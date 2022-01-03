@@ -5,6 +5,7 @@ const cors = require("cors");
 const session = require("express-session");
 const flash = require("express-flash");
 const app = express();
+const authRoute = require("./routes/auth");
 
 dotenv.config();
 
@@ -37,6 +38,11 @@ mongoose
   });
 
 app.use(express.json());
+app.use("/auth", authRoute);
+app.get("/", (req, res) => {
+  req.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  req.header("Access-Control-Request-Method", "http://localhost:3000");
+});
 
 app.listen("5000", () => {
   console.log("Server is running");
