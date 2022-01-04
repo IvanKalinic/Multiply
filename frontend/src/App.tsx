@@ -1,16 +1,27 @@
 import "./App.css";
-import { GameBoard } from "./components/sharedcomponents/GameBoard";
+import { ChakraProvider } from "@chakra-ui/react";
 import styled from "styled-components";
-function App() {
+import AppRoutes from "./routes";
+
+const App = () => {
   const ParentContainer = styled.div`
     display: flex;
     justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+    min-height: 100vh;
   `;
+
   return (
-    <ParentContainer>
-      <GameBoard />
-    </ParentContainer>
+    <ChakraProvider>
+      <ParentContainer>
+        <AppRoutes />
+      </ParentContainer>
+    </ChakraProvider>
   );
-}
+};
 
 export default App;

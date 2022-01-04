@@ -21,7 +21,7 @@ const AppRoutes = () => {
 
   return (
     <Router>
-      <div>
+      <div style={{ width: "100%" }}>
         <Navbar user={user} admin={admin} />
         <Routes>
           <Route path="/" element={<HomePage />} />
