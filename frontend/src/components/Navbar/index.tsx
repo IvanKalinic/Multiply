@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -16,12 +15,28 @@ const Navbar = ({ user, admin }: Props) => {
     align-items: center;
     justify-content: space-between;
   `;
+  const logout = () => {
+    window.open(
+      `${process.env.REACT_APP_SERVER_BASE_URL}/auth/logout`,
+      "_self"
+    );
+  };
 
   return (
     <NavbarWrapper>
-      <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+      <span
+        style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "20px" }}
+      >
         <Link to="/">Multiply</Link>
       </span>
+      {(user || admin) && (
+        <span
+          style={{ fontSize: "20px", marginRight: "20px", cursor: "pointer" }}
+          onClick={logout}
+        >
+          Logout
+        </span>
+      )}
     </NavbarWrapper>
   );
 };

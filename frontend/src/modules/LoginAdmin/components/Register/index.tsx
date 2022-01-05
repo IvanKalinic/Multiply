@@ -7,8 +7,12 @@ import { defaultAdminValues } from "../../interface";
 import { requiredFields } from "../../../../consts";
 import { SubmitButton } from "../../styles";
 import { AdminRegisterForm } from "../../../../types";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const {
     register,
     handleSubmit,
@@ -21,6 +25,16 @@ const Register = () => {
 
   const handleRegister = async (adminForm: AdminRegisterForm) => {
     console.log(adminForm);
+    try {
+      await axios.post(`${baseUrl}/auth/register`, {
+        username: adminForm.username,
+        email: adminForm.email,
+        password: adminForm.password,
+      });
+      navigate("/adminApp");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

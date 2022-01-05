@@ -7,8 +7,14 @@ import { defaultAdminValues } from "../../interface";
 import { requiredFields } from "../../../../consts";
 import { SubmitButton } from "../../styles";
 import { AdminLoginForm } from "../../../../types";
+import { useNavigate } from "react-router-dom";
+import { useAdmin } from "../../../../context/AdminContext";
+import axios from "axios";
 
 const Login = () => {
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const navigate = useNavigate();
+  const { setAdmin } = useAdmin();
   const {
     register,
     handleSubmit,
@@ -21,6 +27,17 @@ const Login = () => {
 
   const handleLogin = async (adminForm: AdminLoginForm) => {
     console.log(adminForm);
+    try {
+      const newAdmin = await axios.post(`${baseUrl}/auth/loginAdmin`, {
+        username: adminForm.username,
+        email: adminForm.email,
+        password: adminForm.password,
+      });
+      setAdmin(newAdmin);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
