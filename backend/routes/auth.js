@@ -28,6 +28,29 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/registerUser", async (req, res) => {
+  console.log(req.body);
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: hashedPassword,
+    });
+    const registeredUser = await newUser.save();
+    res.status(200).json(registeredUser);
+  } catch (err) {
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
 router.post("/loginAdmin", async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(

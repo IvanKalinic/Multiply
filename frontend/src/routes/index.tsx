@@ -11,6 +11,7 @@ import {
   HomePage,
   AdminAppPage,
   UserAppPage,
+  AddNewUser,
 } from "../modules";
 import { useUser } from "../context/UserContext";
 import { useAdmin } from "../context/AdminContext";
@@ -27,6 +28,7 @@ const AppRoutes = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/adminApp" element={<AdminAppPage />} />
           <Route path="/userApp" element={<UserAppPage />} />
+          <Route path="/addNewUser" element={<AddNewUser />} />
           <Route
             path="/loginUser"
             element={user ? <Navigate to="/userApp" /> : <LoginUser />}

@@ -12,10 +12,6 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: "",
     },
-    gameColor: {
-      type: String,
-      default: "",
-    },
     profilePicture: {
       type: String,
       default: "",

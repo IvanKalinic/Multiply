@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { Flex } from "@chakra-ui/react";
 
 interface Props {
   user: any;
@@ -21,7 +22,7 @@ const Navbar = ({ user, admin }: Props) => {
       "_self"
     );
   };
-
+  console.log(user);
   return (
     <NavbarWrapper>
       <span
@@ -30,12 +31,17 @@ const Navbar = ({ user, admin }: Props) => {
         <Link to="/">Multiply</Link>
       </span>
       {(user || admin) && (
-        <span
-          style={{ fontSize: "20px", marginRight: "20px", cursor: "pointer" }}
-          onClick={logout}
-        >
-          Logout
-        </span>
+        <Flex justifyContent="center">
+          <span style={{ fontSize: "20px", marginRight: "20px" }}>
+            {user?.data.username || admin?.data.username}
+          </span>
+          <span
+            style={{ fontSize: "20px", marginRight: "20px", cursor: "pointer" }}
+            onClick={logout}
+          >
+            Logout
+          </span>
+        </Flex>
       )}
     </NavbarWrapper>
   );
