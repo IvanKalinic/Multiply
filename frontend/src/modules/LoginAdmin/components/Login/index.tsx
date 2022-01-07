@@ -34,7 +34,7 @@ const Login = () => {
         password: adminForm.password,
       });
       setAdmin(newAdmin);
-      navigate("/");
+      navigate("/adminApp");
     } catch (err) {
       console.log(err);
     }

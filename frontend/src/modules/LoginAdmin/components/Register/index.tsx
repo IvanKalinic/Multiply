@@ -58,8 +58,8 @@ const Register = () => {
           ))}
           <TextInput
             type="password"
-            placeholder="Password"
-            title="Password"
+            placeholder="Repeat Password"
+            title="Repeat Password"
             id="passwordAgain"
             registerName="passwordAgain"
             register={register}

@@ -25,6 +25,6 @@ const ClassSchema = new mongoose.Schema(
 
 ClassSchema.plugin(findOrCreate);
 
-const Class = mongoose.model("User", ClassSchema);
+const Class = mongoose.model("Class", ClassSchema);
 
 module.exports = Class;

@@ -25,6 +25,6 @@ const GroupSchema = new mongoose.Schema(
 
 GroupSchema.plugin(findOrCreate);
 
-const Group = mongoose.model("User", GroupSchema);
+const Group = mongoose.model("Group", GroupSchema);
 
 module.exports = Group;
