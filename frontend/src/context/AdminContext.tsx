@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 type ContextType = {
   admin: any;
@@ -24,7 +25,7 @@ interface Props {
 }
 
 export const AdminProvider = ({ children }: Props) => {
-  const [admin, setAdmin] = useState(null);
+  const [admin, setAdmin] = useLocalStorage("admin", null);
   const value = { admin, setAdmin };
 
   return (
