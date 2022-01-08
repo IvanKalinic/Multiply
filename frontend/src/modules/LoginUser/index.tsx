@@ -16,6 +16,7 @@ const LoginUser = () => {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
   const { setUser } = useUser();
+
   const {
     register,
     handleSubmit,
@@ -53,6 +54,7 @@ const LoginUser = () => {
             <Box ml="2" mr="2" mb="6">
               {requiredFields.map(({ placeholder, id }) => (
                 <TextInput
+                  key={id}
                   title={placeholder}
                   registerName={id}
                   type={id}

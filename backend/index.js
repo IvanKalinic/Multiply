@@ -10,6 +10,7 @@ const authRoute = require("./routes/auth");
 dotenv.config();
 
 const allowedOrigins = ["http://localhost:3000"];
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -39,6 +40,7 @@ mongoose
 
 app.use(express.json());
 app.use("/auth", authRoute);
+
 app.get("/", (req, res) => {
   req.header("Access-Control-Allow-Origin", "http://localhost:3000");
   req.header("Access-Control-Request-Method", "http://localhost:3000");

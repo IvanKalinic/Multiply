@@ -20,14 +20,15 @@ const AppRoutes = () => {
   const { user } = useUser();
   const { admin } = useAdmin();
 
+  console.log(user);
   return (
     <Router>
       <div style={{ width: "100%" }}>
         <Navbar user={user} admin={admin} />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/adminApp" element={<AdminAppPage />} />
-          <Route path="/userApp" element={<UserAppPage />} />
+          <Route path="/adminApp" element={admin && <AdminAppPage />} />
+          <Route path="/userApp" element={user && <UserAppPage />} />
           <Route path="/addNewUser" element={<AddNewUser />} />
           <Route
             path="/loginUser"

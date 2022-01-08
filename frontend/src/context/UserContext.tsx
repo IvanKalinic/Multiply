@@ -1,13 +1,19 @@
+import axios from "axios";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 type ContextType = {
   user: any;
   setUser: React.Dispatch<React.SetStateAction<any>>;
+  numberOfClicks: number;
+  setNumberOfClicks: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const UserContext = createContext<ContextType>({
   user: null,
   setUser: () => null,
+  numberOfClicks: 0,
+  setNumberOfClicks: () => null,
 });
 
 export const useUser = () => {
@@ -24,8 +30,12 @@ interface Props {
 }
 
 export const UserProvider = ({ children }: Props) => {
-  const [user, setUser] = useState(null);
-  const value = { user, setUser };
+  const [user, setUser] = useLocalStorage("user", null);
+  const [numberOfClicks, setNumberOfClicks] = useState(0);
+
+  //const [clickedItems,setClickedItems] = useState([])
+
+  const value = { user, setUser, numberOfClicks, setNumberOfClicks };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
