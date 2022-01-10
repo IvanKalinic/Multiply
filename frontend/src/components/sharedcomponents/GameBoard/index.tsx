@@ -18,12 +18,12 @@ export const GameBoard = () => {
   console.log(user);
 
   const randomValues = () => {
-    const randomArray: Array<number> = [];
+    const randomArray: Array<{ number: number; clicked: boolean }> = [];
     for (let i = 0; i < 8; i++) {
       let randomNumber: number =
         multiplyArray[Math.floor(Math.random() * multiplyArray.length)];
       if (aggArray.filter((item: number) => item === randomNumber).length < 2) {
-        randomArray.push(randomNumber);
+        randomArray.push({ number: randomNumber, clicked: false });
         setAggArray((aggArray) => [...aggArray, randomNumber]);
       } else {
         i--;
@@ -39,12 +39,20 @@ export const GameBoard = () => {
     setBoardArray(initialArray);
   }, []);
 
-  console.log(boardArray);
+  useEffect(() => console.log(boardArray), [boardArray]);
+  // console.log(boardArray);
 
+  // console.log(gameOver());
+  console.log(boardArray);
   return (
     <GameBoardWrapper>
       {boardArray.map((column: any, index: number) => (
-        <BoardColumn column={column} key={`col-${index}`} />
+        <BoardColumn
+          column={column}
+          key={`col-${index}`}
+          id={index}
+          boardArray={boardArray}
+        />
       ))}
     </GameBoardWrapper>
   );
