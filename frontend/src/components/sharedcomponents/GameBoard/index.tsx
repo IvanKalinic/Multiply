@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../../../context/UserContext";
+import { useGame } from "../../../context/GameContext";
 import BoardColumn from "../BoardColumn";
-import { BoardItem } from "../BoardItem";
-import { GameBoardWrapper } from "../styles";
+import { GameBoardWrapper, Overlay } from "../styles";
+import Winner from "../../Winner";
+import { Flex } from "@chakra-ui/react";
 
 const multiplyArray = [
   12, 14, 15, 16, 18, 20, 21, 24, 25, 27, 28, 30, 32, 34, 35, 36, 40, 42, 45,
@@ -14,8 +16,7 @@ export const GameBoard = () => {
   const [aggArray, setAggArray] = useState<Array<number>>([]);
   const initialArray: any = [];
   const { user } = useUser();
-
-  console.log(user);
+  const { displayWin, setDisplayWin } = useGame();
 
   const randomValues = () => {
     const randomArray: Array<{ number: number; clicked: boolean }> = [];
@@ -33,27 +34,29 @@ export const GameBoard = () => {
   };
 
   useEffect(() => {
+    setDisplayWin(false);
+  }, []);
+
+  useEffect(() => {
     for (let i = 0; i < 8; i++) {
       initialArray.push(randomValues());
     }
     setBoardArray(initialArray);
   }, []);
 
-  useEffect(() => console.log(boardArray), [boardArray]);
-  // console.log(boardArray);
-
-  // console.log(gameOver());
-  console.log(boardArray);
   return (
-    <GameBoardWrapper>
-      {boardArray.map((column: any, index: number) => (
-        <BoardColumn
-          column={column}
-          key={`col-${index}`}
-          id={index}
-          boardArray={boardArray}
-        />
-      ))}
-    </GameBoardWrapper>
+    <Flex flexDirection="column">
+      {displayWin && <Winner user={user} />}
+      <GameBoardWrapper>
+        {boardArray.map((column: any, index: number) => (
+          <BoardColumn
+            column={column}
+            key={`col-${index}`}
+            id={index}
+            boardArray={boardArray}
+          />
+        ))}
+      </GameBoardWrapper>
+    </Flex>
   );
 };

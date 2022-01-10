@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NumberWrapper } from "../styles";
 import { vertical, horizontal, diagonalUp, diagonalDown } from "../../../utils";
+import { useGame } from "../../../context/GameContext";
 
 export const BoardItem = ({
   value,
@@ -14,11 +15,7 @@ export const BoardItem = ({
   index: number;
 }) => {
   const [color, setColor] = useState<boolean>(false);
-
-  const handleChange = () => {
-    boardArray[index][id].clicked = !color;
-    setColor(!color);
-  };
+  const { setDisplayWin } = useGame();
 
   const gameOver = () => {
     //vertical
@@ -32,6 +29,14 @@ export const BoardItem = ({
 
     //diagonal down to the right
     if (diagonalDown(boardArray)) return true;
+  };
+
+  const handleChange = () => {
+    boardArray[index][id].clicked = !color;
+    setColor(!color);
+    if (gameOver()) {
+      setDisplayWin(true);
+    }
   };
 
   console.log(boardArray[index][id].clicked);
