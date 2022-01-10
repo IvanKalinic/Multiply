@@ -1,15 +1,18 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Flex } from "@chakra-ui/react";
 import { useUser } from "../../context/UserContext";
+import { useAdmin } from "../../context/AdminContext";
 
 interface Props {
   user: any;
   admin: any;
 }
+
 const Navbar = ({ user, admin }: Props) => {
   const { setUser } = useUser();
-  const { setAdmin } = useUser();
+  const { setAdmin } = useAdmin();
+  const navigate = useNavigate();
 
   const NavbarWrapper = styled.div`
     width: 100%;
@@ -22,19 +25,17 @@ const Navbar = ({ user, admin }: Props) => {
   `;
 
   const logout = () => {
-    window.open(
-      `${process.env.REACT_APP_SERVER_BASE_URL}/auth/logout`,
-      "_self"
-    );
     if (user) {
       setUser(null);
-      return;
     }
     if (admin) {
       setAdmin(null);
-      return;
     }
+    navigate("/");
   };
+
+  console.log(user);
+  console.log(admin);
 
   return (
     <NavbarWrapper>
@@ -46,14 +47,20 @@ const Navbar = ({ user, admin }: Props) => {
       {(!!user || !!admin) && (
         <Flex justifyContent="center">
           <span style={{ fontSize: "20px", marginRight: "20px" }}>
-            {user?.data.username || admin?.data.username}
+            {user ? user?.data?.username : admin ? admin?.data?.username : null}
           </span>
-          <span
-            style={{ fontSize: "20px", marginRight: "20px", cursor: "pointer" }}
-            onClick={logout}
-          >
-            Logout
-          </span>
+          {user || admin ? (
+            <span
+              style={{
+                fontSize: "20px",
+                marginRight: "20px",
+                cursor: "pointer",
+              }}
+              onClick={logout}
+            >
+              Logout
+            </span>
+          ) : null}
         </Flex>
       )}
     </NavbarWrapper>
