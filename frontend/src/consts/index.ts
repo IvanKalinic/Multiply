@@ -45,7 +45,7 @@ export const difficulties = [
   },
 ];
 
-export const category = [
+export const categories = [
   {
     category: "Addition",
     value: 1,

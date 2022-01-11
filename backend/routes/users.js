@@ -10,4 +10,12 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:class", async (req, res) => {
+  try {
+    const users = await User.find({ class: req.params });
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 module.exports = router;

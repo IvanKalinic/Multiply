@@ -11,6 +11,11 @@ const multiplyArray = [
   48, 49, 50, 54, 56, 60, 63, 64, 70, 72, 80, 81, 90, 100,
 ];
 
+const additionArray = [
+  14, 21, 27, 29, 43, 57, 58, 48, 55, 38, 36, 50, 44, 31, 39, 46, 60, 72, 62,
+  25, 42, 37, 63, 98, 85,
+];
+
 export const GameBoard = () => {
   const [boardArray, setBoardArray] = useState<any>([]);
   const [aggArray, setAggArray] = useState<Array<number>>([]);
