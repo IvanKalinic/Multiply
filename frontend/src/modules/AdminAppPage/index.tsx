@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Flex, Box, Button, Text } from "@chakra-ui/react";
 import MathPicture from "../../assets/images/math.png";
-import { MenuWrapper } from "../../styles";
+import { MenuWrapper, SelectionWrapper } from "../../styles";
 import SelectDropdown from "../../components/Select";
 import { categories, difficulties } from "../../consts";
 import { useAdmin } from "../../context/AdminContext";
@@ -52,55 +52,64 @@ const AdminAppPage = () => {
           flexDirection="column"
           alignItems="center"
         >
-          <Flex>
-            <Text fontSize="4xl" color="white">
-              You want to add new user?
+          <Text fontSize="5xl" color="black" mb="2">
+            Hello teacher {admin.data.username} !
+          </Text>
+          <Flex mb="4">
+            <Text fontSize="2xl" color="white" mr="4">
+              Add new user to game
             </Text>
-            <Button mt="2" w={200}>
+            <Button w={200}>
               <Link to="/addNewUser">Add</Link>
             </Button>
           </Flex>
-          <Box mt="10">
-            <SelectDropdown
-              message="Please select category for quiz"
-              array={categories}
-              setSelectedOptions={setSelectedOptions}
-              selectedOptions={selectedOptions}
-              selection="category"
-            />
-          </Box>
-          <Box mt="4">
-            <SelectDropdown
-              message="Please select difficulty for quiz"
-              array={difficulties}
-              setSelectedOptions={setSelectedOptions}
-              selectedOptions={selectedOptions}
-              selection="difficulty"
-            />
-          </Box>
-          <Text mt="4" fontSize="3xl" color="white">
-            Please objectively select concurent students
-          </Text>
-          <Flex>
-            <Box mt="4" mr="4">
+          <SelectionWrapper>
+            <Text fontSize="3xl">Configure game</Text>
+            <Box mt="10">
               <SelectDropdown
-                message="Please select 1st opponent"
-                array={users}
+                message="Please select category for quiz"
+                array={categories}
                 setSelectedOptions={setSelectedOptions}
                 selectedOptions={selectedOptions}
-                selection="opponents"
+                selection="category"
               />
             </Box>
             <Box mt="4">
               <SelectDropdown
-                message="Please select 2nd opponent"
-                array={users}
+                message="Please select difficulty for quiz"
+                array={difficulties}
                 setSelectedOptions={setSelectedOptions}
                 selectedOptions={selectedOptions}
-                selection="opponents"
+                selection="difficulty"
               />
             </Box>
-          </Flex>
+            <Text mt="4" fontSize="3xl" color="white">
+              Please select competitive students
+            </Text>
+            <Flex>
+              <Box mt="4" mr="4">
+                <SelectDropdown
+                  message=" 1st opponent"
+                  array={users}
+                  setSelectedOptions={setSelectedOptions}
+                  selectedOptions={selectedOptions}
+                  selection="opponents"
+                />
+              </Box>
+              <Box mt="4">
+                <SelectDropdown
+                  message="2nd opponent"
+                  array={users}
+                  setSelectedOptions={setSelectedOptions}
+                  selectedOptions={selectedOptions}
+                  selection="opponents"
+                />
+              </Box>
+            </Flex>
+            <Button colorScheme="teal" size="lg" mt="10" mb="10" w={400}>
+              Start game
+            </Button>
+          </SelectionWrapper>
         </Flex>
       </MenuWrapper>
     </Flex>
