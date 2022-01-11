@@ -6,7 +6,8 @@ const session = require("express-session");
 const flash = require("express-flash");
 const app = express();
 const authRoute = require("./routes/auth");
-const question = require("./routes/questions");
+const questionRoute = require("./routes/questions");
+const userRoute = require("./routes/users");
 
 dotenv.config();
 
@@ -40,8 +41,10 @@ mongoose
   });
 
 app.use(express.json());
+
 app.use("/auth", authRoute);
 app.use("/questions", questionRoute);
+app.use("/users", userRoute);
 
 app.get("/", (req, res) => {
   req.header("Access-Control-Allow-Origin", "http://localhost:3000");

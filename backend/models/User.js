@@ -22,7 +22,8 @@ const UserSchema = new mongoose.Schema(
     score: {
       type: Number,
     },
-    level: {
+    // if score/5 >= 1 -> medium score/5 >=2 hard
+    difficulty: {
       type: String,
     },
   },
