@@ -19,6 +19,12 @@ const UserSchema = new mongoose.Schema(
     class: {
       type: String,
     },
+    score: {
+      type: Number,
+    },
+    level: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
