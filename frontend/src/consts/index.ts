@@ -29,3 +29,37 @@ export const listOfClasses = [
   { id: 15, name: "4C" },
   { id: 16, name: "4D" },
 ];
+
+export const difficulties = [
+  {
+    category: "Easy",
+    value: 1,
+  },
+  {
+    category: "Medium",
+    value: 2,
+  },
+  {
+    category: "Hard",
+    value: 3,
+  },
+];
+
+export const category = [
+  {
+    category: "Addition",
+    value: 1,
+  },
+  {
+    category: "Subtraction",
+    value: 2,
+  },
+  {
+    category: "Multiplication",
+    value: 3,
+  },
+  {
+    category: "Divison",
+    value: 4,
+  },
+];

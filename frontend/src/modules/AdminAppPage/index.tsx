@@ -1,14 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Box, Button } from "@chakra-ui/react";
+import { Flex, Box, Button } from "@chakra-ui/react";
+import MathPicture from "../../assets/images/math.png";
+import { MenuWrapper } from "../../styles";
 
 const AdminAppPage = () => {
   return (
-    <Box>
-      <Button mt="2" w={200}>
-        <Link to="/addNewUser">Add New User</Link>
-      </Button>
-    </Box>
+    <Flex
+      justifyContent="center"
+      style={{
+        height: "calc(100vh - 50px)",
+        backgroundImage: `url(${MathPicture})`,
+        backgroundSize: "300px 300px",
+      }}
+    >
+      <MenuWrapper>
+        <Button mt="2" w={200}>
+          <Link to="/addNewUser">Add New User</Link>
+        </Button>
+      </MenuWrapper>
+    </Flex>
   );
 };
 
