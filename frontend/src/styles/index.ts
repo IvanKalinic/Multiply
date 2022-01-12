@@ -9,7 +9,7 @@ export const MenuWrapper = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 20px;
-  background-color: rgba(108, 122, 137, 0.6);
+  background-color: rgb(255, 255, 255, 0.5);
 `;
 
 export const SelectionWrapper = styled.div`

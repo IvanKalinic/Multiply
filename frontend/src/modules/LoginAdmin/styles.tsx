@@ -10,6 +10,7 @@ export const LoginWrapper = styled.div`
   display: flex;
   align-items: center;
   border-radius: 20px;
+  background-color: rgb(255, 255, 255, 0.5);
 `;
 
 export const SubmitButton = styled.button`

@@ -2,6 +2,7 @@ import "./App.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import styled from "styled-components";
 import AppRoutes from "./routes";
+import MathPicture from "./assets/images/math.png";
 
 const App = () => {
   const ParentContainer = styled.div`
@@ -13,6 +14,9 @@ const App = () => {
     width: 100vw;
     text-align: center;
     min-height: 100vh;
+    background-image: url(${MathPicture});
+    background-size: 100% 100%;
+    object-fit: cover;
   `;
 
   return (
