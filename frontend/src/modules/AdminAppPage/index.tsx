@@ -19,7 +19,7 @@ const startValue = { category: "", difficulty: "", opponents: ["", ""] };
 
 const AdminAppPage = () => {
   const { admin } = useAdmin();
-  const { setQuestions } = useGame();
+  const { questions, setQuestions } = useGame();
   const [users, setUsers] = useState<Array<{}>>([]);
   const [selectedOptions, setSelectedOptions] =
     useState<SelectedOptions>(startValue);
@@ -42,7 +42,7 @@ const AdminAppPage = () => {
 
   console.log(selectedOptions);
 
-  const generateGame = () => {
+  const generateGame = async () => {
     fetchQuestions(selectedOptions.category, selectedOptions.difficulty).then(
       (data) => setQuestions(data.data)
     );
@@ -121,7 +121,6 @@ const AdminAppPage = () => {
           >
             Start game
           </Button>
-          {/* </SelectionWrapper> */}
         </Flex>
       </MenuWrapper>
     </Flex>

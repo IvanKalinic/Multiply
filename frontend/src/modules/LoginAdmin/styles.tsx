@@ -27,7 +27,7 @@ export const SubmitButton = styled.button`
 
     &:hover {
       color: ${({ login }: { login: boolean | undefined }) =>
-        login ? `#182740` : `#1eb6f7`};;
+        login ? `#182740` : `#1eb6f7`};
       opacity: 0.95;
       transform: translateY(2px);
     }

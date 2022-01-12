@@ -1,4 +1,4 @@
-import { GameBoard } from "./GameBoard";
-import { QuestionSection } from "./QuestionSection";
+import { GameBoard } from "./Board/GameBoard";
+import { QuestionSection } from "./Questions/QuestionSection";
 
 export { GameBoard, QuestionSection };

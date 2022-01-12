@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useUser } from "../../../context/UserContext";
-import { useGame } from "../../../context/GameContext";
+import { useUser } from "../../../../context/UserContext";
+import { useGame } from "../../../../context/GameContext";
+
 import BoardColumn from "../BoardColumn";
-import { GameBoardWrapper, Overlay } from "../styles";
-import Winner from "../../Winner";
+import { GameBoardWrapper, Overlay } from "../../styles";
+import Winner from "../../../Winner";
 import { Flex } from "@chakra-ui/react";
 
 const multiplyArray = [

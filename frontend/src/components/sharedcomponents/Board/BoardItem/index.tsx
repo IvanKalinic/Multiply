@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { NumberWrapper } from "../styles";
-import { vertical, horizontal, diagonalUp, diagonalDown } from "../../../utils";
-import { useGame } from "../../../context/GameContext";
+import { NumberWrapper } from "../../styles";
+import {
+  vertical,
+  horizontal,
+  diagonalUp,
+  diagonalDown,
+} from "../../../../utils";
+import { useGame } from "../../../../context/GameContext";
 
 export const BoardItem = ({
   value,

@@ -32,3 +32,9 @@ export const Overlay = styled.div`
   bottom: 0;
   position: fixed;
 `;
+
+export const Details = styled.div`
+  position: absolute;
+  top: 220px;
+  left: 240px;
+`;

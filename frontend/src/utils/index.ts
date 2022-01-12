@@ -63,3 +63,7 @@ export const diagonalDown = (boardArray: any) => {
     }
   }
 };
+
+export const handleShuffle = (options: any) => {
+  return options.sort(() => Math.random() - 0.5);
+};

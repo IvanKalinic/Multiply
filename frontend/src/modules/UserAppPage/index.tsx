@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
-import { GameBoard } from "../../components/sharedcomponents/GameBoard";
+import { GameBoard } from "../../components/sharedcomponents/Board/GameBoard";
 
 const UserAppPage = () => {
   return (
