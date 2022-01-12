@@ -3,6 +3,7 @@ import React, { SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import OptionButton from "../OptionButton";
 import { handleShuffle } from "../../../../utils";
+import { useGame } from "../../../../context/GameContext";
 
 interface Props {
   currentQuestion: number;
@@ -17,6 +18,7 @@ const QuestionItem = ({
 }: Props) => {
   const [options, setOptions] = useState<Array<number>>([]);
   const [selectedOption, setSelectedOption] = useState<number>(0);
+  const { setSelectedNumber } = useGame();
 
   useEffect(() => {
     if (question)
@@ -39,6 +41,7 @@ const QuestionItem = ({
 
   useEffect(() => {
     setSelectedOption(0);
+    setSelectedNumber(0);
   }, [currentQuestion]);
 
   return (

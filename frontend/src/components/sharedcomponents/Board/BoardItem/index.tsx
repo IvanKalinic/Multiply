@@ -20,7 +20,7 @@ export const BoardItem = ({
   index: number;
 }) => {
   const [color, setColor] = useState<boolean>(false);
-  const { setDisplayWin } = useGame();
+  const { setDisplayWin, selectedNumber } = useGame();
 
   const gameOver = () => {
     //vertical
@@ -47,7 +47,17 @@ export const BoardItem = ({
   console.log(boardArray[index][id].clicked);
   console.log("Game over " + gameOver());
   return (
-    <NumberWrapper color={color} onClick={handleChange}>
+    <NumberWrapper
+      color={color}
+      onClick={handleChange}
+      style={{
+        backgroundColor: `${
+          selectedNumber === value && !boardArray[index][id].clicked
+            ? "gray"
+            : ""
+        }`,
+      }}
+    >
       {value}
     </NumberWrapper>
   );
