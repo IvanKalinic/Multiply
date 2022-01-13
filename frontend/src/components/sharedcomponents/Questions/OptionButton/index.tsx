@@ -7,6 +7,7 @@ interface Props {
   correctAnswer: number;
   setSelectedOption: React.Dispatch<React.SetStateAction<number>>;
   selectedOption: number;
+  setCurrentQuestion: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const OptionButton = ({
@@ -14,6 +15,7 @@ const OptionButton = ({
   correctAnswer,
   setSelectedOption,
   selectedOption,
+  setCurrentQuestion,
 }: Props) => {
   const { setSelectedNumber } = useGame();
 

@@ -4,6 +4,8 @@ import styled from "styled-components";
 import OptionButton from "../OptionButton";
 import { handleShuffle } from "../../../../utils";
 import { useGame } from "../../../../context/GameContext";
+import ArrowRight from "../../../../assets/icons/arrow-right.png";
+import Warning from "../../../Warning";
 
 interface Props {
   currentQuestion: number;
@@ -18,6 +20,7 @@ const QuestionItem = ({
 }: Props) => {
   const [options, setOptions] = useState<Array<number>>([]);
   const [selectedOption, setSelectedOption] = useState<number>(0);
+  const [warning, setWarning] = useState<boolean>(false);
   const { setSelectedNumber } = useGame();
 
   useEffect(() => {
@@ -27,26 +30,39 @@ const QuestionItem = ({
       );
   }, [currentQuestion, question]);
 
-  //   const handleColor = () => {
-  //     if (selectedOption && selectedOption === question.correctAnswer) {
-  //       return "green";
-  //     }
-  //     if (selectedOption  && selectedOption !== question.correctAnswer) {
-  //       return "red";
-  //     }
-  //     if (selectedOption === question.correctAnswer) {
-  //       return "green";
-  //     }
-  //   };
-
   useEffect(() => {
     setSelectedOption(0);
     setSelectedNumber(0);
+    setWarning(false);
   }, [currentQuestion]);
+
+  useEffect(() => {
+    if (selectedOption) setWarning(false);
+  }, [selectedOption]);
+
+  const ArrowWrapper = styled.img`
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    margin-left: 370px;
+    &:hover {
+      transform: translateX(4px);
+    }
+  `;
+
+  const handleNext = () => {
+    if (!selectedOption) {
+      setWarning(true);
+      return;
+    }
+    setCurrentQuestion((curr) => curr + 1);
+  };
 
   return (
     <Box>
-      <Heading>What is the result of {question?.question} ?</Heading>
+      <Heading mb="10" mt="20">
+        What is the result of {question?.question} ?
+      </Heading>
       <Flex
         flexDirection="column"
         alignItems="center"
@@ -60,14 +76,16 @@ const QuestionItem = ({
             <OptionButton
               key={index}
               value={option}
-              //   handleColor={handleColor}
               correctAnswer={question?.correctAnswer}
               setSelectedOption={setSelectedOption}
               selectedOption={selectedOption}
+              setCurrentQuestion={setCurrentQuestion}
             />
           ))}
         </Flex>
       </Flex>
+      <ArrowWrapper src={ArrowRight} alt="arrow" onClick={handleNext} />
+      {warning && <Warning />}
     </Box>
   );
 };
