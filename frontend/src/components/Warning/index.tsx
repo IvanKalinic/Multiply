@@ -4,9 +4,9 @@ const Warning = ({ text }: { text: string }) => {
   return (
     <Flex
       style={{
-        position: "absolute",
-        bottom: "60px",
-        left: "300px",
+        position: "relative",
+        bottom: "-20px",
+        left: "100px",
         maxWidth: "300px",
         height: "60px",
       }}

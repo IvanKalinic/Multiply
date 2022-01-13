@@ -89,8 +89,6 @@ export const GameBoard = () => {
     }
   }, [selectedNumber]);
 
-  console.log(absentItem);
-
   return (
     <Flex flexDirection="column">
       {displayWin && <Winner user={user} />}

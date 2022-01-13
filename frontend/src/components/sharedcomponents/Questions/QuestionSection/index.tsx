@@ -15,7 +15,7 @@ export const QuestionSection = () => {
         <MenuWrapper
           style={{
             marginLeft: "-30px",
-            width: "500px",
+            width: "520px",
             height: "400px",
             marginRight: "4rem",
             flexDirection: "column",
