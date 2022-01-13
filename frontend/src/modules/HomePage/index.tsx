@@ -1,16 +1,8 @@
-import React from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Button, Flex } from "@chakra-ui/react";
+import { HomeWrapper } from "../modules.style";
 
 const HomePage = () => {
-  const HomeWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  `;
-
   return (
     <HomeWrapper>
       Who are you?

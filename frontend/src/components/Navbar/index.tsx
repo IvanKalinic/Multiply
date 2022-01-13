@@ -1,8 +1,8 @@
-import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { Flex } from "@chakra-ui/react";
 import { useUser } from "../../context/UserContext";
 import { useAdmin } from "../../context/AdminContext";
+import { NavbarWrapper } from "../components.style";
 
 interface Props {
   user: any;
@@ -14,16 +14,6 @@ const Navbar = ({ user, admin }: Props) => {
   const { setAdmin } = useAdmin();
   const navigate = useNavigate();
 
-  const NavbarWrapper = styled.div`
-    width: 100%;
-    height: 50px;
-    background-color: #326da8;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  `;
-
   const logout = () => {
     if (user) {
       setUser(null);
@@ -33,9 +23,6 @@ const Navbar = ({ user, admin }: Props) => {
     }
     navigate("/");
   };
-
-  console.log(user);
-  console.log(admin);
 
   return (
     <NavbarWrapper>

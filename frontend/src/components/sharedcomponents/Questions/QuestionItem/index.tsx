@@ -1,11 +1,11 @@
 import { Box, Heading, Flex } from "@chakra-ui/react";
 import React, { SetStateAction, useEffect, useState } from "react";
-import styled from "styled-components";
 import OptionButton from "../OptionButton";
 import { handleShuffle } from "../../../../utils";
 import { useGame } from "../../../../context/GameContext";
 import ArrowRight from "../../../../assets/icons/arrow-right.png";
 import Warning from "../../../Warning";
+import { ArrowWrapper } from "./styles";
 
 interface Props {
   currentQuestion: number;
@@ -39,16 +39,6 @@ const QuestionItem = ({
   useEffect(() => {
     if (selectedOption) setWarning(false);
   }, [selectedOption]);
-
-  const ArrowWrapper = styled.img`
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
-    margin-left: 370px;
-    &:hover {
-      transform: translateX(4px);
-    }
-  `;
 
   const handleNext = () => {
     if (!selectedOption) {

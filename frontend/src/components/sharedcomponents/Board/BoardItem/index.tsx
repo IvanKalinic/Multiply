@@ -44,8 +44,9 @@ export const BoardItem = ({
     }
   };
 
-  console.log(boardArray[index][id].clicked);
-  console.log("Game over " + gameOver());
+  // console.log(boardArray[index][id].clicked);
+  // console.log("Game over " + gameOver());
+
   return (
     <NumberWrapper
       color={color}
