@@ -15,7 +15,15 @@ import {
 export const GameBoard = () => {
   const [boardArray, setBoardArray] = useState<any>([]);
   const { user } = useUser();
-  const { questions, displayWin, setDisplayWin } = useGame();
+  const {
+    questions,
+    displayWin,
+    setDisplayWin,
+    setMaxClicks,
+    selectedNumber,
+    setAbsentItem,
+    absentItem,
+  } = useGame();
   const initialArray: any = [];
   let aggArray: Array<number> = [];
 
@@ -49,19 +57,40 @@ export const GameBoard = () => {
     }
     return randomArray;
   };
-
-  useEffect(() => {
-    setDisplayWin(false);
-  }, []);
+  console.log(aggArray);
 
   useEffect(() => {
     for (let i = 0; i < 8; i++) {
       initialArray.push(randomValues());
     }
     setBoardArray(initialArray);
+    setDisplayWin(false);
+    setMaxClicks(0);
   }, []);
 
-  console.log(aggArray.filter((item: number) => item === 100).length);
+  // console.log(boardArray);
+  // console.log(boardArray.find((item) => item.number === 14));
+  // useEffect(() => {
+  //   if()
+  // },[selectedNumber])
+  const checkAbsent = () => {
+    let counter = 0;
+    boardArray.forEach((array) => {
+      if (array.filter((item) => item.number === 60).length) {
+        counter = counter + 1;
+      }
+    });
+    return counter;
+  };
+
+  useEffect(() => {
+    if (selectedNumber && !checkAbsent()) {
+      setAbsentItem(true);
+    }
+  }, [selectedNumber]);
+
+  console.log(absentItem);
+
   return (
     <Flex flexDirection="column">
       {displayWin && <Winner user={user} />}

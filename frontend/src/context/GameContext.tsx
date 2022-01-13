@@ -7,6 +7,10 @@ type ContextType = {
   setQuestions: React.Dispatch<React.SetStateAction<Array<any>>>;
   selectedNumber: number;
   setSelectedNumber: React.Dispatch<React.SetStateAction<number>>;
+  maxClicks: number;
+  setMaxClicks: React.Dispatch<React.SetStateAction<number>>;
+  absentItem: boolean;
+  setAbsentItem: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const GameContext = createContext<ContextType>({
@@ -16,6 +20,10 @@ const GameContext = createContext<ContextType>({
   setQuestions: () => null,
   selectedNumber: 0,
   setSelectedNumber: () => 0,
+  maxClicks: 0,
+  setMaxClicks: () => 0,
+  absentItem: false,
+  setAbsentItem: () => null,
 });
 
 export const useGame = () => {
@@ -35,6 +43,8 @@ export const GameProvider = ({ children }: Props) => {
   const [displayWin, setDisplayWin] = useState<boolean>(false);
   const [questions, setQuestions] = useState<Array<any>>([]);
   const [selectedNumber, setSelectedNumber] = useState<number>(0);
+  const [maxClicks, setMaxClicks] = useState<number>(0);
+  const [absentItem, setAbsentItem] = useState<boolean>(false);
 
   const value = {
     displayWin,
@@ -43,8 +53,11 @@ export const GameProvider = ({ children }: Props) => {
     setQuestions,
     selectedNumber,
     setSelectedNumber,
+    maxClicks,
+    setMaxClicks,
+    absentItem,
+    setAbsentItem,
   };
 
-  console.log(questions);
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };

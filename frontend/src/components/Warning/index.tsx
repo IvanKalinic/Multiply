@@ -1,13 +1,23 @@
-import { Box, Text } from "@chakra-ui/react";
-import React from "react";
+import { Flex, Text } from "@chakra-ui/react";
 
-const Warning = () => {
+const Warning = ({ text }: { text: string }) => {
   return (
-    <div style={{ marginTop: "-10px" }}>
+    <Flex
+      style={{
+        position: "absolute",
+        bottom: "60px",
+        left: "300px",
+        maxWidth: "300px",
+        height: "60px",
+      }}
+      justifyContent="center"
+      alignItems="center"
+      flexWrap="wrap"
+    >
       <Text fontSize="2xl" color="red">
-        You must select an option
+        <strong>{text}</strong>
       </Text>
-    </div>
+    </Flex>
   );
 };
 

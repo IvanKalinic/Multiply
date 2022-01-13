@@ -8,22 +8,28 @@ import {
 } from "../../../../utils";
 import { useGame } from "../../../../context/GameContext";
 
-export const BoardItem = ({
-  value,
-  id,
-  boardArray,
-  index,
-}: {
+const MAX_PLAYER_CHOICES = 4;
+
+interface Props {
   value: number;
   id: number;
   boardArray: any;
   index: number;
-}) => {
+}
+
+export const BoardItem = ({ value, id, boardArray, index }: Props) => {
   const [color, setColor] = useState<boolean>(false);
-  const { setDisplayWin, selectedNumber } = useGame();
+  const {
+    setDisplayWin,
+    selectedNumber,
+    maxClicks,
+    setMaxClicks,
+    setSelectedNumber,
+  } = useGame();
 
   const gameOver = () => {
     //vertical
+
     if (vertical(boardArray)) return true;
 
     //horizontal
@@ -37,15 +43,17 @@ export const BoardItem = ({
   };
 
   const handleChange = () => {
-    boardArray[index][id].clicked = !color;
-    setColor(!color);
-    if (gameOver()) {
-      setDisplayWin(true);
+    if (selectedNumber) {
+      !color
+        ? setMaxClicks((prev) => prev + 1)
+        : setMaxClicks((prev) => prev - 1);
+
+      boardArray[index][id].clicked = !color;
+      setColor(!color);
+      if (maxClicks !== MAX_PLAYER_CHOICES) setSelectedNumber(0);
+      if (gameOver()) setDisplayWin(true);
     }
   };
-
-  // console.log(boardArray[index][id].clicked);
-  // console.log("Game over " + gameOver());
 
   return (
     <NumberWrapper
@@ -56,6 +64,19 @@ export const BoardItem = ({
           selectedNumber === value && !boardArray[index][id].clicked
             ? "gray"
             : ""
+        }`,
+        pointerEvents: `${
+          maxClicks === MAX_PLAYER_CHOICES &&
+          !boardArray[index][id].clicked &&
+          !color
+            ? "none"
+            : (maxClicks < MAX_PLAYER_CHOICES &&
+                value !== selectedNumber &&
+                !boardArray[index][id].clicked &&
+                !color) ||
+              (maxClicks < MAX_PLAYER_CHOICES && color)
+            ? "none"
+            : "auto"
         }`,
       }}
     >

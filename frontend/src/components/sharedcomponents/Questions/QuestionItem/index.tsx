@@ -13,6 +13,11 @@ interface Props {
   question: any;
 }
 
+type WarningType = {
+  question: boolean;
+  item: boolean;
+};
+
 const QuestionItem = ({
   currentQuestion,
   setCurrentQuestion,
@@ -20,8 +25,12 @@ const QuestionItem = ({
 }: Props) => {
   const [options, setOptions] = useState<Array<number>>([]);
   const [selectedOption, setSelectedOption] = useState<number>(0);
-  const [warning, setWarning] = useState<boolean>(false);
-  const { setSelectedNumber } = useGame();
+  const [warning, setWarning] = useState<WarningType>({
+    question: false,
+    item: false,
+  });
+
+  const { setSelectedNumber, selectedNumber, maxClicks } = useGame();
 
   useEffect(() => {
     if (question)
@@ -33,16 +42,21 @@ const QuestionItem = ({
   useEffect(() => {
     setSelectedOption(0);
     setSelectedNumber(0);
-    setWarning(false);
+    setWarning({ question: false, item: false });
   }, [currentQuestion]);
 
   useEffect(() => {
-    if (selectedOption) setWarning(false);
+    if (selectedOption)
+      setWarning((prevValue) => ({ ...prevValue, question: false }));
   }, [selectedOption]);
 
   const handleNext = () => {
+    if (selectedNumber && maxClicks < 4) {
+      setWarning((prevValue) => ({ ...prevValue, item: true }));
+      return;
+    }
     if (!selectedOption) {
-      setWarning(true);
+      setWarning((prevValue) => ({ ...prevValue, question: true }));
       return;
     }
     setCurrentQuestion((curr) => curr + 1);
@@ -69,13 +83,15 @@ const QuestionItem = ({
               correctAnswer={question?.correctAnswer}
               setSelectedOption={setSelectedOption}
               selectedOption={selectedOption}
-              setCurrentQuestion={setCurrentQuestion}
             />
           ))}
         </Flex>
       </Flex>
       <ArrowWrapper src={ArrowRight} alt="arrow" onClick={handleNext} />
-      {warning && <Warning />}
+      {warning.question && <Warning text="You must select an option" />}
+      {warning.item && (
+        <Warning text="Select one of game board colored items" />
+      )}
     </Box>
   );
 };
