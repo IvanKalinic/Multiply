@@ -38,7 +38,7 @@ export const LineDivider = styled.div`
   height: 70%;
   background-color: black;
   position: absolute;
-  top: 4rem;
+  top: 5rem;
   bottom: 0;
   left: 0;
   right: 0;
