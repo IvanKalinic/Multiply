@@ -4,16 +4,20 @@ import { useGame } from "../../../../context/GameContext";
 import BoardColumn from "../BoardColumn";
 import { GameBoardWrapper } from "../../styles";
 import Winner from "../../../Winner";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import {
   multiplyArray as currentArray,
   additionArray,
   substractionArray,
   divisionArray,
 } from "../../../../consts/gameCategory";
+import BadLuck from "../../../BadLuck";
+import Warning from "../../../Warning";
+import Explanation from "../../../Explanation";
 
 export const GameBoard = () => {
   const [boardArray, setBoardArray] = useState<any>([]);
+  const [displayMessage, setDisplayMessage] = useState<boolean>(false);
   const { user } = useUser();
   const {
     questions,
@@ -23,6 +27,7 @@ export const GameBoard = () => {
     selectedNumber,
     setAbsentItem,
     absentItem,
+    maxClicks,
   } = useGame();
   const initialArray: any = [];
   let aggArray: Array<number> = [];
@@ -68,15 +73,10 @@ export const GameBoard = () => {
     setMaxClicks(0);
   }, []);
 
-  // console.log(boardArray);
-  // console.log(boardArray.find((item) => item.number === 14));
-  // useEffect(() => {
-  //   if()
-  // },[selectedNumber])
   const checkAbsent = () => {
     let counter = 0;
     boardArray.forEach((array) => {
-      if (array.filter((item) => item.number === 60).length) {
+      if (array.filter((item) => item.number === selectedNumber).length) {
         counter = counter + 1;
       }
     });
@@ -87,21 +87,41 @@ export const GameBoard = () => {
     if (selectedNumber && !checkAbsent()) {
       setAbsentItem(true);
     }
+    if (maxClicks < 4) {
+      setDisplayMessage(false);
+    }
   }, [selectedNumber]);
 
+  useEffect(() => {
+    if (maxClicks === 4) {
+      setDisplayMessage(true);
+    }
+  }, [maxClicks]);
+
   return (
-    <Flex flexDirection="column">
-      {displayWin && <Winner user={user} />}
-      <GameBoardWrapper>
-        {boardArray.map((column: any, index: number) => (
-          <BoardColumn
-            column={column}
-            key={`col-${index}`}
-            id={index}
-            boardArray={boardArray}
+    <>
+      <Flex flexDirection="column">
+        {displayWin && <Winner user={user} />}
+        {absentItem && (
+          <BadLuck text="Sorry, the selected value doesn't exist on the board" />
+        )}
+        {displayMessage && (
+          <BadLuck
+            text="You reached maximum of 4 selected items. In order to select new one
+          first unclick one of selected items."
           />
-        ))}
-      </GameBoardWrapper>
-    </Flex>
+        )}
+        <GameBoardWrapper>
+          {boardArray.map((column: any, index: number) => (
+            <BoardColumn
+              column={column}
+              key={`col-${index}`}
+              id={index}
+              boardArray={boardArray}
+            />
+          ))}
+        </GameBoardWrapper>
+      </Flex>
+    </>
   );
 };

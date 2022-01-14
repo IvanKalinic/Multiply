@@ -1,4 +1,5 @@
 import { Flex } from "@chakra-ui/react";
+import Pawns from "../../components/Pawns";
 import { GameBoard, QuestionSection } from "../../components/sharedcomponents";
 import { useGame } from "../../context/GameContext";
 import { MenuWrapper } from "../../styles";
@@ -14,6 +15,7 @@ const GameStart = () => {
           <GameBoard />
         </MenuWrapper>
       )}
+      <Pawns />
     </Flex>
   );
 };

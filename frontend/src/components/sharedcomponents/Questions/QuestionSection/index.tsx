@@ -19,6 +19,7 @@ export const QuestionSection = () => {
             height: "400px",
             marginRight: "4rem",
             flexDirection: "column",
+            marginTop: "-10px",
           }}
         >
           <Details>

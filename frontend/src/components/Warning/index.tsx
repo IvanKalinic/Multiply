@@ -14,7 +14,7 @@ const Warning = ({ text }: { text: string }) => {
       alignItems="center"
       flexWrap="wrap"
     >
-      <Text fontSize="2xl" color="red">
+      <Text fontSize="2xl" color="#cf084a">
         <strong>{text}</strong>
       </Text>
     </Flex>

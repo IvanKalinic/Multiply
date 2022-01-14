@@ -23,3 +23,12 @@ export const Wrapper = styled.section`
     margin-bottom: 1.5rem;
   }
 `;
+
+export const PawnWrapper = styled.div`
+  height: 3rem;
+  width: 3rem;
+  background-color: #cf084a;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+`;

@@ -30,7 +30,8 @@ const QuestionItem = ({
     item: false,
   });
 
-  const { setSelectedNumber, selectedNumber, maxClicks } = useGame();
+  const { setSelectedNumber, selectedNumber, maxClicks, absentItem } =
+    useGame();
 
   useEffect(() => {
     if (question)
@@ -51,6 +52,10 @@ const QuestionItem = ({
   }, [selectedOption]);
 
   const handleNext = () => {
+    if (absentItem) {
+      setCurrentQuestion((curr) => curr + 1);
+      return;
+    }
     if (selectedNumber && maxClicks < 4) {
       setWarning((prevValue) => ({ ...prevValue, item: true }));
       return;
