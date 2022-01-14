@@ -54,9 +54,11 @@ const Login = () => {
               registerName={id}
               type={id}
               placeholder={placeholder}
+              _placeholder={{ color: "gray.600" }}
               id={id}
               register={register}
               errors={errors}
+              color="black"
             />
           ))}
         </Box>

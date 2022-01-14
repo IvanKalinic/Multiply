@@ -49,6 +49,7 @@ const Register = () => {
             <TextInput
               type={id}
               placeholder={placeholder}
+              _placeholder={{ color: "gray.600" }}
               id={id}
               title={placeholder}
               registerName={id}
@@ -59,6 +60,7 @@ const Register = () => {
           <TextInput
             type="password"
             placeholder="Repeat Password"
+            _placeholder={{ color: "gray.600" }}
             title="Repeat Password"
             id="passwordAgain"
             registerName="passwordAgain"

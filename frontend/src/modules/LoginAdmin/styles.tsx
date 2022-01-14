@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const LoginWrapper = styled.div`
   margin-top: 20px;
-  width: 80%;
+  width: 70%;
   height: calc(100vh - 150px);
   -webkit-box-shadow: 0px 5px 33px -21px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 5px 33px -21px rgba(66, 68, 90, 1);
@@ -34,16 +34,16 @@ export const SubmitButton = styled.button`
   }`;
 
 export const LineDivider = styled.div`
-  width: 0.5px;
+  width: 1px;
   height: 70%;
-  background-color: lightgray;
+  background-color: black;
   position: absolute;
   top: 4rem;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
-  z-index: -1;
+  z-index: 0;
 `;
 
 export const OrSign = styled.div`
@@ -53,4 +53,5 @@ export const OrSign = styled.div`
   color: gray;
   background-color: white;
   font-weight: bold;
+  z-index: 1;
 `;

@@ -4,7 +4,7 @@ import { useGame } from "../../../../context/GameContext";
 import BoardColumn from "../BoardColumn";
 import { GameBoardWrapper } from "../../styles";
 import Winner from "../../../Winner";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import {
   multiplyArray as currentArray,
   additionArray,
@@ -12,8 +12,6 @@ import {
   divisionArray,
 } from "../../../../consts/gameCategory";
 import BadLuck from "../../../BadLuck";
-import Warning from "../../../Warning";
-import Explanation from "../../../Explanation";
 
 export const GameBoard = () => {
   const [boardArray, setBoardArray] = useState<any>([]);
@@ -71,7 +69,7 @@ export const GameBoard = () => {
     setBoardArray(initialArray);
     setDisplayWin(false);
     setMaxClicks(0);
-  }, []);
+  }, [user]);
 
   const checkAbsent = () => {
     let counter = 0;

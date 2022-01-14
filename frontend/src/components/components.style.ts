@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const NavbarWrapper = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #326da8;
   color: #fff;
   display: flex;
   align-items: center;

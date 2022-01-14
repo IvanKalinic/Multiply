@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useUser } from "../../context/UserContext";
 import { useAdmin } from "../../context/AdminContext";
 import { NavbarWrapper } from "../components.style";
@@ -29,7 +29,11 @@ const Navbar = ({ user, admin }: Props) => {
       <span
         style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "20px" }}
       >
-        <Link to="/">Multiply</Link>
+        {(user || admin) && (
+          <Text fontSize="2xl">
+            <Link to="/">Multiply</Link>
+          </Text>
+        )}
       </span>
       {(!!user || !!admin) && (
         <Flex justifyContent="center">
