@@ -31,7 +31,7 @@ const AdminAppPage = () => {
       await axios
         .get(`${process.env.REACT_APP_SERVER_BASE_URL}/users`)
         .then((data) => {
-          const userValues = data.data.map((user) => {
+          const userValues = data.data.map((user: any) => {
             return { category: user.username, value: user._id };
           });
           setUsers(userValues);
@@ -39,8 +39,6 @@ const AdminAppPage = () => {
     };
     fetchUsers();
   }, [admin]);
-
-  console.log(selectedOptions);
 
   const generateGame = async () => {
     await fetchQuestions(

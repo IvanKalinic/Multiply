@@ -19,7 +19,7 @@ const Pawns = () => {
           Available:
         </Text>
       )}
-      {pawnsArray.map((item) => item > maxClicks && <PawnWrapper />)}
+      {pawnsArray.map((item) => item > maxClicks && <PawnWrapper key={item} />)}
     </Flex>
   );
 };

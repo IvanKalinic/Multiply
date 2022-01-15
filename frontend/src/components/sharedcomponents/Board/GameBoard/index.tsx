@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useUser } from "../../../../context/UserContext";
 import { useGame } from "../../../../context/GameContext";
 import BoardColumn from "../BoardColumn";
@@ -12,10 +12,12 @@ import {
   divisionArray,
 } from "../../../../consts/gameCategory";
 import BadLuck from "../../../BadLuck";
+import { GAMEBOARD_DIMENSION, MAX_PLAYER_CHOICES } from "../../../../consts";
 
 export const GameBoard = () => {
   const [boardArray, setBoardArray] = useState<any>([]);
   const [displayMessage, setDisplayMessage] = useState<boolean>(false);
+
   const { user } = useUser();
   const {
     questions,
@@ -27,10 +29,11 @@ export const GameBoard = () => {
     absentItem,
     maxClicks,
   } = useGame();
+
   const initialArray: any = [];
   let aggArray: Array<number> = [];
 
-  const chooseCategory = () => {
+  const chooseCategory = useCallback(() => {
     switch (questions[0]?.category) {
       case "Addition":
         return additionArray;
@@ -43,12 +46,12 @@ export const GameBoard = () => {
       default:
         return [];
     }
-  };
+  }, [questions]);
 
-  const randomValues = () => {
+  const randomValues = useCallback(() => {
     const currentArray = chooseCategory();
     const randomArray: Array<{ number: number; clicked: boolean }> = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
       let randomNumber: number =
         currentArray[Math.floor(Math.random() * currentArray.length)];
       if (aggArray.filter((item: number) => item === randomNumber).length < 3) {
@@ -59,11 +62,10 @@ export const GameBoard = () => {
       }
     }
     return randomArray;
-  };
-  console.log(aggArray);
+  }, [chooseCategory, aggArray]);
 
   useEffect(() => {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
       initialArray.push(randomValues());
     }
     setBoardArray(initialArray);
@@ -71,27 +73,27 @@ export const GameBoard = () => {
     setMaxClicks(0);
   }, [user]);
 
-  const checkAbsent = () => {
+  const checkAbsent = useCallback(() => {
     let counter = 0;
-    boardArray.forEach((array) => {
-      if (array.filter((item) => item.number === selectedNumber).length) {
+    boardArray.forEach((array: any) => {
+      if (array.filter((item: any) => item.number === selectedNumber).length) {
         counter = counter + 1;
       }
     });
     return counter;
-  };
+  }, [boardArray, selectedNumber]);
 
   useEffect(() => {
     if (selectedNumber && !checkAbsent()) {
       setAbsentItem(true);
     }
-    if (maxClicks < 4) {
+    if (maxClicks < MAX_PLAYER_CHOICES) {
       setDisplayMessage(false);
     }
   }, [selectedNumber]);
 
   useEffect(() => {
-    if (maxClicks === 4) {
+    if (maxClicks === MAX_PLAYER_CHOICES) {
       setDisplayMessage(true);
     }
   }, [maxClicks]);
@@ -99,7 +101,7 @@ export const GameBoard = () => {
   return (
     <>
       <Flex flexDirection="column">
-        {displayWin && <Winner user={user} />}
+        {displayWin && <Winner />}
         {absentItem && (
           <BadLuck text="Sorry, the selected value doesn't exist on the board" />
         )}

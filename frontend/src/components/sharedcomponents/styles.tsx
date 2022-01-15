@@ -12,7 +12,7 @@ export const GameBoardWrapper = styled.div`
 
 export const NumberWrapper = styled.div`
   cursor: pointer;
-  background-color: ${({ color }: { color: boolean }) =>
+  background-color: ${({ color }: { color: any }) =>
     color ? "#cf084a" : "#9dbef5"};
   display: flex;
   justify-content: center;
@@ -20,6 +20,11 @@ export const NumberWrapper = styled.div`
   height: 60px;
   width: 60px;
   margin: 2px 0 2px 0;
+  border-radius: 5px;
+
+  &:hover {
+    border: 2px solid #0069a6;
+  }
 `;
 
 export const Overlay = styled.div`

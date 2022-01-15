@@ -17,12 +17,12 @@ const OptionButton = ({
 }: Props) => {
   const { setSelectedNumber } = useGame();
 
-  const handleCheck = () => {
+  const handleCheck = useCallback(() => {
     setSelectedOption(value);
     if (value === correctAnswer) {
       setSelectedNumber(value);
     }
-  };
+  }, [value, correctAnswer]);
 
   const handleColor = useCallback(() => {
     if (selectedOption === value && selectedOption === correctAnswer) {

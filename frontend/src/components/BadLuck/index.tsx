@@ -6,7 +6,7 @@ import {
   Flex,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, memo } from "react";
 
 const BadLuck = ({ text }: { text: string }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -40,4 +40,4 @@ const BadLuck = ({ text }: { text: string }) => {
   );
 };
 
-export default BadLuck;
+export default memo(BadLuck);

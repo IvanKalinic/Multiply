@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { NumberWrapper } from "../../styles";
 import {
   vertical,
@@ -7,8 +7,7 @@ import {
   diagonalDown,
 } from "../../../../utils";
 import { useGame } from "../../../../context/GameContext";
-
-const MAX_PLAYER_CHOICES = 4;
+import { MAX_PLAYER_CHOICES } from "../../../../consts";
 
 interface Props {
   value: number;
@@ -27,9 +26,8 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
     setSelectedNumber,
   } = useGame();
 
-  const gameOver = () => {
+  const gameOver = useCallback(() => {
     //vertical
-
     if (vertical(boardArray)) return true;
 
     //horizontal
@@ -40,7 +38,7 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
 
     //diagonal down to the right
     if (diagonalDown(boardArray)) return true;
-  };
+  }, [boardArray]);
 
   const handleChange = () => {
     if (selectedNumber) {
@@ -57,12 +55,12 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
 
   return (
     <NumberWrapper
-      color={color}
+      color={color ? 1 : 0}
       onClick={handleChange}
       style={{
         backgroundColor: `${
           selectedNumber === value && !boardArray[index][id].clicked
-            ? "gray"
+            ? "#9ba4a8"
             : ""
         }`,
         pointerEvents: `${

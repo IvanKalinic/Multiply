@@ -26,7 +26,6 @@ const AddNewUser = () => {
   });
 
   const handleRegisterUser = async (userForm: AdminLoginForm) => {
-    console.log(userForm);
     try {
       await axios.post(`${baseUrl}/auth/registerUser`, {
         username: userForm.username,

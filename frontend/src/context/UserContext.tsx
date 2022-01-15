@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useMemo } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 type ContextType = {
@@ -33,9 +32,10 @@ export const UserProvider = ({ children }: Props) => {
   const [user, setUser] = useLocalStorage("user", null);
   const [numberOfClicks, setNumberOfClicks] = useState(0);
 
-  //const [clickedItems,setClickedItems] = useState([])
-
-  const value = { user, setUser, numberOfClicks, setNumberOfClicks };
+  const value = useMemo(
+    () => ({ user, setUser, numberOfClicks, setNumberOfClicks }),
+    [user, setUser, numberOfClicks, setNumberOfClicks]
+  );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -26,7 +26,6 @@ const Login = () => {
   });
 
   const handleLogin = async (adminForm: AdminLoginForm) => {
-    console.log(adminForm);
     try {
       const newAdmin = await axios.post(`${baseUrl}/auth/loginAdmin`, {
         username: adminForm.username,
@@ -50,12 +49,13 @@ const Login = () => {
         <Box ml="2" mr="2" mb="6">
           {requiredFields.map(({ placeholder, id }) => (
             <TextInput
+              key={`login-${id}`}
               title={placeholder}
               registerName={id}
               type={id}
               placeholder={placeholder}
               _placeholder={{ color: "gray.600" }}
-              id={id}
+              id={`login-${id}`}
               register={register}
               errors={errors}
               color="black"

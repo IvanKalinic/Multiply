@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useMemo } from "react";
 
 type ContextType = {
   displayWin: boolean;
@@ -46,18 +46,32 @@ export const GameProvider = ({ children }: Props) => {
   const [maxClicks, setMaxClicks] = useState<number>(0);
   const [absentItem, setAbsentItem] = useState<boolean>(false);
 
-  const value = {
-    displayWin,
-    setDisplayWin,
-    questions,
-    setQuestions,
-    selectedNumber,
-    setSelectedNumber,
-    maxClicks,
-    setMaxClicks,
-    absentItem,
-    setAbsentItem,
-  };
+  const value = useMemo(
+    () => ({
+      displayWin,
+      setDisplayWin,
+      questions,
+      setQuestions,
+      selectedNumber,
+      setSelectedNumber,
+      maxClicks,
+      setMaxClicks,
+      absentItem,
+      setAbsentItem,
+    }),
+    [
+      displayWin,
+      setDisplayWin,
+      questions,
+      setQuestions,
+      selectedNumber,
+      setSelectedNumber,
+      maxClicks,
+      setMaxClicks,
+      absentItem,
+      setAbsentItem,
+    ]
+  );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };

@@ -63,3 +63,6 @@ export const categories = [
     value: 4,
   },
 ];
+
+export const GAMEBOARD_DIMENSION = 8;
+export const MAX_PLAYER_CHOICES = 4;

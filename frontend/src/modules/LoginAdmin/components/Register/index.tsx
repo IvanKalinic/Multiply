@@ -24,7 +24,6 @@ const Register = () => {
   });
 
   const handleRegister = async (adminForm: AdminRegisterForm) => {
-    console.log(adminForm);
     try {
       await axios.post(`${baseUrl}/auth/register`, {
         username: adminForm.username,
@@ -47,10 +46,11 @@ const Register = () => {
         <Box ml="2" mr="2" mb="6">
           {requiredFields.map(({ placeholder, id }) => (
             <TextInput
+              key={`register-${id}`}
               type={id}
               placeholder={placeholder}
               _placeholder={{ color: "gray.600" }}
-              id={id}
+              id={`register-${id}`}
               title={placeholder}
               registerName={id}
               register={register}

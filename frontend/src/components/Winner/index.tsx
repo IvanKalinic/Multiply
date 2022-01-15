@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Winner = ({ user }: { user: any }) => {
+const Winner = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const navigate = useNavigate();
 
