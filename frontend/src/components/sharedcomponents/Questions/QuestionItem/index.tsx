@@ -11,6 +11,7 @@ interface Props {
   currentQuestion: number;
   setCurrentQuestion: React.Dispatch<SetStateAction<number>>;
   question: any;
+  length: number;
 }
 
 type WarningType = {
@@ -22,6 +23,7 @@ const QuestionItem = ({
   currentQuestion,
   setCurrentQuestion,
   question,
+  length,
 }: Props) => {
   const [options, setOptions] = useState<Array<number>>([]);
   const [selectedOption, setSelectedOption] = useState<number>(0);
@@ -53,7 +55,7 @@ const QuestionItem = ({
 
   const handleNext = () => {
     if (absentItem) {
-      setCurrentQuestion((curr) => curr + 1);
+      setCurrentQuestion(Math.round(Math.random() * length));
       return;
     }
     if (selectedNumber && maxClicks < 4) {
@@ -64,8 +66,10 @@ const QuestionItem = ({
       setWarning((prevValue) => ({ ...prevValue, question: true }));
       return;
     }
-    setCurrentQuestion((curr) => curr + 1);
+    setCurrentQuestion(Math.round(Math.random() * length));
   };
+
+  console.log(Math.round(Math.random() * length));
 
   return (
     <Box>

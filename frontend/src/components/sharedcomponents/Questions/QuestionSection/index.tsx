@@ -16,7 +16,7 @@ export const QuestionSection = () => {
           style={{
             marginLeft: "-30px",
             width: "520px",
-            height: "400px",
+            height: "420px",
             marginRight: "4rem",
             flexDirection: "column",
             marginTop: "-10px",
@@ -36,6 +36,7 @@ export const QuestionSection = () => {
             currentQuestion={currentQuestion}
             setCurrentQuestion={setCurrentQuestion}
             question={questions[currentQuestion]}
+            length={questions.length}
           />
         </MenuWrapper>
       )}

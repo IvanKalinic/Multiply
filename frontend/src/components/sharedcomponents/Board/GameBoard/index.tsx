@@ -6,10 +6,14 @@ import { GameBoardWrapper } from "../../styles";
 import Winner from "../../../Winner";
 import { Flex } from "@chakra-ui/react";
 import {
-  multiplyArray as currentArray,
-  additionArray,
+  easyAdditionArray,
+  mediumAdditionArray,
+  hardAdditionArray,
   substractionArray,
   divisionArray,
+  easyMultiplyArray,
+  mediumMultiplyArray,
+  hardMultiplyArray,
 } from "../../../../consts/gameCategory";
 import BadLuck from "../../../BadLuck";
 import { GAMEBOARD_DIMENSION, MAX_PLAYER_CHOICES } from "../../../../consts";
@@ -36,11 +40,17 @@ export const GameBoard = () => {
   const chooseCategory = useCallback(() => {
     switch (questions[0]?.category) {
       case "Addition":
-        return additionArray;
+        if (questions[0]?.difficulty === "Easy") return easyAdditionArray;
+        if (questions[0]?.difficulty === "Medium") return mediumAdditionArray;
+        if (questions[0]?.difficulty === "Hard") return hardAdditionArray;
+        else return easyAdditionArray;
       case "Substraction":
         return substractionArray;
       case "Multiplication":
-        return currentArray;
+        if (questions[0]?.difficulty === "Easy") return easyMultiplyArray;
+        if (questions[0]?.difficulty === "Medium") return mediumMultiplyArray;
+        if (questions[0]?.difficulty === "Hard") return hardMultiplyArray;
+        else return easyMultiplyArray;
       case "Division":
         return divisionArray;
       default:
