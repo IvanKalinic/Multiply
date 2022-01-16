@@ -14,12 +14,12 @@ export const QuestionSection = () => {
       {questions && (
         <MenuWrapper
           style={{
-            marginLeft: "-30px",
-            width: "520px",
-            height: "420px",
+            marginLeft: "-1.875rem",
+            width: "32.5rem",
+            height: "26.25rem",
             marginRight: "4rem",
             flexDirection: "column",
-            marginTop: "-10px",
+            marginTop: "-0.625rem",
           }}
         >
           <Details>

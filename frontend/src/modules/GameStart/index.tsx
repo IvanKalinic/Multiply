@@ -10,7 +10,7 @@ const GameStart = () => {
   return (
     <Flex justifyContent="center" alignItems="center">
       {questions && (
-        <MenuWrapper style={{ width: "1200px" }}>
+        <MenuWrapper style={{ width: "75rem" }}>
           <QuestionSection />
           <GameBoard />
         </MenuWrapper>

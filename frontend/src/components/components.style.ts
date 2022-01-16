@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const NavbarWrapper = styled.div`
   width: 100%;
-  height: 50px;
+  height: 3.2rem;
   color: #fff;
   display: flex;
   align-items: center;

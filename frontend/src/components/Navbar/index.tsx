@@ -27,7 +27,11 @@ const Navbar = ({ user, admin }: Props) => {
   return (
     <NavbarWrapper>
       <span
-        style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "20px" }}
+        style={{
+          fontSize: "1.25rem",
+          fontWeight: "bold",
+          marginLeft: "1.25rem",
+        }}
       >
         {(user || admin) && (
           <Text fontSize="2xl">
@@ -37,14 +41,14 @@ const Navbar = ({ user, admin }: Props) => {
       </span>
       {(!!user || !!admin) && (
         <Flex justifyContent="center">
-          <span style={{ fontSize: "20px", marginRight: "20px" }}>
+          <span style={{ fontSize: "1.25rem", marginRight: "1.25rem" }}>
             {user ? user?.data?.username : admin ? admin?.data?.username : null}
           </span>
           {user || admin ? (
             <span
               style={{
-                fontSize: "20px",
-                marginRight: "20px",
+                fontSize: "1.25rem",
+                marginRight: "1.25rem",
                 cursor: "pointer",
               }}
               onClick={logout}

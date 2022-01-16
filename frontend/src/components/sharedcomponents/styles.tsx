@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
 export const GameBoardWrapper = styled.div`
-  margin-top: 8px;
-  height: 500px;
-  width: 500px;
+  margin-top: 0.5rem;
+  height: 31.25rem;
+  width: 31.25rem;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  gap: 2px;
+  gap: 0.125rem;
 `;
 
 export const NumberWrapper = styled.div`
@@ -17,13 +17,13 @@ export const NumberWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
-  width: 60px;
-  margin: 2px 0 2px 0;
-  border-radius: 5px;
+  height: 3.75rem;
+  width: 3.75rem;
+  margin: 0.125rem 0 0.125rem 0;
+  border-radius: 0.3125rem;
 
   &:hover {
-    border: 2px solid #0069a6;
+    border: 0.125rem solid #0069a6;
   }
 `;
 
@@ -40,6 +40,6 @@ export const Overlay = styled.div`
 
 export const Details = styled.div`
   position: relative;
-  top: 50px;
-  left: -150px;
+  top: 3.125rem;
+  left: -9.375rem;
 `;

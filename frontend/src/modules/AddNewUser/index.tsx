@@ -43,7 +43,7 @@ const AddNewUser = () => {
         <Heading mt="6">Add new user</Heading>
         <form
           className="login-inputs"
-          style={{ marginTop: "40px", flex: 1 }}
+          style={{ marginTop: "2.5rem", flex: 1 }}
           onSubmit={handleSubmit(handleRegisterUser)}
         >
           <Flex flexDirection="column" alignItems="center">

@@ -46,7 +46,7 @@ const LoginUser = () => {
         <Heading mt="6">Login with your credentials</Heading>
         <form
           className="login-inputs"
-          style={{ marginTop: "40px", flex: 1 }}
+          style={{ marginTop: "2.5rem", flex: 1 }}
           onSubmit={handleSubmit(handleLogin)}
         >
           <Flex flexDirection="column" alignItems="center">

@@ -69,8 +69,6 @@ const QuestionItem = ({
     setCurrentQuestion(Math.round(Math.random() * length));
   };
 
-  console.log(Math.round(Math.random() * length));
-
   return (
     <Box>
       <Heading mb="10" mt="20">

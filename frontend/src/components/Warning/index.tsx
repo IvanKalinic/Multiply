@@ -5,10 +5,10 @@ const Warning = ({ text }: { text: string }) => {
     <Flex
       style={{
         position: "relative",
-        bottom: "-20px",
-        left: "100px",
-        maxWidth: "300px",
-        height: "60px",
+        bottom: "-1.25rem",
+        left: "6.25rem",
+        maxWidth: "18.75rem",
+        height: "3.75rem",
       }}
       justifyContent="center"
       alignItems="center"
