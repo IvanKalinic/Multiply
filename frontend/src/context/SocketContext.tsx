@@ -6,8 +6,10 @@ type ContextType = {
   setSocket: React.Dispatch<React.SetStateAction<any>>;
 };
 
+const defaultSocket = io(`${process.env.REACT_APP_SERVER_BASE_URL}`);
+
 const SocketContext = createContext<ContextType>({
-  socket: null,
+  socket: defaultSocket,
   setSocket: () => null,
 });
 
@@ -21,9 +23,7 @@ interface Props {
 }
 
 export const SocketProvider = ({ id, children }: Props) => {
-  const [socket, setSocket] = useState<any>(
-    io(`${process.env.REACT_APP_SERVER_BASE_URL}`)
-  );
+  const [socket, setSocket] = useState<any>(defaultSocket);
 
   useEffect(() => {
     setSocket(
@@ -34,8 +34,12 @@ export const SocketProvider = ({ id, children }: Props) => {
 
     return () => socket.close();
   }, [id]);
+  console.log(id);
+  console.log(socket);
+
+  const value = { socket, setSocket };
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
   );
 };

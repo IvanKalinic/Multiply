@@ -50,6 +50,7 @@ const AddNewUser = () => {
             <Box ml="2" mr="2" mb="6">
               {newUserField.map(({ placeholder, id }) => (
                 <TextInput
+                  key={id}
                   title={placeholder}
                   registerName={id}
                   type={id}

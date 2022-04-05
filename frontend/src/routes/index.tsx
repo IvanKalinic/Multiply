@@ -1,4 +1,4 @@
-import { lazy, Suspense, memo } from "react";
+import React, { lazy, Suspense, memo } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,7 +19,11 @@ const LoginAdmin = lazy(() => import("../modules/LoginAdmin"));
 const LoginUser = lazy(() => import("../modules/LoginUser"));
 const GameStart = lazy(() => import("../modules/GameStart"));
 
-const AppRoutes = () => {
+const AppRoutes = ({
+  setId,
+}: {
+  setId: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const { user } = useUser();
   const { admin } = useAdmin();
 
@@ -40,7 +44,13 @@ const AppRoutes = () => {
             />
             <Route
               path="/loginAdmin"
-              element={admin ? <Navigate to="/adminApp" /> : <LoginAdmin />}
+              element={
+                admin ? (
+                  <Navigate to="/adminApp" />
+                ) : (
+                  <LoginAdmin setId={setId} />
+                )
+              }
             />
             <Route path="*" element={<ErrorComponent />} />
           </Routes>

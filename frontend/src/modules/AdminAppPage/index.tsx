@@ -8,6 +8,7 @@ import { categories, difficulties } from "../../consts";
 import { useAdmin } from "../../context/AdminContext";
 import { fetchQuestions } from "../../apis";
 import { useGame } from "../../context/GameContext";
+import { useSocket } from "../../context/SocketContext";
 
 type SelectedOptions = {
   category: string;
@@ -23,6 +24,9 @@ const AdminAppPage = () => {
   const [users, setUsers] = useState<Array<{}>>([]);
   const [selectedOptions, setSelectedOptions] =
     useState<SelectedOptions>(startValue);
+
+  const { socket } = useSocket();
+  console.log(socket?.id);
 
   const navigate = useNavigate();
 

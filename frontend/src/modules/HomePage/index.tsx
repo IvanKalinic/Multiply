@@ -3,10 +3,14 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import { HomeWrapper } from "../modules.style";
 import { useAdmin } from "../../context/AdminContext";
 import { useUser } from "../../context/UserContext";
+import { useSocket } from "../../context/SocketContext";
 
 const HomePage = () => {
   const { user } = useUser();
   const { admin } = useAdmin();
+  const { socket } = useSocket();
+
+  console.log(socket?.id);
 
   return (
     <HomeWrapper>

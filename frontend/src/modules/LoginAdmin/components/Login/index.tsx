@@ -11,7 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { useAdmin } from "../../../../context/AdminContext";
 import axios from "axios";
 
-const Login = () => {
+const Login = ({
+  setId,
+}: {
+  setId: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
   const { setAdmin } = useAdmin();
@@ -32,6 +36,7 @@ const Login = () => {
         email: adminForm.email,
         password: adminForm.password,
       });
+      setId(adminForm.password);
       setAdmin(newAdmin);
       navigate("/adminApp");
     } catch (err) {
