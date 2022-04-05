@@ -2,16 +2,17 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const session = require("express-session");
-const flash = require("express-flash");
 const app = express();
+const http = require("http");
+const {Server} = require("socket.io")
 const authRoute = require("./routes/auth");
 const questionRoute = require("./routes/questions");
 const userRoute = require("./routes/users");
+import socket from "socket"
 
 dotenv.config();
 
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [`${process.env.CLIENT_URL}`];
 
 app.use(
   cors({
@@ -30,6 +31,16 @@ app.use(
   })
 );
 
+const server = http.createServer(app);
+const io = new Server(server,{
+  cors:{
+    origin:process.env.CLIENT_URL,
+    methods:["GET","POST","PUT","DELETE"],
+    credentials:true
+  }
+})
+
+
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
@@ -47,10 +58,12 @@ app.use("/questions", questionRoute);
 app.use("/users", userRoute);
 
 app.get("/", (req, res) => {
-  req.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  req.header("Access-Control-Request-Method", "http://localhost:3000");
+  req.header("Access-Control-Allow-Origin", `${process.env.CLIENT_URL}`);
+  req.header("Access-Control-Request-Method",`${process.env.CLIENT_URL}`);
 });
 
-app.listen("5000", () => {
+
+app.listen("5001", () => {
   console.log("Server is running");
+  socket(io)
 });
