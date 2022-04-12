@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 router.get("/", async (req, res) => {
   try {
@@ -18,4 +19,5 @@ router.get("/:class", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
 module.exports = router;

@@ -2,14 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const app = express();
 const http = require("http");
 const {Server} = require("socket.io")
 const authRoute = require("./routes/auth");
 const questionRoute = require("./routes/questions");
 const userRoute = require("./routes/users");
-import socket from "socket"
+const socket = require("./socket")
 
+const app = express();
 dotenv.config();
 
 const allowedOrigins = [`${process.env.CLIENT_URL}`];
@@ -34,12 +34,11 @@ app.use(
 const server = http.createServer(app);
 const io = new Server(server,{
   cors:{
-    origin:process.env.CLIENT_URL,
+    origin:`${process.env.CLIENT_URL}`,
     methods:["GET","POST","PUT","DELETE"],
     credentials:true
   }
 })
-
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -62,8 +61,7 @@ app.get("/", (req, res) => {
   req.header("Access-Control-Request-Method",`${process.env.CLIENT_URL}`);
 });
 
-
-app.listen("5001", () => {
+server.listen("5001", () => {
   console.log("Server is running");
-  socket(io)
+  socket({io})
 });

@@ -1,9 +1,8 @@
 const router = require("express").Router();
-const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const Admin = require("../models/Admin");
-const passport = require("passport");
 const logout = require("express-passport-logout");
+const bcrypt = require("bcrypt");
 
 router.post("/register", async (req, res) => {
   console.log(req.body);
@@ -29,7 +28,6 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/registerUser", async (req, res) => {
-  console.log(req.body);
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -52,11 +50,11 @@ router.post("/registerUser", async (req, res) => {
 });
 
 router.post("/loginAdmin", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  // res.header("Access-Control-Allow-Origin", "*");
+  // res.header(
+  //   "Access-Control-Allow-Headers",
+  //   "Origin, X-Requested-With, Content-Type, Accept"
+  // );
   try {
     const admin = await Admin.findOne({ email: req.body.email });
     !admin && res.status(404).send("Admin not found");
@@ -73,24 +71,25 @@ router.post("/loginAdmin", async (req, res) => {
   }
 });
 
-router.post("/loginUser", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+router.post("/userlogin", async (req, res) => {
+  // res.header("Access-Control-Allow-Origin", "*");
+  // res.header(
+  //   "Access-Control-Allow-Headers",
+  //   "Origin, X-Requested-With, Content-Type, Accept"
+  // );
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ username: req.body.username });
     !user && res.status(404).send("User not found");
 
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
-    !validPassword && res.status(400).send("Wrong password");
-
-    res.status(200).json(user);
+    !validPassword
+      ? res.status(400).send("Wrong password")
+      : res.status(200).json(user);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });

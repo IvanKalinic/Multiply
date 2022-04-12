@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+const nanoid = require("nanoid")
 
 const EVENTS = {
   connection: "connection",
@@ -16,7 +16,7 @@ const EVENTS = {
 
 const rooms = {};
 
-const socket = (io) => {
+const socket = ({io}) => {
   console.log(`Sockets enabled`);
 
   io.on(EVENTS.connection, (socket) => {
@@ -74,4 +74,4 @@ const socket = (io) => {
   });
 }
 
-export default socket;
+module.exports = socket
