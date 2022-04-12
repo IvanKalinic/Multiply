@@ -39,7 +39,7 @@ const LoginUser = ({
       });
       setId(userForm.password);
       setUser(newUser);
-      navigate("/");
+      navigate("/userApp");
     } catch (err) {
       console.log(err);
     }

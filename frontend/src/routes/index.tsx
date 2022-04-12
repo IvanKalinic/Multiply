@@ -62,4 +62,4 @@ const AppRoutes = ({
   );
 };
 
-export default memo(AppRoutes);
+export default AppRoutes;

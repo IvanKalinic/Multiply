@@ -6,7 +6,7 @@ import { SocketProvider } from "./context/SocketContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 
 const App = () => {
-  const [id, setId] = useLocalStorage("id", "random");
+  const [id, setId] = useLocalStorage("id", "");
 
   return (
     <ChakraProvider>

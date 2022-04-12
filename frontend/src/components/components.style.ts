@@ -7,6 +7,7 @@ export const NavbarWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  zindex: 10000;
 `;
 
 export const Wrapper = styled.section`

@@ -33,11 +33,9 @@ const Navbar = ({ user, admin }: Props) => {
           marginLeft: "1.25rem",
         }}
       >
-        {(user || admin) && (
-          <Text fontSize="2xl">
-            <Link to="/">Multiply</Link>
-          </Text>
-        )}
+        <Text fontSize="2xl">
+          <Link to="/">Multiply</Link>
+        </Text>
       </span>
       {(!!user || !!admin) && (
         <Flex justifyContent="center">
