@@ -19,10 +19,10 @@ const Login = ({
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
   const { setAdmin } = useAdmin();
+
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(adminLoginSchema),

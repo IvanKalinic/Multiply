@@ -12,7 +12,11 @@ import { adminLoginSchema } from "../../schemas/adminLoginSchema";
 import { AdminLoginForm } from "../../types";
 import axios from "axios";
 
-const LoginUser = () => {
+const LoginUser = ({
+  setId,
+}: {
+  setId: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
   const { setUser } = useUser();
@@ -20,7 +24,6 @@ const LoginUser = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(adminLoginSchema),
@@ -29,13 +32,14 @@ const LoginUser = () => {
 
   const handleLogin = async (userForm: AdminLoginForm) => {
     try {
-      const newUser = await axios.post(`${baseUrl}/auth/loginUser`, {
+      const newUser = await axios.post(`${baseUrl}/auth/userlogin`, {
         username: userForm.username,
         email: userForm.email,
         password: userForm.password,
       });
+      setId(userForm.password);
       setUser(newUser);
-      navigate("/userApp");
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -53,13 +57,13 @@ const LoginUser = () => {
             <Box ml="2" mr="2" mb="6">
               {requiredFields.map(({ placeholder, id }) => (
                 <TextInput
-                  key={id}
+                  key={`loginUser-${id}`}
                   title={placeholder}
                   registerName={id}
                   type={id}
                   placeholder={placeholder}
                   _placeholder={{ color: "gray.600" }}
-                  id={id}
+                  id={`loginUser-${id}`}
                   register={register}
                   errors={errors}
                 />

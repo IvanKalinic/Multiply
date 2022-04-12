@@ -34,6 +34,7 @@ export const SocketProvider = ({ id, children }: Props) => {
 
     return () => socket.close();
   }, [id]);
+
   console.log(id);
   console.log(socket);
 

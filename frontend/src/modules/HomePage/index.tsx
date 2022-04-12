@@ -20,12 +20,16 @@ const HomePage = () => {
             Who are you?
           </Text>
           <Flex mt="2">
-            <Button mr="4" w={300} h={50}>
-              <Link to="/loginUser">Student</Link>
-            </Button>
-            <Button w={300} h={50}>
-              <Link to="/loginAdmin">Teacher</Link>
-            </Button>
+            <Link to="/loginUser">
+              <Button mr="4" w={300} h={50} cursor="pointer">
+                Student
+              </Button>
+            </Link>
+            <Link to="/loginAdmin">
+              <Button w={300} h={50} cursor="pointer">
+                Teacher
+              </Button>
+            </Link>
           </Flex>
         </>
       )}

@@ -40,7 +40,9 @@ const AppRoutes = ({
             <Route path="/gameStart" element={<GameStart />} />
             <Route
               path="/loginUser"
-              element={user ? <Navigate to="/userApp" /> : <LoginUser />}
+              element={
+                user ? <Navigate to="/userApp" /> : <LoginUser setId={setId} />
+              }
             />
             <Route
               path="/loginAdmin"
