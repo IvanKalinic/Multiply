@@ -34,8 +34,8 @@ const AppRoutes = ({
         <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/adminApp" element={admin ? <AdminAppPage /> : null} />
-            <Route path="/userApp" element={user ? <UserAppPage /> : null} />
+            <Route path="/adminApp" element={<AdminAppPage />} />
+            <Route path="/userApp" element={<UserAppPage />} />
             <Route path="/addNewUser" element={<AddNewUser />} />
             <Route path="/gameStart" element={<GameStart />} />
             <Route
