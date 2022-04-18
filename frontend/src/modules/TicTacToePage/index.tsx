@@ -4,7 +4,6 @@ import { useSocket } from '../../context/SocketContext';
 import { TicTacToeBox } from '../../components';
 import { winningCombinations } from '../../consts/ticTacToe';
 
-
 export const TicTacToePage = () => {
   const [game, setGame] = useState(Array(9).fill(''));
   const [turnNumber, setTurnNumber] = useState(0);
@@ -15,13 +14,12 @@ export const TicTacToePage = () => {
   const [hasOpponent, setHasOpponent] = useState(false);
   const [share, setShare] = useState(false);
 
-  const {socket} = useSocket();
+  const { socket } = useSocket();
 
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const paramsRoom = params.get('room');
   const [room, setRoom] = useState(paramsRoom);
-
   const [turnData, setTurnData] = useState<boolean>(false);
 
   const sendTurn = (index:number) => {
@@ -64,21 +62,23 @@ export const TicTacToePage = () => {
 
     socket.on('opponent_joined', () => {
       setHasOpponent(true);
-      setShare(false);
+      setShare(false);    
     });
   }, []);
 
   useEffect(() => {
+    console.log(turnData)
     if (turnData) {
-      const data = JSON.parse(turnData);
+      const data = parseInt(turnData.toString());
+      console.log(data) 
       let g = [...game];
-      if (!g[data.index] && !winner) {
-        g[data.index] = data.value;
+      if (!g[data] && !winner) {    
+        g[data] = data;
         setGame(g);
         setTurnNumber(turnNumber + 1);
         setTurnData(false);
         setMyTurn(!myTurn);
-        setPlayer(data.value);
+        setPlayer(data.toString());
       }
     }
   }, [turnData, game, turnNumber, winner, myTurn]);
@@ -102,7 +102,7 @@ export const TicTacToePage = () => {
   return (
     <div className="container">
       Room: {room}
-      <button className="btn" onClick={() => setShare(!share)}>
+      <button className="btn" onClick={() => setShare(share => !share)}>
         Share
       </button>
       {share ? (

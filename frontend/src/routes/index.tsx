@@ -10,6 +10,7 @@ import Navbar from "../components/Navbar";
 import { useUser } from "../context/UserContext";
 import { useAdmin } from "../context/AdminContext";
 import { HomePage } from "../modules";
+import { TicTacToePage } from "../modules/TicTacToePage";
 
 const ErrorComponent = lazy(() => import("../components/Error"));
 const AdminAppPage = lazy(() => import("../modules/AdminAppPage"));
@@ -31,6 +32,7 @@ const AppRoutes = ({
     <Router>
       <div style={{ width: "100%" }}>
         <Navbar user={user} admin={admin} />
+        <TicTacToePage/>
         <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
