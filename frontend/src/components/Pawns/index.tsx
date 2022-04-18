@@ -1,5 +1,4 @@
 import { Flex, Text } from "@chakra-ui/react";
-import React from "react";
 import { useGame } from "../../context/GameContext";
 import { PawnWrapper } from "../components.style";
 

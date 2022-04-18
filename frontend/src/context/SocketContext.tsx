@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import io from "socket.io-client";
 
 type ContextType = {
@@ -38,7 +38,7 @@ export const SocketProvider = ({ id, children }: Props) => {
   console.log(id);
   console.log(socket);
 
-  const value = { socket, setSocket };
+  const value = useMemo(() => ({ socket, setSocket }),[socket,setSocket]);
 
   return (
     <SocketContext.Provider value={value}>{children}</SocketContext.Provider>

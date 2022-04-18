@@ -8,7 +8,6 @@ export const newUserField = [
   { placeholder: "Username", id: "username" },
   { placeholder: "Email", id: "email" },
   { placeholder: "Password", id: "password" },
-  // { placeholder: "Class", id: "class" },
 ];
 
 export const listOfClasses = [
