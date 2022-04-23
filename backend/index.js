@@ -53,10 +53,10 @@ mongoose
 
 app.use(express.json());
 
+app.use("/game", gameRoute);
 app.use("/auth", authRoute);
 app.use("/questions", questionRoute);
 app.use("/users", userRoute);
-app.use("/game", gameRoute);
 
 app.get("/", (req, res) => {
   req.header("Access-Control-Allow-Origin", `${process.env.CLIENT_URL}`);
