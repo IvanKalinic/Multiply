@@ -10,7 +10,6 @@ import Navbar from "../components/Navbar";
 import { useUser } from "../context/UserContext";
 import { useAdmin } from "../context/AdminContext";
 import { HomePage } from "../modules";
-import { TicTacToePage } from "../modules/TicTacToePage";
 
 const ErrorComponent = lazy(() => import("../components/Error"));
 const AdminAppPage = lazy(() => import("../modules/AdminAppPage"));
@@ -19,6 +18,11 @@ const AddNewUser = lazy(() => import("../modules/AddNewUser"));
 const LoginAdmin = lazy(() => import("../modules/LoginAdmin"));
 const LoginUser = lazy(() => import("../modules/LoginUser"));
 const GameStart = lazy(() => import("../modules/GameStart"));
+const TicTacToePage = lazy(() => import("../modules/TicTacToePage"));
+const MultiplySetup = lazy(() => import("../modules/GamesSetup/MultiplySetup"));
+const TicTacToeSetup = lazy(
+  () => import("../modules/GamesSetup/TicTacToeSetup")
+);
 
 const AppRoutes = ({
   setId,
@@ -32,14 +36,16 @@ const AppRoutes = ({
     <Router>
       <div style={{ width: "100%" }}>
         <Navbar user={user} admin={admin} />
-        <TicTacToePage/>
         <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/adminApp" element={<AdminAppPage />} />
             <Route path="/userApp" element={<UserAppPage />} />
+            <Route path="/multiplySetup" element={<MultiplySetup />} />
+            <Route path="/ticTacToeSetup" element={<TicTacToeSetup />} />
             <Route path="/addNewUser" element={<AddNewUser />} />
-            <Route path="/gameStart" element={<GameStart />} />
+            <Route path="/ticTacToe" element={<TicTacToePage />} />
+            <Route path="/mulitplyGameStart" element={<GameStart />} />
             <Route
               path="/loginUser"
               element={

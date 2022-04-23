@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import io from "socket.io-client";
+import { useUser } from "./UserContext";
 
 type ContextType = {
   socket: any;
@@ -24,6 +31,7 @@ interface Props {
 
 export const SocketProvider = ({ id, children }: Props) => {
   const [socket, setSocket] = useState<any>(defaultSocket);
+  const { user } = useUser();
 
   useEffect(() => {
     setSocket(
@@ -33,12 +41,13 @@ export const SocketProvider = ({ id, children }: Props) => {
     );
 
     return () => socket.close();
-  }, [id]);
+  }, [id, user]);
 
   console.log(id);
   console.log(socket);
+  console.log(user);
 
-  const value = useMemo(() => ({ socket, setSocket }),[socket,setSocket]);
+  const value = useMemo(() => ({ socket, setSocket }), [socket, setSocket]);
 
   return (
     <SocketContext.Provider value={value}>{children}</SocketContext.Provider>

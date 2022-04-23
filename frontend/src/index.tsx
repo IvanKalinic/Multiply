@@ -5,13 +5,16 @@ import App from "./App";
 import { AdminProvider } from "./context/AdminContext";
 import { UserProvider } from "./context/UserContext";
 import { GameProvider } from "./context/GameContext";
+import { TicTacToeProvider } from "./context/TicTacToeContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <AdminProvider>
       <UserProvider>
         <GameProvider>
-          <App />
+          <TicTacToeProvider>
+            <App />
+          </TicTacToeProvider>
         </GameProvider>
       </UserProvider>
     </AdminProvider>

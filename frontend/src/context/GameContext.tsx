@@ -30,7 +30,7 @@ export const useGame = () => {
   const gameContext = useContext(GameContext);
 
   if (gameContext === undefined) {
-    throw new Error("useAuth must be inside of its provider");
+    throw new Error("useGame must be inside of its provider");
   }
   return gameContext;
 };

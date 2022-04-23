@@ -67,3 +67,9 @@ export const diagonalDown = (boardArray: any) => {
 export const handleShuffle = (options: any) => {
   return options.sort(() => Math.random() - 0.5);
 };
+
+export const randomRoomName = () => {
+  return Array.from(Array(8), () =>
+    Math.floor(Math.random() * 36).toString(36)
+  ).join("");
+};
