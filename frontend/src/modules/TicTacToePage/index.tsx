@@ -45,6 +45,15 @@ const TicTacToePage = () => {
   };
 
   useEffect(() => {
+    const fetchUser = (async () => {
+      await axios.get(`${baseUrl}/game/`).then((res) => {
+        console.log(res);
+        setRoom(res.data.room);
+      });
+    })();
+  }, []);
+
+  useEffect(() => {
     winningCombinations.forEach((c) => {
       if (
         game[c[0]] === game[c[1]] &&
@@ -107,15 +116,6 @@ const TicTacToePage = () => {
   }, [room]);
 
   console.log(room);
-
-  useEffect(() => {
-    const fetchUser = (async () => {
-      await axios.get(`${baseUrl}/game/`).then((res) => {
-        console.log(res);
-        setRoom(res.data.room);
-      });
-    })();
-  }, []);
 
   return (
     <TicTacToeContainer>
