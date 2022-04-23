@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const http = require("http");
-const {Server} = require("socket.io")
-const authRoute = require("./routes/auth");
+const { Server } = require("socket.io");
 const questionRoute = require("./routes/questions");
+const gameRoute = require("./routes/game");
+const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
-const socket = require("./socket")
+const socket = require("./socket");
 
 const app = express();
 dotenv.config();
@@ -32,13 +33,13 @@ app.use(
 );
 
 const server = http.createServer(app);
-const io = new Server(server,{
-  cors:{
-    origin:`${process.env.CLIENT_URL}`,
-    methods:["GET","POST","PUT","DELETE"],
-    credentials:true
-  }
-})
+const io = new Server(server, {
+  cors: {
+    origin: `${process.env.CLIENT_URL}`,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  },
+});
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -55,13 +56,14 @@ app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/questions", questionRoute);
 app.use("/users", userRoute);
+app.use("/game", gameRoute);
 
 app.get("/", (req, res) => {
   req.header("Access-Control-Allow-Origin", `${process.env.CLIENT_URL}`);
-  req.header("Access-Control-Request-Method",`${process.env.CLIENT_URL}`);
+  req.header("Access-Control-Request-Method", `${process.env.CLIENT_URL}`);
 });
 
 server.listen("5001", () => {
   console.log("Server is running");
-  socket({io})
+  socket({ io });
 });
