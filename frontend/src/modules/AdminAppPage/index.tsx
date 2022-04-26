@@ -1,13 +1,10 @@
+import { Button, Flex, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { Flex, Button, Text } from "@chakra-ui/react";
-import { MenuWrapper } from "../../styles";
 import { useAdmin } from "../../context/AdminContext";
-import { useSocket } from "../../context/SocketContext";
+import { MenuWrapper } from "../../styles";
 
 const AdminAppPage = () => {
   const { admin } = useAdmin();
-  const { socket } = useSocket();
-  console.log(socket?.id);
 
   return (
     <Flex justifyContent="center">

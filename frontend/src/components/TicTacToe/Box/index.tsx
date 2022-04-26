@@ -6,7 +6,6 @@ interface Props {
 }
 
 export const Box = ({ value, onClick, color }: Props) => {
-  console.log(color);
   return (
     <TicTacToeBox onClick={onClick} color={color}>
       {value}

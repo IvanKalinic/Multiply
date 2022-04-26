@@ -41,8 +41,6 @@ export const TicTacToeProvider = ({ children }: Props) => {
     [opponents, setOpponents, room, setRoom]
   );
 
-  console.log(opponents);
-
   return (
     <TicTacToeContext.Provider value={value}>
       {children}
