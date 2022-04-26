@@ -1,13 +1,17 @@
 import styled from "styled-components";
-
 interface Props {
-  index: number;
-  turn: (index: number) => void;
   value: number;
+  onClick: () => void;
+  color?: boolean;
 }
 
-export const Box = ({ index, turn, value }: Props) => {
-  return <TicTacToeBox onClick={() => turn(index)}>{value}</TicTacToeBox>;
+export const Box = ({ value, onClick, color }: Props) => {
+  console.log(color);
+  return (
+    <TicTacToeBox onClick={onClick} color={color}>
+      {value}
+    </TicTacToeBox>
+  );
 };
 
 export const TicTacToeBox = styled.div`
@@ -18,4 +22,6 @@ export const TicTacToeBox = styled.div`
   line-height: 4.5rem;
   font-size: 3rem;
   font-weight: bold;
+  cursor: pointer;
+  color: ${({ color }: { color: boolean }) => (color ? "red" : "black")};
 `;

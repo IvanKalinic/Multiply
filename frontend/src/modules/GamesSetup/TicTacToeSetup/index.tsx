@@ -17,7 +17,7 @@ type SelectedOpponents = {
 const startValue = { opponents: ["", ""], room: "" };
 
 const TicTacToeSetup = () => {
-  const { setOpponents, setRoom, room } = useTicTacToe();
+  const { setOpponents } = useTicTacToe();
   const { admin } = useAdmin();
   const { socket } = useSocket();
   const navigate = useNavigate();

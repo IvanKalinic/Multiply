@@ -1,3 +1,3 @@
-import {TicTacToeBox} from "./TicTacToe"
+import { TicTacToeBox } from "./TicTacToe";
 
-export {TicTacToeBox}
+export { TicTacToeBox };
