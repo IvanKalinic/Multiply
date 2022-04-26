@@ -22,5 +22,5 @@ export const TicTacToeBox = styled.div`
   font-size: 3rem;
   font-weight: bold;
   cursor: pointer;
-  color: ${({ color }: { color: boolean }) => (color ? "red" : "black")};
+  color: ${({ color }: { color: any }) => (color ? "red" : "black")};
 `;
