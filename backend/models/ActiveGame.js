@@ -13,8 +13,7 @@ const ActiveGameSchema = new mongoose.Schema(
       default: 1,
     },
     room: {
-      name: String,
-      required: false,
+      type: String,
     },
   },
   { timestamps: true }

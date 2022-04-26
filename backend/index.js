@@ -65,5 +65,5 @@ app.get("/", (req, res) => {
 
 server.listen("5001", () => {
   console.log("Server is running");
-  socket({ io });
+  socket(io);
 });

@@ -4,7 +4,7 @@ const ActiveGame = require("../models/ActiveGame");
 router.post("/save", async (req, res) => {
   try {
     const newActiveGame = new ActiveGame({
-      opponents: reg.body.opponents,
+      opponents: req.body.opponents,
       type: req.body.type,
       room: req.body.room,
     });
@@ -12,6 +12,7 @@ router.post("/save", async (req, res) => {
     const activeGame = await newActiveGame.save();
     res.status(200).json(activeGame);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -26,5 +27,4 @@ router.get("/", async (req, res) => {
 });
 
 // route for deleting active game after it is finished
-
 module.exports = router;
