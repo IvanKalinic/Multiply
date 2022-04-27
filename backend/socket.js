@@ -23,7 +23,7 @@ const socket = (io) => {
 
     socket.on("reqRestart", (room) => {
       // const room = JSON.parse(data).room;
-      socket.emit("restart");
+      socket.broadcast.emit("restart");
     });
   });
 };
