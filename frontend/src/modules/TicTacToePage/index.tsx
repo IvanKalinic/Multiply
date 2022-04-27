@@ -1,4 +1,4 @@
-import { Grid } from "@chakra-ui/react";
+import { Button, Flex, Grid } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { TicTacToeBox } from "../../components";
@@ -36,6 +36,8 @@ const TicTacToePage = () => {
   };
 
   const sendRestart = () => {
+    restart()
+    setMyTurn(true)
     socket.emit("reqRestart", room);
   };
 
@@ -44,6 +46,7 @@ const TicTacToePage = () => {
     setWinner(false);
     setTurnNumber(0);
     setMyTurn(false);
+    setColorIndexes([])
   };
 
   useEffect(() => {
@@ -101,7 +104,7 @@ const TicTacToePage = () => {
         socket.emit("join", room);
         setMyTurn(false);
       }
-    }
+    } 
   }, [room, opponents, user]);
 
   return (
@@ -112,11 +115,11 @@ const TicTacToePage = () => {
       Turn: {myTurn ? "You" : "Opponent"}
       <br />
       {hasOpponent || xo === "O" ? "" : "Waiting for opponent..."}
-      <p style={{ marginBottom: "2rem" }}>
+      <Flex mb="2rem" flexDirection="column" alignItems="center">
         {winner || turnNumber === 9 ? (
-          <button className="btn" onClick={sendRestart}>
+          <Button onClick={sendRestart} mr="1rem" w="5rem">
             Restart
-          </button>
+          </Button>
         ) : null}
         {winner ? (
           <span>We have a winner: {player === xo ? "You" : "Opponent"}</span>
@@ -125,7 +128,7 @@ const TicTacToePage = () => {
         ) : (
           <br />
         )}
-      </p>
+      </Flex>
       <Grid templateColumns="repeat(3, 1fr)" gap={0}>
         {game.map((value, index) => (
           <TicTacToeBox
