@@ -10,10 +10,12 @@ import { defaultUserValues } from "./interface";
 import { adminLoginSchema } from "../../schemas/adminLoginSchema";
 import { AdminLoginForm } from "../../types";
 import axios from "axios";
+import { useAxios } from "../../context/AxiosContext";
 
 const AddNewUser = () => {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
+  const axios = useAxios();
 
   const {
     register,
@@ -27,7 +29,7 @@ const AddNewUser = () => {
 
   const handleRegisterUser = async (userForm: AdminLoginForm) => {
     try {
-      await axios.post(`${baseUrl}/auth/registerUser`, {
+      await axios.post(`/auth/registerUser`, {
         username: userForm.username,
         email: userForm.email,
         password: userForm.password,

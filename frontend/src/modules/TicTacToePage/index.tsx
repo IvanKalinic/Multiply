@@ -1,8 +1,10 @@
 import { Button, Flex, Grid } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { saveWinner } from "../../apis";
 import { TicTacToeBox } from "../../components";
 import { winningCombinations } from "../../consts/ticTacToe";
+import { useAxios } from "../../context/AxiosContext";
 import { useSocket } from "../../context/SocketContext";
 import { useUser } from "../../context/UserContext";
 import { TicTacToeContainer } from "../modules.style";
@@ -20,8 +22,7 @@ const TicTacToePage = () => {
   const [colorIndexes, setColorIndexes] = useState<Array<any>>([]);
   const { socket } = useSocket();
   const { user } = useUser();
-
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const axios = useAxios();
 
   const sendTurn = (index: number) => {
     if (!game[index] && !winner && myTurn) {
@@ -36,8 +37,8 @@ const TicTacToePage = () => {
   };
 
   const sendRestart = () => {
-    restart()
-    setMyTurn(true)
+    restart();
+    setMyTurn(true);
     socket.emit("reqRestart", room);
   };
 
@@ -46,12 +47,12 @@ const TicTacToePage = () => {
     setWinner(false);
     setTurnNumber(0);
     setMyTurn(false);
-    setColorIndexes([])
+    setColorIndexes([]);
   };
 
   useEffect(() => {
     const fetchGameDetails = (async () => {
-      await axios.get(`${baseUrl}/game/`).then((res) => {
+      await axios.get(`/game`).then((res) => {
         setRoom(res?.data[0]?.room);
         setOpponents(res?.data[0]?.opponents);
       });
@@ -104,8 +105,18 @@ const TicTacToePage = () => {
         socket.emit("join", room);
         setMyTurn(false);
       }
-    } 
+    }
   }, [room, opponents, user]);
+
+  useEffect(() => {
+    if (winner && player === xo)
+      saveWinner({
+        opponents,
+        room,
+        type: 2,
+        winner: user.data.username,
+      });
+  }, [winner]);
 
   return (
     <TicTacToeContainer>

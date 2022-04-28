@@ -11,14 +11,15 @@ import { defaultUserValues } from "./interface";
 import { adminLoginSchema } from "../../schemas/adminLoginSchema";
 import { AdminLoginForm } from "../../types";
 import axios from "axios";
+import { useAxios } from "../../context/AxiosContext";
 
 const LoginUser = ({
   setId,
 }: {
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
+  const axios = useAxios();
   const { setUser } = useUser();
 
   const {
@@ -32,7 +33,7 @@ const LoginUser = ({
 
   const handleLogin = async (userForm: AdminLoginForm) => {
     try {
-      const newUser = await axios.post(`${baseUrl}/auth/userlogin`, {
+      const newUser = await axios.post(`/auth/userlogin`, {
         username: userForm.username,
         email: userForm.email,
         password: userForm.password,

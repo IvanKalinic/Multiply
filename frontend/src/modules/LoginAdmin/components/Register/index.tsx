@@ -9,10 +9,12 @@ import { SubmitButton } from "../../styles";
 import { AdminRegisterForm } from "../../../../types";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAxios } from "../../../../context/AxiosContext";
 
 const Register = () => {
   const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const axios = useAxios();
+
   const {
     register,
     handleSubmit,
@@ -25,7 +27,7 @@ const Register = () => {
 
   const handleRegister = async (adminForm: AdminRegisterForm) => {
     try {
-      await axios.post(`${baseUrl}/auth/register`, {
+      await axios.post(`/auth/register`, {
         username: adminForm.username,
         email: adminForm.email,
         password: adminForm.password,

@@ -2,8 +2,10 @@ import { Box, Button, Flex } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { deleteActiveGameIfThereIsAWinner } from "../../../apis";
 import SelectDropdown from "../../../components/Select";
 import { useAdmin } from "../../../context/AdminContext";
+import { useAxios } from "../../../context/AxiosContext";
 import { useSocket } from "../../../context/SocketContext";
 import { useTicTacToe } from "../../../context/TicTacToeContext";
 import { MenuWrapper } from "../../../styles";
@@ -21,32 +23,31 @@ const TicTacToeSetup = () => {
   const { admin } = useAdmin();
   const { socket } = useSocket();
   const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const axios = useAxios();
 
-  const [users, setUsers] = useState<Array<{}>>([]);
+  const [users, setUsers] = useState<Array<any>>([]);
   const [selectedOptions, setSelectedOptions] =
     useState<SelectedOpponents>(startValue);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUsers = (async () => {
       // set global axios instance
-      await axios
-        .get(`${process.env.REACT_APP_SERVER_BASE_URL}/users`)
-        .then((data) => {
-          const userValues = data.data.map((user: any) => {
-            return { category: user.username, value: user._id };
-          });
-          setUsers(userValues);
+      await axios.get(`/users`).then((data) => {
+        const userValues = data.data.map((user: any) => {
+          return { category: user.username, value: user._id };
         });
-    };
-    fetchUsers();
+        setUsers(userValues);
+      });
+    })();
+    //deleting active game before new one is setup
+    deleteActiveGameIfThereIsAWinner();
   }, [admin]);
 
   const generateGame = async () => {
     let room = randomRoomName();
     setOpponents(selectedOptions.opponents);
     try {
-      await axios.post(`${baseUrl}/game/save`, {
+      await axios.post(`/game/save`, {
         opponents: selectedOptions.opponents,
         type: 2,
         room,

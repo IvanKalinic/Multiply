@@ -10,14 +10,15 @@ import { AdminLoginForm } from "../../../../types";
 import { useNavigate } from "react-router-dom";
 import { useAdmin } from "../../../../context/AdminContext";
 import axios from "axios";
+import { useAxios } from "../../../../context/AxiosContext";
 
 const Login = ({
   setId,
 }: {
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
+  const axios = useAxios();
   const { setAdmin } = useAdmin();
 
   const {
@@ -31,7 +32,7 @@ const Login = ({
 
   const handleLogin = async (adminForm: AdminLoginForm) => {
     try {
-      const newAdmin = await axios.post(`${baseUrl}/auth/loginAdmin`, {
+      const newAdmin = await axios.post(`/auth/loginAdmin`, {
         username: adminForm.username,
         email: adminForm.email,
         password: adminForm.password,

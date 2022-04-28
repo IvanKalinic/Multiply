@@ -2,10 +2,16 @@ import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchQuestions } from "../../../apis";
+import {
+  deleteActiveGame,
+  deleteActiveGameIfThereIsAWinner,
+  fetchQuestions,
+  getActiveGame,
+} from "../../../apis";
 import SelectDropdown from "../../../components/Select";
 import { categories, difficulties } from "../../../consts";
 import { useAdmin } from "../../../context/AdminContext";
+import { useAxios } from "../../../context/AxiosContext";
 import { useGame } from "../../../context/GameContext";
 import { MenuWrapper } from "../../../styles";
 
@@ -21,10 +27,11 @@ const MultiplySetup = () => {
   const { setQuestions } = useGame();
   const { admin } = useAdmin();
   const navigate = useNavigate();
+  const axios = useAxios();
 
   const [selectedOptions, setSelectedOptions] =
     useState<SelectedOptions>(startValue);
-  const [users, setUsers] = useState<Array<{}>>([]);
+  const [users, setUsers] = useState<Array<any>>([]);
 
   const generateGame = async () => {
     await fetchQuestions(
@@ -35,18 +42,16 @@ const MultiplySetup = () => {
   };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      // set global axios instance
-      await axios
-        .get(`${process.env.REACT_APP_SERVER_BASE_URL}/users`)
-        .then((data) => {
-          const userValues = data.data.map((user: any) => {
-            return { category: user.username, value: user._id };
-          });
-          setUsers(userValues);
+    const fetchUsers = (async () => {
+      await axios.get(`/users`).then((data) => {
+        const userValues = data.data.map((user: any) => {
+          return { category: user.username, value: user._id };
         });
-    };
-    fetchUsers();
+        setUsers(userValues);
+      });
+    })();
+    //deleting active game before new one is setup
+    deleteActiveGameIfThereIsAWinner();
   }, [admin]);
 
   return (
