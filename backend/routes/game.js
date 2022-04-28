@@ -8,11 +8,9 @@ router.post("/save", async (req, res) => {
       type: req.body.type,
       room: req.body.room,
     });
-    console.log("anytjing");
     const activeGame = await newActiveGame.save();
     res.status(200).json(activeGame);
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -33,7 +31,6 @@ router.put("/winner", async (req, res) => {
     res.status(200).json("Active game was updated with winner");
   } catch (err) {
     res.status(500).json(err);
-    console.log(err);
   }
 });
 
