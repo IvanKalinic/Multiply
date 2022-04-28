@@ -15,6 +15,9 @@ const ActiveGameSchema = new mongoose.Schema(
     room: {
       type: String,
     },
+    winner: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

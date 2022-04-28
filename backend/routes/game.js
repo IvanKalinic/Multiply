@@ -26,5 +26,26 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.put("/winner", async (req, res) => {
+  try {
+    const activeGame = await ActiveGame.find({});
+    await activeGame[0].updateOne({ $set: req.body });
+    res.status(200).json("Active game was updated with winner");
+  } catch (err) {
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
+router.delete("/deleteActiveGame", async (req, res) => {
+  try {
+    const activeGame = await ActiveGame.find({});
+    await activeGame[0].deleteOne();
+    res.status(200).json("Active game was deleted.");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // route for deleting active game after it is finished
 module.exports = router;
