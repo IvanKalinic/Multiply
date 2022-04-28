@@ -30,3 +30,10 @@ export const deleteActiveGameIfThereIsAWinner = async () => {
     }
   });
 };
+
+export const saveActiveGame = async (payload: any) => {
+  await axios.post(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/save`,
+    payload
+  );
+};

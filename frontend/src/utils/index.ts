@@ -1,3 +1,5 @@
+import { saveActiveGame } from "../apis";
+
 export const vertical = (boardArray: any) => {
   let column;
   for (let i = 0; i < 8; i++) {
@@ -72,4 +74,23 @@ export const randomRoomName = () => {
   return Array.from(Array(8), () =>
     Math.floor(Math.random() * 36).toString(36)
   ).join("");
+};
+
+export const gameSetup = async (
+  opponents: Array<any>,
+  socket: any,
+  navigate: any
+) => {
+  let room = randomRoomName();
+  try {
+    saveActiveGame({
+      opponents,
+      type: 2,
+      room,
+    });
+    socket.emit("create", room);
+    navigate("/");
+  } catch (err) {
+    console.log(err);
+  }
 };

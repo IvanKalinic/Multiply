@@ -1,5 +1,4 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteActiveGameIfThereIsAWinner } from "../../../apis";
@@ -9,7 +8,7 @@ import { useAxios } from "../../../context/AxiosContext";
 import { useSocket } from "../../../context/SocketContext";
 import { useTicTacToe } from "../../../context/TicTacToeContext";
 import { MenuWrapper } from "../../../styles";
-import { randomRoomName } from "../../../utils";
+import { gameSetup } from "../../../utils";
 
 type SelectedOpponents = {
   opponents: Array<string>;
@@ -31,7 +30,6 @@ const TicTacToeSetup = () => {
 
   useEffect(() => {
     const fetchUsers = (async () => {
-      // set global axios instance
       await axios.get(`/users`).then((data) => {
         const userValues = data.data.map((user: any) => {
           return { category: user.username, value: user._id };
@@ -44,19 +42,8 @@ const TicTacToeSetup = () => {
   }, [admin]);
 
   const generateGame = async () => {
-    let room = randomRoomName();
     setOpponents(selectedOptions.opponents);
-    try {
-      await axios.post(`/game/save`, {
-        opponents: selectedOptions.opponents,
-        type: 2,
-        room,
-      });
-      socket.emit("create", room);
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-    }
+    gameSetup(selectedOptions.opponents, socket, navigate);
   };
 
   return (

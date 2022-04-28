@@ -1,5 +1,4 @@
 import { Button, Flex, Grid } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { saveWinner } from "../../apis";
 import { TicTacToeBox } from "../../components";

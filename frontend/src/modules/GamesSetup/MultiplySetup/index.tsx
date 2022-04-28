@@ -1,19 +1,18 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  deleteActiveGame,
   deleteActiveGameIfThereIsAWinner,
   fetchQuestions,
-  getActiveGame,
 } from "../../../apis";
 import SelectDropdown from "../../../components/Select";
 import { categories, difficulties } from "../../../consts";
 import { useAdmin } from "../../../context/AdminContext";
 import { useAxios } from "../../../context/AxiosContext";
 import { useGame } from "../../../context/GameContext";
+import { useSocket } from "../../../context/SocketContext";
 import { MenuWrapper } from "../../../styles";
+import { gameSetup } from "../../../utils";
 
 const startValue = { category: "", difficulty: "", opponents: ["", ""] };
 
@@ -26,6 +25,8 @@ type SelectedOptions = {
 const MultiplySetup = () => {
   const { setQuestions } = useGame();
   const { admin } = useAdmin();
+  const { socket } = useSocket();
+
   const navigate = useNavigate();
   const axios = useAxios();
 
@@ -38,7 +39,8 @@ const MultiplySetup = () => {
       selectedOptions.category,
       selectedOptions.difficulty
     ).then((data) => setQuestions(data.data));
-    navigate("/mulitplyGameStart");
+
+    gameSetup(selectedOptions.opponents, socket, navigate);
   };
 
   useEffect(() => {
