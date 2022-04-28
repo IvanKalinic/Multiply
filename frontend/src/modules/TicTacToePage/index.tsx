@@ -142,6 +142,7 @@ const TicTacToePage = () => {
       <Grid templateColumns="repeat(3, 1fr)" gap={0}>
         {game.map((value, index) => (
           <TicTacToeBox
+            key={value}
             onClick={() => sendTurn(index)}
             value={value}
             color={

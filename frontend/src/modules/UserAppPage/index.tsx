@@ -17,11 +17,15 @@ const UserAppPage = () => {
 
   useEffect(() => {
     getActiveGame().then((data) => setGameType(data.data[0].type));
-  }, [user]);
+  }, []);
 
   return (
     <Flex justifyContent="center" alignItems="center">
-      {isUserSelected() && gameType === 2 ? <GameStart /> : <TicTacToePage />}
+      {isUserSelected() && gameType === 2 ? (
+        <GameStart />
+      ) : gameType === 1 ? (
+        <TicTacToePage />
+      ) : null}
     </Flex>
   );
 };

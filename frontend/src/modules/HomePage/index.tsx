@@ -10,8 +10,6 @@ const HomePage = () => {
   const { admin } = useAdmin();
   const { socket } = useSocket();
 
-  console.log(socket?.id);
-
   return (
     <HomeWrapper>
       {!user && !admin && (
