@@ -10,14 +10,15 @@ const UserAppPage = () => {
   const { user } = useUser();
   const { opponents } = useTicTacToe();
   const [gameType, setGameType] = useState<number>(0);
-
+  // it nows accidentaly work as global context
+  // it should be replaced with global context storing opponents for all game types
   const isUserSelected = () => {
     return !!opponents.filter((opp) => opp === user.name);
   };
 
   useEffect(() => {
     getActiveGame().then((data) => setGameType(data.data[0].type));
-  }, []);
+  }, [user]);
 
   return (
     <Flex justifyContent="center" alignItems="center">

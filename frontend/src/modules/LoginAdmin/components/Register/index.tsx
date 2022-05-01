@@ -1,15 +1,14 @@
-import { Flex, Box } from "@chakra-ui/react";
-import { TextInput } from "../../../../components/customcomponents/TextInput";
-import { useForm } from "react-hook-form";
+import { Box, Flex } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { adminRegisterSchema } from "../../../../schemas/adminRegisterSchema";
-import { defaultAdminValues } from "../../interface";
-import { requiredFields } from "../../../../consts";
-import { SubmitButton } from "../../styles";
-import { AdminRegisterForm } from "../../../../types";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { TextInput } from "../../../../components/customcomponents/TextInput";
+import { requiredFields } from "../../../../consts";
 import { useAxios } from "../../../../context/AxiosContext";
+import { adminRegisterSchema } from "../../../../schemas/adminRegisterSchema";
+import { AdminRegisterForm } from "../../../../types";
+import { defaultAdminValues } from "../../interface";
+import { SubmitButton } from "../../styles";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -18,7 +17,6 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(adminRegisterSchema),

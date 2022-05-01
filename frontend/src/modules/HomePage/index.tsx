@@ -4,6 +4,7 @@ import { HomeWrapper } from "../modules.style";
 import { useAdmin } from "../../context/AdminContext";
 import { useUser } from "../../context/UserContext";
 import { useSocket } from "../../context/SocketContext";
+import { CircularBar } from "../../components/CircularProgressbar";
 
 const HomePage = () => {
   const { user } = useUser();
@@ -12,7 +13,7 @@ const HomePage = () => {
 
   return (
     <HomeWrapper>
-      {!user && !admin && (
+      {/* {!user && !admin && (
         <>
           <Text fontSize="4xl" color="white">
             Who are you?
@@ -30,7 +31,8 @@ const HomePage = () => {
             </Link>
           </Flex>
         </>
-      )}
+      )} */}
+      <CircularBar />
     </HomeWrapper>
   );
 };
