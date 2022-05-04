@@ -40,7 +40,14 @@ const MultiplySetup = () => {
       selectedOptions.difficulty
     ).then((data) => setQuestions(data.data));
 
-    gameSetup(selectedOptions.opponents, socket, navigate);
+    gameSetup(
+      selectedOptions.opponents,
+      socket,
+      navigate,
+      "multiply",
+      selectedOptions.category,
+      selectedOptions.difficulty
+    );
   };
 
   useEffect(() => {

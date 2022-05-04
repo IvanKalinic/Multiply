@@ -79,14 +79,19 @@ export const randomRoomName = () => {
 export const gameSetup = async (
   opponents: Array<any>,
   socket: any,
-  navigate: any
+  navigate: any,
+  game: string,
+  category?: string,
+  difficulty?: string
 ) => {
   let room = randomRoomName();
   try {
     saveActiveGame({
       opponents,
-      type: 2,
+      type: game === "multiply" ? 1 : 2,
       room,
+      category,
+      difficulty,
     });
     socket.emit("create", room);
     navigate("/");

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { checkWin } from "../../helpers";
 import { PopupButton, PopupContainer, PopupWrapper } from "../../styles";
 

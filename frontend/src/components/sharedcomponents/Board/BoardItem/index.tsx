@@ -8,7 +8,7 @@ import {
 } from "../../../../utils";
 import { useGame } from "../../../../context/GameContext";
 import { MAX_PLAYER_CHOICES } from "../../../../consts";
-
+import { useTurnBased } from "../../../../context/TurnBasedContext";
 interface Props {
   value: number;
   id: number;
@@ -25,6 +25,8 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
     setMaxClicks,
     setSelectedNumber,
   } = useGame();
+
+  const { setGame, myTurn } = useTurnBased();
 
   const gameOver = useCallback(() => {
     //vertical
@@ -47,9 +49,13 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
         : setMaxClicks((prev) => prev - 1);
 
       boardArray[index][id].clicked = !color;
+      //boardArray[index][id].color = myTurn ? "red" : "green"
       setColor(!color);
       if (maxClicks !== MAX_PLAYER_CHOICES) setSelectedNumber(0);
       if (gameOver()) setDisplayWin(true);
+      //save board array to global context - useGame
+      //determine color for each player
+      setGame(boardArray);
     }
   };
 

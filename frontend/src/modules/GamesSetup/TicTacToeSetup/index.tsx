@@ -5,8 +5,8 @@ import { deleteActiveGameIfThereIsAWinner } from "../../../apis";
 import SelectDropdown from "../../../components/Select";
 import { useAdmin } from "../../../context/AdminContext";
 import { useAxios } from "../../../context/AxiosContext";
+import { useOpponents } from "../../../context/OpponentsContext";
 import { useSocket } from "../../../context/SocketContext";
-import { useTicTacToe } from "../../../context/TicTacToeContext";
 import { MenuWrapper } from "../../../styles";
 import { gameSetup } from "../../../utils";
 
@@ -18,7 +18,7 @@ type SelectedOpponents = {
 const startValue = { opponents: ["", ""], room: "" };
 
 const TicTacToeSetup = () => {
-  const { setOpponents } = useTicTacToe();
+  const { setOpponents } = useOpponents();
   const { admin } = useAdmin();
   const { socket } = useSocket();
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ const TicTacToeSetup = () => {
 
   const generateGame = async () => {
     setOpponents(selectedOptions.opponents);
-    gameSetup(selectedOptions.opponents, socket, navigate);
+    gameSetup(selectedOptions.opponents, socket, navigate, "tictactoe");
   };
 
   return (

@@ -1,9 +1,5 @@
 import { NotificationContainer } from "../../styles";
 
-interface Props {
-  showNotification: boolean;
-}
-
 const Notification = () => {
   return (
     <NotificationContainer>

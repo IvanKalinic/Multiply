@@ -18,6 +18,14 @@ const ActiveGameSchema = new mongoose.Schema(
     winner: {
       type: String,
     },
+    category: {
+      type: String,
+      required: false,
+    },
+    difficulty: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );

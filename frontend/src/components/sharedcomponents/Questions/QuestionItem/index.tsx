@@ -6,6 +6,8 @@ import { useGame } from "../../../../context/GameContext";
 import ArrowRight from "../../../../assets/icons/arrow-right.png";
 import Warning from "../../../Warning";
 import { ArrowWrapper } from "./styles";
+import { useSocket } from "../../../../context/SocketContext";
+import { useTurnBased } from "../../../../context/TurnBasedContext";
 
 interface Props {
   currentQuestion: number;
@@ -34,6 +36,17 @@ const QuestionItem = ({
 
   const { setSelectedNumber, selectedNumber, maxClicks, absentItem } =
     useGame();
+  const { socket } = useSocket();
+  const {
+    myTurn,
+    setMyTurn,
+    turnNumber,
+    setTurnNumber,
+    playerType,
+    setPlayer,
+    room,
+    game,
+  } = useTurnBased();
 
   useEffect(() => {
     if (question)
@@ -68,6 +81,21 @@ const QuestionItem = ({
     }
     setCurrentQuestion(Math.round(Math.random() * length));
   };
+
+  useEffect(() => {
+    if (
+      myTurn &&
+      !!selectedOption &&
+      !!selectedNumber &&
+      !warning.item &&
+      !warning.question
+    ) {
+      setMyTurn((myTurn) => !myTurn);
+      setTurnNumber((turnNumber) => turnNumber + 1);
+      setPlayer(playerType);
+      socket.emit("reqTurn", { value: playerType, room, game });
+    }
+  }, [selectedNumber, warning]);
 
   return (
     <Box>

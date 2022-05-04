@@ -7,6 +7,7 @@ import { useAxios } from "../../context/AxiosContext";
 import { useSocket } from "../../context/SocketContext";
 import { useUser } from "../../context/UserContext";
 import { TicTacToeContainer } from "../modules.style";
+import { v4 as uuidv4 } from "uuid";
 
 const TicTacToePage = () => {
   const [game, setGame] = useState(Array(9).fill(""));
@@ -72,20 +73,20 @@ const TicTacToePage = () => {
   }, [game, turnNumber, xo]);
 
   useEffect(() => {
-    socket.on("playerTurn", (json: any) => {
+    socket?.on("playerTurn", (json: any) => {
       setGame(json.g);
       if (!myTurn) setMyTurn(true);
       setPlayer(json.value);
     });
 
-    socket.on("restart", () => {
+    socket?.on("restart", () => {
       restart();
     });
 
-    socket.on("opponent_joined", () => {
+    socket?.on("opponent_joined", () => {
       setHasOpponent(true);
     });
-  }, [myTurn]);
+  }, [myTurn, socket]);
 
   useEffect(() => {
     if (
@@ -117,6 +118,8 @@ const TicTacToePage = () => {
       });
   }, [winner]);
 
+  console.log(socket);
+
   return (
     <TicTacToeContainer>
       Room: {room}
@@ -142,7 +145,7 @@ const TicTacToePage = () => {
       <Grid templateColumns="repeat(3, 1fr)" gap={0}>
         {game.map((value, index) => (
           <TicTacToeBox
-            key={value}
+            key={uuidv4()}
             onClick={() => sendTurn(index)}
             value={value}
             color={

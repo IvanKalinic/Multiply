@@ -50,11 +50,6 @@ router.post("/registerUser", async (req, res) => {
 });
 
 router.post("/loginAdmin", async (req, res) => {
-  // res.header("Access-Control-Allow-Origin", "*");
-  // res.header(
-  //   "Access-Control-Allow-Headers",
-  //   "Origin, X-Requested-With, Content-Type, Accept"
-  // );
   try {
     const admin = await Admin.findOne({ email: req.body.email });
     !admin && res.status(404).send("Admin not found");

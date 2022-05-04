@@ -14,7 +14,7 @@ const HomePage = () => {
 
   return (
     <HomeWrapper>
-      {/* {!user && !admin && (
+      {!user && !admin && (
         <>
           <Text fontSize="4xl" color="white">
             Who are you?
@@ -32,9 +32,9 @@ const HomePage = () => {
             </Link>
           </Flex>
         </>
-      )} */}
+      )}
       {/* <CircularBar /> */}
-      <Hangman />
+      {/* <Hangman /> */}
     </HomeWrapper>
   );
 };

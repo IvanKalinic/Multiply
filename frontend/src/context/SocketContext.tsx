@@ -23,14 +23,14 @@ interface Props {
 }
 
 export const SocketProvider = ({ id, children }: Props) => {
-  const { user } = useUser();
   const socketIo = useMemo(
     () =>
       io(`${process.env.REACT_APP_SERVER_BASE_URL}`, {
         query: { id },
       }),
-    [id, user]
+    [id]
   );
+
   const [socket, setSocket] = useState<any>(socketIo);
 
   const value = useMemo(() => ({ socket, setSocket }), [socket, setSocket]);
