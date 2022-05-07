@@ -6,6 +6,7 @@ import { useUser } from "../../context/UserContext";
 import { useSocket } from "../../context/SocketContext";
 import { CircularBar } from "../../components/CircularProgressbar";
 import Hangman from "../../components/Hangman";
+import MemoryGame from "../Games/MemoryGame";
 
 const HomePage = () => {
   const { user } = useUser();
@@ -35,6 +36,7 @@ const HomePage = () => {
       )}
       {/* <CircularBar /> */}
       {/* <Hangman /> */}
+      {/* <MemoryGame /> */}
     </HomeWrapper>
   );
 };

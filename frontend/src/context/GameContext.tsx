@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useMemo } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 type ContextType = {
   displayWin: boolean;
@@ -41,7 +42,7 @@ interface Props {
 
 export const GameProvider = ({ children }: Props) => {
   const [displayWin, setDisplayWin] = useState<boolean>(false);
-  const [questions, setQuestions] = useState<Array<any>>([]);
+  const [questions, setQuestions] = useLocalStorage("questions", []);
   const [selectedNumber, setSelectedNumber] = useState<number>(0);
   const [maxClicks, setMaxClicks] = useState<number>(0);
   const [absentItem, setAbsentItem] = useState<boolean>(false);

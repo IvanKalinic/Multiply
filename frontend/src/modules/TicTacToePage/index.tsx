@@ -1,6 +1,6 @@
 import { Button, Flex, Grid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { saveWinner } from "../../apis";
+import { saveWinnerOrMultiplyDetails } from "../../apis";
 import { TicTacToeBox } from "../../components";
 import { winningCombinations } from "../../consts/ticTacToe";
 import { useAxios } from "../../context/AxiosContext";
@@ -110,7 +110,7 @@ const TicTacToePage = () => {
 
   useEffect(() => {
     if (winner && player === xo)
-      saveWinner({
+      saveWinnerOrMultiplyDetails({
         opponents,
         room,
         type: 2,

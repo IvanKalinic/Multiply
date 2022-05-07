@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { fetchQuestions } from "../../apis";
 import Pawns from "../../components/Pawns";
@@ -25,6 +25,7 @@ const GameStart = () => {
     setWinner,
     myTurn,
     setMyTurn,
+    hasOpponent,
     setHasOpponent,
     turnNumber,
     setTurnNumber,
@@ -33,6 +34,7 @@ const GameStart = () => {
 
   const [category, setCategory] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("");
+  const [opponentArray, setOpponentArray] = useState<any>([]);
 
   const restart = () => {
     setGame([]);
@@ -41,22 +43,30 @@ const GameStart = () => {
     setMyTurn(false);
   };
 
+  const fetchGameDetails = async (hasOpponent: boolean) => {
+    await axios.get(`/game`).then((res) => {
+      setRoom(res?.data[0]?.room);
+      setOpponents(res?.data[0]?.opponents);
+      setCategory(res?.data[0]?.category);
+      setDifficulty(res?.data[0]?.difficulty);
+      if (hasOpponent) {
+        setOpponentArray(res?.data[0]?.gameBoard);
+        setQuestions(res?.data[0]?.questions);
+      }
+    });
+  };
+
   useEffect(() => {
-    const fetchGameDetails = (async () => {
-      await axios.get(`/game`).then((res) => {
-        setRoom(res?.data[0]?.room);
-        setOpponents(res?.data[0]?.opponents);
-        setCategory(res?.data[0]?.category);
-        setDifficulty(res?.data[0]?.difficulty);
-      });
-    })();
-  }, []);
+    fetchGameDetails(hasOpponent);
+  }, [hasOpponent]);
 
   useEffect(() => {
     const fetchGameQuestions = (async () => {
-      await fetchQuestions(category, difficulty).then((data) =>
-        setQuestions(data.data)
-      );
+      if (category && difficulty) {
+        await fetchQuestions(category, difficulty).then((data) =>
+          setQuestions(data.data)
+        );
+      }
     })();
   }, [category, difficulty]);
 
@@ -92,16 +102,18 @@ const GameStart = () => {
         setPlayerType("opp");
         socket.emit("join", room);
         setMyTurn(false);
+        //fetch logika za vec setani gameboard (gameboard + questions)
       }
     }
   }, [room, opponents, user]);
 
   return (
     <Flex justifyContent="center" alignItems="center">
+      <Heading fontSize="md">Turn: {myTurn ? "You" : "Opponent"}</Heading>
       {questions && (
         <MenuWrapper style={{ width: "75rem" }}>
           <QuestionSection />
-          <GameBoard />
+          <GameBoard opponentArray={opponentArray} />
         </MenuWrapper>
       )}
       <Pawns />

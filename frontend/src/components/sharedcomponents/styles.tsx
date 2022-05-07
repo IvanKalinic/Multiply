@@ -13,7 +13,7 @@ export const GameBoardWrapper = styled.div`
 export const NumberWrapper = styled.div`
   cursor: pointer;
   background-color: ${({ color }: { color: any }) =>
-    color ? "#cf084a" : "#9dbef5"};
+    color === "red" ? "#cf084a" : color ==="green" ? "#08cf51" : "#9dbef5"};
   display: flex;
   justify-content: center;
   align-items: center;

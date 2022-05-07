@@ -9,7 +9,7 @@ import TicTacToePage from "../TicTacToePage";
 const UserAppPage = () => {
   const { user } = useUser();
   const { opponents } = useOpponents();
-  const [gameType, setGameType] = useState<number>(1);
+  const [gameType, setGameType] = useState<number>(0);
   // it nows accidentaly work as global context
   // it should be replaced with global context storing opponents for all game types
   const isUserSelected = () => {
@@ -25,9 +25,11 @@ const UserAppPage = () => {
 
   return (
     <Flex justifyContent="center" alignItems="center">
-      {!!gameType &&
-        isUserSelected() &&
-        (gameType === 2 ? <TicTacToePage /> : <GameStart />)}
+      {isUserSelected() && !!gameType && gameType === 2 ? (
+        <TicTacToePage />
+      ) : (
+        gameType === 1 && <GameStart />
+      )}
     </Flex>
   );
 };

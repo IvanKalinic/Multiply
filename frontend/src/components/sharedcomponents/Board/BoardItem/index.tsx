@@ -49,7 +49,7 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
         : setMaxClicks((prev) => prev - 1);
 
       boardArray[index][id].clicked = !color;
-      //boardArray[index][id].color = myTurn ? "red" : "green"
+      boardArray[index][id].color = myTurn ? "red" : "green"
       setColor(!color);
       if (maxClicks !== MAX_PLAYER_CHOICES) setSelectedNumber(0);
       if (gameOver()) setDisplayWin(true);
@@ -59,9 +59,11 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
     }
   };
 
+
+  //
   return (
     <NumberWrapper
-      color={color ? 1 : 0}
+      color={!!boardArray[index][id].color && color ? 1 : 0}
       onClick={handleChange}
       style={{
         backgroundColor: `${

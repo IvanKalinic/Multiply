@@ -6,9 +6,9 @@ export const fetchQuestions = async (category: string, difficulty: string) => {
   );
 };
 
-export const saveWinner = async (activeGame: any) => {
+export const saveWinnerOrMultiplyDetails = async (activeGame: any) => {
   await axios.put(
-    `${process.env.REACT_APP_SERVER_BASE_URL}/game/winner`,
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/winnerOrMultiplyDetails`,
     activeGame
   );
 };
