@@ -10,7 +10,7 @@ interface Props {
 const BoardColumn = ({ column, boardArray, id }: Props) => {
   return (
     <Flex flexDirection="column">
-      {column.map((item, index) => (
+      {column?.map((item, index) => (
         <BoardItem
           value={item.number}
           key={index}

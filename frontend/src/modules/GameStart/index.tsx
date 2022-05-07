@@ -1,6 +1,6 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { fetchQuestions } from "../../apis";
+import { fetchQuestions, getActiveGame } from "../../apis";
 import Pawns from "../../components/Pawns";
 import { GameBoard, QuestionSection } from "../../components/sharedcomponents";
 import { useAxios } from "../../context/AxiosContext";
@@ -102,7 +102,11 @@ const GameStart = () => {
         setPlayerType("opp");
         socket.emit("join", room);
         setMyTurn(false);
-        //fetch logika za vec setani gameboard (gameboard + questions)
+
+        getActiveGame().then((data) => {
+          if (data.data?.questions) setQuestions(data.data?.questions);
+          if (data.data?.gameBoard) setOpponentArray(data.data?.gameBoard);
+        });
       }
     }
   }, [room, opponents, user]);

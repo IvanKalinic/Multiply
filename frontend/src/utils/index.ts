@@ -82,7 +82,8 @@ export const gameSetup = async (
   navigate: any,
   game: string,
   category?: string,
-  difficulty?: string
+  difficulty?: string,
+  questions?: Array<any>
 ) => {
   let room = randomRoomName();
   try {
@@ -92,6 +93,7 @@ export const gameSetup = async (
       room,
       category,
       difficulty,
+      questions,
     });
     socket.emit("create", room);
     navigate("/");

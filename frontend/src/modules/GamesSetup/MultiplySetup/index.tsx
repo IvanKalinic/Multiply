@@ -23,7 +23,7 @@ type SelectedOptions = {
 };
 
 const MultiplySetup = () => {
-  const { setQuestions } = useGame();
+  const { setQuestions, questions } = useGame();
   const { admin } = useAdmin();
   const { socket } = useSocket();
 
@@ -38,16 +38,19 @@ const MultiplySetup = () => {
     await fetchQuestions(
       selectedOptions.category,
       selectedOptions.difficulty
-    ).then((data) => setQuestions(data.data));
+    ).then((data) => {
+      setQuestions(data.data);
 
-    gameSetup(
-      selectedOptions.opponents,
-      socket,
-      navigate,
-      "multiply",
-      selectedOptions.category,
-      selectedOptions.difficulty
-    );
+      gameSetup(
+        selectedOptions.opponents,
+        socket,
+        navigate,
+        "multiply",
+        selectedOptions.category,
+        selectedOptions.difficulty,
+        data.data
+      );
+    });
   };
 
   useEffect(() => {

@@ -18,6 +18,7 @@ import {
 import BadLuck from "../../../BadLuck";
 import { GAMEBOARD_DIMENSION, MAX_PLAYER_CHOICES } from "../../../../consts";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
+import { getActiveGame, saveWinnerOrMultiplyDetails } from "../../../../apis";
 interface Props {
   opponentArray?: Array<any>;
 }
@@ -28,7 +29,6 @@ export const GameBoard = ({ opponentArray }: Props) => {
 
   const { user } = useUser();
   const {
-    questions,
     displayWin,
     setDisplayWin,
     setMaxClicks,
@@ -38,63 +38,64 @@ export const GameBoard = ({ opponentArray }: Props) => {
     maxClicks,
   } = useGame();
 
+  const [questions, setQuestions] = useState<Array<any>>([]);
+
   const { winner, setWinner } = useTurnBased();
 
   const initialArray: any = [];
   let aggArray: Array<number> = [];
 
-  const chooseCategory = useCallback(() => {
-    console.log(questions);
-    switch (questions[0]?.category) {
-      case "Addition":
-        if (questions[0]?.difficulty === "Easy") return easyAdditionArray;
-        if (questions[0]?.difficulty === "Medium") return mediumAdditionArray;
-        if (questions[0]?.difficulty === "Hard") return hardAdditionArray;
-        else return easyAdditionArray;
-      case "Substraction":
-        return substractionArray;
-      case "Multiplication":
-        if (questions[0]?.difficulty === "Easy") return easyMultiplyArray;
-        if (questions[0]?.difficulty === "Medium") return mediumMultiplyArray;
-        if (questions[0]?.difficulty === "Hard") return hardMultiplyArray;
-        else return easyMultiplyArray;
-      case "Division":
-        return divisionArray;
-      default:
-        return [];
-    }
-  }, [questions]);
+  const randomValues = () => {
+    let currentArray: Array<any> = [];
 
-  const randomValues = useCallback(() => {
-    const currentArray = chooseCategory();
-    const randomArray: Array<{ number: number; clicked: boolean }> = [];
+    if (!questions.length) {
+      getActiveGame().then((data) => {
+        currentArray = [...data.data[0]?.questions];
+      });
+    } else {
+      currentArray = [...questions];
+    }
+
+    const randomArray: Array<any> = [];
     for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
-      console.log("First loop");
-      let randomNumber: number =
-        currentArray[Math.floor(Math.random() * currentArray.length)];
-      if (aggArray.filter((item: number) => item === randomNumber).length < 3) {
-        randomArray.push({ number: randomNumber, clicked: false });
-        aggArray.push(randomNumber);
-      } else {
-        i--;
+      let randomNumber: number = 0;
+      if (!!currentArray.length) {
+        randomNumber =
+          currentArray[Math.floor(Math.random() * currentArray.length)]
+            ?.correctAnswer;
+        if (
+          !!randomNumber &&
+          aggArray.filter((item: number) => item === randomNumber).length < 3
+        ) {
+          randomArray.push({ number: randomNumber, clicked: false });
+          aggArray.push(randomNumber);
+        } else {
+          i--;
+        }
       }
     }
     return randomArray;
-  }, [chooseCategory, aggArray]);
-
-  console.log(questions);
+  };
 
   useEffect(() => {
-    if (opponentArray) return;
+    if (!!boardArray[0]?.length || !!opponentArray?.length) return;
+
+    getActiveGame().then((data) => {
+      setQuestions(data.data[0]?.questions);
+    });
 
     for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
-      console.log("Second loop");
       initialArray[i] = randomValues();
     }
-    setBoardArray(initialArray);
 
-    // ode ide save gamea (board,questions)
-    // saveWinnerOrMultiplyDetails()
+    setBoardArray(initialArray);
+    if (!!initialArray[0].length) {
+      saveWinnerOrMultiplyDetails({ gameBoard: initialArray, questions });
+    } else {
+      getActiveGame().then((data) => {
+        setBoardArray(data.data[0]?.gameBoard);
+      });
+    }
 
     setDisplayWin(false);
     setMaxClicks(0);
@@ -103,7 +104,6 @@ export const GameBoard = ({ opponentArray }: Props) => {
   const checkAbsent = useCallback(() => {
     let counter = 0;
     boardArray.forEach((array: any) => {
-      console.log("Third loop");
       if (array.filter((item: any) => item.number === selectedNumber).length) {
         counter = counter + 1;
       }
@@ -126,8 +126,6 @@ export const GameBoard = ({ opponentArray }: Props) => {
     }
   }, [maxClicks]);
 
-  console.log("Board array", boardArray);
-
   useEffect(() => {
     if (displayWin) {
       setWinner(true);
@@ -135,7 +133,7 @@ export const GameBoard = ({ opponentArray }: Props) => {
   }, [displayWin]);
 
   const renderList = (array: Array<any>) => {
-    return array.map((column: any, index: number) => (
+    return array?.map((column: any, index: number) => (
       <BoardColumn
         column={column}
         key={`col-${index}`}
@@ -159,7 +157,9 @@ export const GameBoard = ({ opponentArray }: Props) => {
           />
         )}
         <GameBoardWrapper>
-          {opponentArray ? renderList(opponentArray) : renderList(boardArray)}
+          {!!opponentArray?.length
+            ? renderList(opponentArray)
+            : renderList(boardArray)}
         </GameBoardWrapper>
       </Flex>
     </>
