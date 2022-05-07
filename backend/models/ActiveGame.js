@@ -26,6 +26,15 @@ const ActiveGameSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    gameBoard:{
+      type:Array,
+      required:false
+    }, 
+    questions:{
+      type:Array,
+      required:false
+    }
+
   },
   { timestamps: true }
 );
