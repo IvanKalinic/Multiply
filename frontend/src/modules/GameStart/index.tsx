@@ -9,10 +9,11 @@ import { useSocket } from "../../context/SocketContext";
 import { useTurnBased } from "../../context/TurnBasedContext";
 import { useUser } from "../../context/UserContext";
 import { MenuWrapper } from "../../styles";
+import { homeColor, awayColor } from "../../consts";
 
 const GameStart = () => {
   const { questions, setQuestions } = useGame();
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const axios = useAxios();
   const { socket } = useSocket();
   const {
@@ -35,6 +36,7 @@ const GameStart = () => {
   const [category, setCategory] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("");
   const [opponentArray, setOpponentArray] = useState<any>([]);
+  const [questionFromOpponent, setQuestionFromOpponent] = useState<number>(0);
 
   const restart = () => {
     setGame([]);
@@ -72,9 +74,12 @@ const GameStart = () => {
 
   useEffect(() => {
     socket?.on("playerTurn", (json: any) => {
+      console.log("Player turn");
+      console.log(json.question);
       setGame(json.g);
       if (!myTurn) setMyTurn(true);
       setPlayer(json.value);
+      setQuestionFromOpponent(json.question);
     });
 
     socket?.on("restart", () => {
@@ -96,12 +101,14 @@ const GameStart = () => {
       // means you are player 1
       if (opponents[0] === user?.data.username) {
         setMyTurn(true);
+        if (!user?.color) setUser({ ...user, color: homeColor });
       }
       // means you are player 2
       else {
         setPlayerType("opp");
         socket.emit("join", room);
         setMyTurn(false);
+        if (!user?.color) setUser({ ...user, color: awayColor });
 
         getActiveGame().then((data) => {
           if (data.data?.questions) setQuestions(data.data?.questions);
@@ -112,16 +119,22 @@ const GameStart = () => {
   }, [room, opponents, user]);
 
   return (
-    <Flex justifyContent="center" alignItems="center">
-      <Heading fontSize="md">Turn: {myTurn ? "You" : "Opponent"}</Heading>
-      {questions && (
-        <MenuWrapper style={{ width: "75rem" }}>
-          <QuestionSection />
-          <GameBoard opponentArray={opponentArray} />
-        </MenuWrapper>
-      )}
-      <Pawns />
-    </Flex>
+    <>
+      <Heading position="absolute" fontSize="md" top="2">
+        Turn: {myTurn ? "You" : "Opponent"}
+      </Heading>
+      <Flex justifyContent="center" alignItems="center">
+        {questions && (
+          <MenuWrapper style={{ width: "75rem" }}>
+            <QuestionSection
+              currentQuestionFromOpponent={questionFromOpponent}
+            />
+            <GameBoard opponentArray={opponentArray} />
+          </MenuWrapper>
+        )}
+        <Pawns />
+      </Flex>
+    </>
   );
 };
 

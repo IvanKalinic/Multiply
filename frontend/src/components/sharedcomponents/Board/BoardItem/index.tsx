@@ -9,6 +9,8 @@ import {
 import { useGame } from "../../../../context/GameContext";
 import { MAX_PLAYER_CHOICES } from "../../../../consts";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
+import { useUser } from "../../../../context/UserContext";
+import { useOpponents } from "../../../../context/OpponentsContext";
 interface Props {
   value: number;
   id: number;
@@ -27,6 +29,7 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
   } = useGame();
 
   const { setGame, myTurn } = useTurnBased();
+  const { user } = useUser();
 
   const gameOver = useCallback(() => {
     //vertical
@@ -49,7 +52,8 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
         : setMaxClicks((prev) => prev - 1);
 
       boardArray[index][id].clicked = !color;
-      boardArray[index][id].color = myTurn ? "red" : "green";
+      console.log(user?.color);
+      boardArray[index][id].color = user?.color ? user?.color : undefined;
       setColor(!color);
       if (maxClicks !== MAX_PLAYER_CHOICES) setSelectedNumber(0);
       if (gameOver()) setDisplayWin(true);
@@ -59,7 +63,6 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
     }
   };
 
-  //
   return (
     <NumberWrapper
       color={!!boardArray[index][id].color && boardArray[index][id].color}

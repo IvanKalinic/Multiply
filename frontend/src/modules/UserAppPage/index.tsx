@@ -8,24 +8,28 @@ import TicTacToePage from "../TicTacToePage";
 
 const UserAppPage = () => {
   const { user } = useUser();
-  const { opponents } = useOpponents();
+  const { opponents, setOpponents } = useOpponents();
   const [gameType, setGameType] = useState<number>(0);
   // it nows accidentaly work as global context
   // it should be replaced with global context storing opponents for all game types
-  const isUserSelected = () => {
-    return !!opponents.filter((opp) => opp === user.name);
-  };
 
   useEffect(() => {
-    getActiveGame().then((data) => setGameType(data.data[0].type));
+    getActiveGame().then((data) => {
+      console.log(data.data);
+      setGameType(data.data[0].type);
+    });
   }, [user]);
-
-  console.log(isUserSelected());
-  console.log(gameType);
+  console.log(user);
+  // const isUserSelected = () => {
+  //   console.log(opponents);
+  //   return opponents.filter((opp) => opp === user.data?.username);
+  // };
+  // console.log(isUserSelected());
+  // console.log(gameType);
 
   return (
     <Flex justifyContent="center" alignItems="center">
-      {isUserSelected() && !!gameType && gameType === 2 ? (
+      {!!gameType && gameType === 2 ? (
         <TicTacToePage />
       ) : (
         gameType === 1 && <GameStart />

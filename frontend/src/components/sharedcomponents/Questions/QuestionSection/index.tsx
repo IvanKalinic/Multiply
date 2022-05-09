@@ -1,13 +1,22 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGame } from "../../../../context/GameContext";
 import { MenuWrapper } from "../../../../styles";
 import { Details } from "../../styles";
 import QuestionItem from "../QuestionItem";
+interface Props {
+  currentQuestionFromOpponent: number;
+}
 
-export const QuestionSection = () => {
+export const QuestionSection = ({ currentQuestionFromOpponent }: Props) => {
   const { questions } = useGame();
-  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [currentQuestion, setCurrentQuestion] = useState<number>(
+    currentQuestionFromOpponent
+  );
+
+  useEffect(() => {
+    setCurrentQuestion(currentQuestionFromOpponent);
+  }, [currentQuestionFromOpponent]);
 
   return (
     <Box>

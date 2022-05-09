@@ -65,3 +65,6 @@ export const categories = [
 
 export const GAMEBOARD_DIMENSION: number = 8;
 export const MAX_PLAYER_CHOICES: number = 4;
+
+export const homeColor = "#cf084a";
+export const awayColor = "#f5da42";

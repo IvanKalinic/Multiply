@@ -19,6 +19,7 @@ import BadLuck from "../../../BadLuck";
 import { GAMEBOARD_DIMENSION, MAX_PLAYER_CHOICES } from "../../../../consts";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
 import { getActiveGame, saveWinnerOrMultiplyDetails } from "../../../../apis";
+import { useOpponents } from "../../../../context/OpponentsContext";
 interface Props {
   opponentArray?: Array<any>;
 }

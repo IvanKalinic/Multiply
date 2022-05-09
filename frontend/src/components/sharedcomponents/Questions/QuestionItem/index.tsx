@@ -8,7 +8,6 @@ import Warning from "../../../Warning";
 import { ArrowWrapper } from "./styles";
 import { useSocket } from "../../../../context/SocketContext";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
-
 interface Props {
   currentQuestion: number;
   setCurrentQuestion: React.Dispatch<SetStateAction<number>>;
@@ -67,8 +66,19 @@ const QuestionItem = ({
   }, [selectedOption]);
 
   const handleNext = () => {
+    let randomValue = Math.round(Math.random() * length);
     if (absentItem) {
-      setCurrentQuestion(Math.round(Math.random() * length));
+      setCurrentQuestion(randomValue);
+      setMyTurn((myTurn) => !myTurn);
+      setTurnNumber((turnNumber) => turnNumber + 1);
+      setPlayer(playerType);
+      socket.emit("reqTurn", {
+        value: playerType,
+        room,
+        game,
+        question: randomValue,
+      });
+      console.log("Called");
       return;
     }
     if (selectedNumber && maxClicks < 4) {
@@ -79,23 +89,44 @@ const QuestionItem = ({
       setWarning((prevValue) => ({ ...prevValue, question: true }));
       return;
     }
-    setCurrentQuestion(Math.round(Math.random() * length));
+    setCurrentQuestion(randomValue);
+    setMyTurn((myTurn) => !myTurn);
+    setTurnNumber((turnNumber) => turnNumber + 1);
+    setPlayer(playerType);
+    socket.emit("reqTurn", {
+      value: playerType,
+      room,
+      game,
+      question: randomValue,
+    });
+    console.log("Called");
   };
 
-  useEffect(() => {
-    if (
-      myTurn &&
-      !!selectedOption &&
-      !!selectedNumber &&
-      !warning.item &&
-      !warning.question
-    ) {
-      setMyTurn((myTurn) => !myTurn);
-      setTurnNumber((turnNumber) => turnNumber + 1);
-      setPlayer(playerType);
-      socket.emit("reqTurn", { value: playerType, room, game });
-    }
-  }, [selectedNumber, warning]);
+  // useEffect(() => {
+
+  // },[currentQuestion])
+
+  // useEffect(() => {
+  //   if (
+  //     myTurn &&
+  //     ((!!selectedOption &&
+  //       !!selectedNumber &&
+  //       !warning.item &&
+  //       !warning.question) ||
+  //       selectedOption !== question?.correctAnswer)
+  //   ) {
+  //     console.log("Called");
+  //     setMyTurn((myTurn) => !myTurn);
+  //     setTurnNumber((turnNumber) => turnNumber + 1);
+  //     setPlayer(playerType);
+  //     socket.emit("reqTurn", {
+  //       value: playerType,
+  //       room,
+  //       game,
+  //       question: currentQuestion,
+  //     });
+  //   }
+  // }, [selectedNumber, warning, selectedOption, selectedNumber, question]);
 
   return (
     <Box>
