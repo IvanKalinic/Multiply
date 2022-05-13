@@ -29,6 +29,7 @@ export const QuestionSection = ({ currentQuestionFromOpponent }: Props) => {
             marginRight: "4rem",
             flexDirection: "column",
             marginTop: "-0.625rem",
+            // pointerEvents: "none",
           }}
         >
           <Details>

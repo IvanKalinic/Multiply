@@ -1,16 +1,17 @@
 import { useCallback, useState } from "react";
-import { NumberWrapper } from "../../styles";
-import {
-  vertical,
-  horizontal,
-  diagonalUp,
-  diagonalDown,
-} from "../../../../utils";
-import { useGame } from "../../../../context/GameContext";
+import { saveWinnerOrMultiplyDetails } from "../../../../apis";
 import { MAX_PLAYER_CHOICES } from "../../../../consts";
+import { useGame } from "../../../../context/GameContext";
+import { useSocket } from "../../../../context/SocketContext";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
 import { useUser } from "../../../../context/UserContext";
-import { useOpponents } from "../../../../context/OpponentsContext";
+import {
+  diagonalDown,
+  diagonalUp,
+  horizontal,
+  vertical,
+} from "../../../../utils";
+import { NumberWrapper } from "../../styles";
 interface Props {
   value: number;
   id: number;
@@ -28,8 +29,20 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
     setSelectedNumber,
   } = useGame();
 
-  const { setGame, myTurn } = useTurnBased();
+  const {
+    myTurn,
+    setMyTurn,
+    turnNumber,
+    setTurnNumber,
+    playerType,
+    setPlayer,
+    room,
+    game,
+    setGame,
+  } = useTurnBased();
+
   const { user } = useUser();
+  const { socket } = useSocket();
 
   const gameOver = useCallback(() => {
     //vertical
@@ -56,16 +69,35 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
       boardArray[index][id].color = user?.color ? user?.color : undefined;
       setColor(!color);
       if (maxClicks !== MAX_PLAYER_CHOICES) setSelectedNumber(0);
-      if (gameOver()) setDisplayWin(true);
-      //save board array to global context - useGame
-      //determine color for each player
+      if (gameOver()) {
+        setDisplayWin(true);
+        socket.emit("reqTurn", {
+          value: playerType,
+          room,
+          game,
+          winner: user?.data.username,
+        });
+        console.log(user?.data.username);
+        setPlayer(user?.data.username);
+
+        saveWinnerOrMultiplyDetails({
+          room,
+          type: 2,
+          winner: user.data.username,
+        });
+      }
+
       setGame(boardArray);
     }
   };
 
   return (
     <NumberWrapper
-      color={!!boardArray[index][id].color && boardArray[index][id].color}
+      color={
+        !!boardArray[index][id].color &&
+        boardArray[index][id].clicked &&
+        boardArray[index][id].color
+      }
       onClick={handleChange}
       style={{
         backgroundColor: `${

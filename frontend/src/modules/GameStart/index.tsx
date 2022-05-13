@@ -10,9 +10,10 @@ import { useTurnBased } from "../../context/TurnBasedContext";
 import { useUser } from "../../context/UserContext";
 import { MenuWrapper } from "../../styles";
 import { homeColor, awayColor } from "../../consts";
+import { CircularBar } from "../../components/CircularProgressbar";
 
 const GameStart = () => {
-  const { questions, setQuestions } = useGame();
+  const { questions, setQuestions, setDisplayWin } = useGame();
   const { user, setUser } = useUser();
   const axios = useAxios();
   const { socket } = useSocket();
@@ -30,12 +31,13 @@ const GameStart = () => {
     setHasOpponent,
     turnNumber,
     setTurnNumber,
+    game,
     setGame,
   } = useTurnBased();
 
   const [category, setCategory] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("");
-  const [opponentArray, setOpponentArray] = useState<any>([]);
+  const [opponentArray, setOpponentArray] = useState<Array<any>>([]);
   const [questionFromOpponent, setQuestionFromOpponent] = useState<number>(0);
 
   const restart = () => {
@@ -74,12 +76,23 @@ const GameStart = () => {
 
   useEffect(() => {
     socket?.on("playerTurn", (json: any) => {
+      if (!turnNumber) setHasOpponent(true);
       console.log("Player turn");
-      console.log(json.question);
-      setGame(json.g);
+      console.log(json);
+
       if (!myTurn) setMyTurn(true);
-      setPlayer(json.value);
-      setQuestionFromOpponent(json.question);
+      if (Object.keys(json).every((val) => !json[val].length)) return;
+
+      if (!!json.game.length) {
+        setGame(json.game);
+        setOpponentArray(json.game);
+      }
+      if (json.value) setPlayer(json.value);
+      if (json.question) setQuestionFromOpponent(json.question);
+      if (json.winner) {
+        setDisplayWin(true);
+        setPlayer(json.winner);
+      }
     });
 
     socket?.on("restart", () => {
@@ -130,6 +143,7 @@ const GameStart = () => {
               currentQuestionFromOpponent={questionFromOpponent}
             />
             <GameBoard opponentArray={opponentArray} />
+            <CircularBar />
           </MenuWrapper>
         )}
         <Pawns />

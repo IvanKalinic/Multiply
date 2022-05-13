@@ -1,13 +1,13 @@
-import { Box, Heading, Flex } from "@chakra-ui/react";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 import React, { SetStateAction, useEffect, useState } from "react";
-import OptionButton from "../OptionButton";
-import { handleShuffle } from "../../../../utils";
-import { useGame } from "../../../../context/GameContext";
 import ArrowRight from "../../../../assets/icons/arrow-right.png";
-import Warning from "../../../Warning";
-import { ArrowWrapper } from "./styles";
+import { useGame } from "../../../../context/GameContext";
 import { useSocket } from "../../../../context/SocketContext";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
+import { handleShuffle } from "../../../../utils";
+import Warning from "../../../Warning";
+import OptionButton from "../OptionButton";
+import { ArrowWrapper } from "./styles";
 interface Props {
   currentQuestion: number;
   setCurrentQuestion: React.Dispatch<SetStateAction<number>>;
@@ -27,14 +27,20 @@ const QuestionItem = ({
   length,
 }: Props) => {
   const [options, setOptions] = useState<Array<number>>([]);
-  const [selectedOption, setSelectedOption] = useState<number>(0);
+  // const [selectedOption, setSelectedOption] = useState<number>(0);
   const [warning, setWarning] = useState<WarningType>({
     question: false,
     item: false,
   });
 
-  const { setSelectedNumber, selectedNumber, maxClicks, absentItem } =
-    useGame();
+  const {
+    setSelectedNumber,
+    selectedNumber,
+    maxClicks,
+    absentItem,
+    selectedOption,
+    setSelectedOption,
+  } = useGame();
   const { socket } = useSocket();
   const {
     myTurn,
@@ -78,7 +84,6 @@ const QuestionItem = ({
         game,
         question: randomValue,
       });
-      console.log("Called");
       return;
     }
     if (selectedNumber && maxClicks < 4) {
@@ -93,40 +98,15 @@ const QuestionItem = ({
     setMyTurn((myTurn) => !myTurn);
     setTurnNumber((turnNumber) => turnNumber + 1);
     setPlayer(playerType);
+    console.log(game);
     socket.emit("reqTurn", {
       value: playerType,
       room,
       game,
       question: randomValue,
     });
-    console.log("Called");
+    console.log("Here");
   };
-
-  // useEffect(() => {
-
-  // },[currentQuestion])
-
-  // useEffect(() => {
-  //   if (
-  //     myTurn &&
-  //     ((!!selectedOption &&
-  //       !!selectedNumber &&
-  //       !warning.item &&
-  //       !warning.question) ||
-  //       selectedOption !== question?.correctAnswer)
-  //   ) {
-  //     console.log("Called");
-  //     setMyTurn((myTurn) => !myTurn);
-  //     setTurnNumber((turnNumber) => turnNumber + 1);
-  //     setPlayer(playerType);
-  //     socket.emit("reqTurn", {
-  //       value: playerType,
-  //       room,
-  //       game,
-  //       question: currentQuestion,
-  //     });
-  //   }
-  // }, [selectedNumber, warning, selectedOption, selectedNumber, question]);
 
   return (
     <Box>

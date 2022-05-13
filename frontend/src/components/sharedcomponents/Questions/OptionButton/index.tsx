@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import { useGame } from "../../../../context/GameContext";
+import { useTurnBased } from "../../../../context/TurnBasedContext";
 
 interface Props {
   value: number;
@@ -16,6 +17,7 @@ const OptionButton = ({
   selectedOption,
 }: Props) => {
   const { setSelectedNumber } = useGame();
+  const { myTurn } = useTurnBased();
 
   const handleCheck = useCallback(() => {
     setSelectedOption(value);
@@ -40,10 +42,11 @@ const OptionButton = ({
     handleColor();
   }, [selectedOption, value, handleColor]);
 
+  console.log(myTurn);
+
   const disabledCase = useMemo(
-    () =>
-      !!selectedOption && handleColor() !== "red" && handleColor() !== "green",
-    [selectedOption, handleColor]
+    () => !!selectedOption || !myTurn,
+    [selectedOption, myTurn]
   );
 
   return (

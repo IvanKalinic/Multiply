@@ -12,6 +12,8 @@ type ContextType = {
   setMaxClicks: React.Dispatch<React.SetStateAction<number>>;
   absentItem: boolean;
   setAbsentItem: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedOption: number;
+  setSelectedOption: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const GameContext = createContext<ContextType>({
@@ -25,6 +27,8 @@ const GameContext = createContext<ContextType>({
   setMaxClicks: () => 0,
   absentItem: false,
   setAbsentItem: () => null,
+  selectedOption: 0,
+  setSelectedOption: () => 0,
 });
 
 export const useGame = () => {
@@ -46,6 +50,7 @@ export const GameProvider = ({ children }: Props) => {
   const [selectedNumber, setSelectedNumber] = useState<number>(0);
   const [maxClicks, setMaxClicks] = useState<number>(0);
   const [absentItem, setAbsentItem] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<number>(0);
 
   const value = useMemo(
     () => ({
@@ -59,6 +64,8 @@ export const GameProvider = ({ children }: Props) => {
       setMaxClicks,
       absentItem,
       setAbsentItem,
+      selectedOption,
+      setSelectedOption,
     }),
     [
       displayWin,
@@ -71,6 +78,8 @@ export const GameProvider = ({ children }: Props) => {
       setMaxClicks,
       absentItem,
       setAbsentItem,
+      selectedOption,
+      setSelectedOption,
     ]
   );
 

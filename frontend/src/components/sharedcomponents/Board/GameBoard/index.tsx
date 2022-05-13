@@ -1,25 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
-import { useUser } from "../../../../context/UserContext";
-import { useGame } from "../../../../context/GameContext";
-import BoardColumn from "../BoardColumn";
-import { GameBoardWrapper } from "../../styles";
-import Winner from "../../../Winner";
 import { Flex } from "@chakra-ui/react";
-import {
-  easyAdditionArray,
-  mediumAdditionArray,
-  hardAdditionArray,
-  substractionArray,
-  divisionArray,
-  easyMultiplyArray,
-  mediumMultiplyArray,
-  hardMultiplyArray,
-} from "../../../../consts/gameCategory";
-import BadLuck from "../../../BadLuck";
-import { GAMEBOARD_DIMENSION, MAX_PLAYER_CHOICES } from "../../../../consts";
-import { useTurnBased } from "../../../../context/TurnBasedContext";
+import { useCallback, useEffect, useState } from "react";
 import { getActiveGame, saveWinnerOrMultiplyDetails } from "../../../../apis";
-import { useOpponents } from "../../../../context/OpponentsContext";
+import { GAMEBOARD_DIMENSION, MAX_PLAYER_CHOICES } from "../../../../consts";
+import { useGame } from "../../../../context/GameContext";
+import { useTurnBased } from "../../../../context/TurnBasedContext";
+import { useUser } from "../../../../context/UserContext";
+import BadLuck from "../../../BadLuck";
+import Winner from "../../../Winner";
+import { GameBoardWrapper } from "../../styles";
+import BoardColumn from "../BoardColumn";
+
+// import { v4 as uuidv4 } from "uuid";
+
 interface Props {
   opponentArray?: Array<any>;
 }
@@ -143,6 +135,10 @@ export const GameBoard = ({ opponentArray }: Props) => {
       />
     ));
   };
+
+  useEffect(() => {
+    setBoardArray(opponentArray);
+  }, [opponentArray]);
 
   return (
     <>

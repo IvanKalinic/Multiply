@@ -2,14 +2,21 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { PauseButton, PlayButton } from "../../assets/icons/svgs";
+import { useGame } from "../../context/GameContext";
+import { useSocket } from "../../context/SocketContext";
+import { useTurnBased } from "../../context/TurnBasedContext";
 import "./index.scss";
 
 const red = "#f54e4e";
 const green = "#4aec8c";
-const workSeconds = 10;
-const breakSeconds = 5;
+const workSeconds = 3;
+const breakSeconds = 0;
 
 export const CircularBar = () => {
+  const { myTurn, setMyTurn, hasOpponent, turnNumber } = useTurnBased();
+  const { socket } = useSocket();
+  const { selectedOption } = useGame();
+
   const [isPaused, setIsPaused] = useState(true);
   const [mode, setMode] = useState("work");
   const [secondsLeft, setSecondsLeft] = useState(0);
@@ -19,9 +26,33 @@ export const CircularBar = () => {
   const modeRef = useRef(mode);
 
   const tick = () => {
+    // if (!myTurn || !hasOpponent) return;
+
     secondsLeftRef.current--;
     setSecondsLeft(secondsLeftRef.current);
+    if (secondsLeftRef.current === 0) {
+      pause();
+      setMyTurn(false);
+      socket.emit("reqTurn", {
+        value: "",
+        room: "",
+        game: "",
+        question: "",
+      });
+    }
   };
+
+  useEffect(() => {
+    console.log(hasOpponent);
+    console.log(turnNumber);
+    if (myTurn && (hasOpponent || !!turnNumber)) {
+      play();
+    }
+  }, [myTurn, hasOpponent, turnNumber]);
+
+  useEffect(() => {
+    if (!!selectedOption) pause();
+  }, [selectedOption]);
 
   useEffect(() => {
     const switchMode = () => {
@@ -55,8 +86,28 @@ export const CircularBar = () => {
   const totalSeconds = mode === "work" ? workSeconds : breakSeconds;
   const percentage = Math.round((secondsLeft / totalSeconds) * 100);
 
+  const play = () => {
+    setIsPaused(false);
+    isPausedRef.current = false;
+  };
+
+  const pause = () => {
+    setIsPaused(true);
+    isPausedRef.current = true;
+  };
+
+  // useEffect(() => {
+  //   if (myTurn) {
+  //     play();
+  //   }
+  // }, [myTurn]);
+
   return (
-    <Flex w="20rem" h="20rem">
+    <Flex
+      w="10rem"
+      h="10rem"
+      style={{ position: "fixed", left: "1.5rem", bottom: "0.5rem" }}
+    >
       <CircularProgressbar
         value={percentage}
         text={`${secondsLeft}`}
@@ -68,19 +119,9 @@ export const CircularBar = () => {
       />
       <Box mt="20" w="20" h="20">
         {isPaused ? (
-          <PlayButton
-            onClick={() => {
-              setIsPaused(false);
-              isPausedRef.current = false;
-            }}
-          />
+          <PlayButton onClick={play} />
         ) : (
-          <PauseButton
-            onClick={() => {
-              setIsPaused(true);
-              isPausedRef.current = true;
-            }}
-          />
+          <PauseButton onClick={pause} />
         )}
       </Box>
     </Flex>
