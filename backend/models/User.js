@@ -19,12 +19,40 @@ const UserSchema = new mongoose.Schema(
     class: {
       type: String,
     },
-    score: {
+    overallPoints: {
+      type: Number,
+      default: 0,
+    },
+    bonusPoints: {
+      type: Number,
+      default: 0,
+    },
+    level: {
+      type: String,
+      default: "Beginner",
+    },
+    levelNumber: {
+      type: Number,
+      default: 0,
+    },
+    gamesPlayed: {
+      type: Array,
+    },
+    gamesWon: {
+      type: Array,
+    },
+    battlesPlayed: {
+      type: Array,
+    },
+    battlesWon: {
+      type: Array,
+    },
+    rank: {
       type: Number,
     },
-    // if score/5 >= 1 -> medium score/5 >=2 hard
-    difficulty: {
-      type: String,
+    speed: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

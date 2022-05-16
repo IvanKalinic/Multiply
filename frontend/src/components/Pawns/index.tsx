@@ -13,13 +13,13 @@ const Pawns = () => {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      style={{ position: "absolute", right: "3.5rem" }}
+      style={{ position: "relative", left: "2rem" }}
     >
-      {maxClicks !== 4 && (
+      {/* {maxClicks !== 4 && (
         <Text fontSize="2xl" mb="2" mr="-4" color="white">
-          Available:
+
         </Text>
-      )}
+      )} */}
       {pawnsArray.map(
         (item) =>
           item > maxClicks && (

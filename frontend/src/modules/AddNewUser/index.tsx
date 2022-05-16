@@ -1,26 +1,27 @@
-import React from "react";
-import { LoginWrapper, SubmitButton } from "../LoginAdmin/styles";
-import { Heading, Flex, Box } from "@chakra-ui/react";
-import { newUserField } from "../../consts";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { TextInput } from "../../components/customcomponents/TextInput";
-import { defaultUserValues } from "./interface";
+import SelectDropdown from "../../components/Select";
+import { listOfClasses, newUserField } from "../../consts";
+import { useAxios } from "../../context/AxiosContext";
 import { adminLoginSchema } from "../../schemas/adminLoginSchema";
 import { AdminLoginForm } from "../../types";
-import axios from "axios";
-import { useAxios } from "../../context/AxiosContext";
+import { LoginWrapper, SubmitButton } from "../LoginAdmin/styles";
+import { defaultUserValues } from "./interface";
 
 const AddNewUser = () => {
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const navigate = useNavigate();
   const axios = useAxios();
+  const [selectedOptions, setSelectedOptions] = useState<{ class: string }>({
+    class: "",
+  });
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(adminLoginSchema),
@@ -33,12 +34,15 @@ const AddNewUser = () => {
         username: userForm.username,
         email: userForm.email,
         password: userForm.password,
+        class: selectedOptions.class,
       });
       navigate("/adminApp");
     } catch (err) {
       console.log(err);
     }
   };
+
+  console.log(selectedOptions);
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <LoginWrapper style={{ width: "50%", flexDirection: "column" }}>
@@ -62,6 +66,15 @@ const AddNewUser = () => {
                   errors={errors}
                 />
               ))}
+            </Box>
+            <Box ml="2" mr="2" mb="6">
+              <SelectDropdown
+                message="Select user's class"
+                array={listOfClasses}
+                setSelectedOptions={setSelectedOptions}
+                selectedOptions={selectedOptions}
+                selection="class"
+              />
             </Box>
             <SubmitButton login type="submit">
               Add New User

@@ -32,7 +32,7 @@ export const CircularBar = () => {
     setSecondsLeft(secondsLeftRef.current);
     if (secondsLeftRef.current === 0) {
       pause();
-      setMyTurn(false);
+      setMyTurn((myTurn) => !myTurn);
       socket.emit("reqTurn", {
         value: "",
         room: "",
@@ -45,6 +45,7 @@ export const CircularBar = () => {
   useEffect(() => {
     console.log(hasOpponent);
     console.log(turnNumber);
+    console.log(myTurn);
     if (myTurn && (hasOpponent || !!turnNumber)) {
       play();
     }
@@ -55,6 +56,8 @@ export const CircularBar = () => {
   }, [selectedOption]);
 
   useEffect(() => {
+    if (!myTurn) return;
+
     const switchMode = () => {
       const nextMode = modeRef.current === "work" ? "break" : "work";
       const nextSeconds = nextMode === "work" ? workSeconds : breakSeconds;
@@ -81,7 +84,7 @@ export const CircularBar = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [myTurn]);
 
   const totalSeconds = mode === "work" ? workSeconds : breakSeconds;
   const percentage = Math.round((secondsLeft / totalSeconds) * 100);
@@ -104,9 +107,14 @@ export const CircularBar = () => {
 
   return (
     <Flex
-      w="10rem"
-      h="10rem"
-      style={{ position: "fixed", left: "1.5rem", bottom: "0.5rem" }}
+      w="15rem"
+      h="15rem"
+      flexDirection="column-reverse"
+      justifyContent="center"
+      alignItems="center"
+      position="fixed"
+      left="-3rem"
+      bottom="11vh"
     >
       <CircularProgressbar
         value={percentage}
@@ -119,7 +127,7 @@ export const CircularBar = () => {
       />
       <Box mt="20" w="20" h="20">
         {isPaused ? (
-          <PlayButton onClick={play} />
+          myTurn && <PlayButton onClick={play} />
         ) : (
           <PauseButton onClick={pause} />
         )}

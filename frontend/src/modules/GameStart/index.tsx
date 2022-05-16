@@ -1,16 +1,17 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { fetchQuestions, getActiveGame } from "../../apis";
+import { ChatLogo, VideoCall } from "../../assets/icons/svgs";
+import { CircularBar } from "../../components/CircularProgressbar";
 import Pawns from "../../components/Pawns";
 import { GameBoard, QuestionSection } from "../../components/sharedcomponents";
+import { awayColor, homeColor } from "../../consts";
 import { useAxios } from "../../context/AxiosContext";
 import { useGame } from "../../context/GameContext";
 import { useSocket } from "../../context/SocketContext";
 import { useTurnBased } from "../../context/TurnBasedContext";
 import { useUser } from "../../context/UserContext";
 import { MenuWrapper } from "../../styles";
-import { homeColor, awayColor } from "../../consts";
-import { CircularBar } from "../../components/CircularProgressbar";
 
 const GameStart = () => {
   const { questions, setQuestions, setDisplayWin } = useGame();
@@ -39,6 +40,7 @@ const GameStart = () => {
   const [difficulty, setDifficulty] = useState<string>("");
   const [opponentArray, setOpponentArray] = useState<Array<any>>([]);
   const [questionFromOpponent, setQuestionFromOpponent] = useState<number>(0);
+  // const [ticked,setTicked] = useState<boolean>(false);
 
   const restart = () => {
     setGame([]);
@@ -76,7 +78,9 @@ const GameStart = () => {
 
   useEffect(() => {
     socket?.on("playerTurn", (json: any) => {
-      if (!turnNumber) setHasOpponent(true);
+      if (!turnNumber) {
+        setHasOpponent(true);
+      }
       console.log("Player turn");
       console.log(json);
 
@@ -109,7 +113,8 @@ const GameStart = () => {
       room &&
       !!opponents?.length &&
       !!user?.data.username &&
-      turnNumber === 0
+      turnNumber === 0 &&
+      !hasOpponent
     ) {
       // means you are player 1
       if (opponents[0] === user?.data.username) {
@@ -131,6 +136,7 @@ const GameStart = () => {
     }
   }, [room, opponents, user]);
 
+  console.log("mY TURN", myTurn);
   return (
     <>
       <Heading position="absolute" fontSize="md" top="2">
@@ -138,11 +144,22 @@ const GameStart = () => {
       </Heading>
       <Flex justifyContent="center" alignItems="center">
         {questions && (
-          <MenuWrapper style={{ width: "75rem" }}>
+          <MenuWrapper style={{ width: "75vw", height: "80vh" }}>
             <QuestionSection
               currentQuestionFromOpponent={questionFromOpponent}
             />
             <GameBoard opponentArray={opponentArray} />
+            <Flex
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              position="fixed"
+              left="3.1vw"
+              top="12vh"
+            >
+              <VideoCall />
+              <ChatLogo />
+            </Flex>
             <CircularBar />
           </MenuWrapper>
         )}

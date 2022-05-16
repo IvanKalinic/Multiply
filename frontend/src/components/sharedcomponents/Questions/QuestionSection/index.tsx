@@ -24,8 +24,8 @@ export const QuestionSection = ({ currentQuestionFromOpponent }: Props) => {
         <MenuWrapper
           style={{
             marginLeft: "-1.875rem",
-            width: "32.5rem",
-            height: "26.25rem",
+            width: "30vw",
+            height: "50vh",
             marginRight: "4rem",
             flexDirection: "column",
             marginTop: "-0.625rem",

@@ -13,6 +13,13 @@ export const saveWinnerOrMultiplyDetails = async (activeGame: any) => {
   );
 };
 
+export const saveToGameHistory = async (game: any) => {
+  await axios.post(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/gameHistory`,
+    game
+  );
+};
+
 export const getActiveGame = async () => {
   return await axios.get(`${process.env.REACT_APP_SERVER_BASE_URL}/game`);
 };
@@ -37,3 +44,31 @@ export const saveActiveGame = async (payload: any) => {
     payload
   );
 };
+
+export const fetchUsersFromClassName = async (className: string) => {
+  return await axios.get(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/users/${className}`
+  );
+};
+
+export const fetchGameScores = async (name: string) => {
+  return await axios.get(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/gameHistory/${name}`
+  );
+};
+
+export const fetchAllUsers = async () => {
+  return await axios.get(`${process.env.REACT_APP_SERVER_BASE_URL}/users`);
+};
+interface PayloadType {
+  overallPoints?:number;
+  speed?:number;
+  game?:any;
+  levelNumber?:number;
+  levelName?:string;
+}
+export const saveUserScore = async (username:string,payload: PayloadType) => {
+  await axios.put(`${process.env.REACT_APP_SERVER_BASE_URL}/users/${username}`,payload)
+}
+//fastest - sort po speed-u
+//top 10 - sort po overallPoints

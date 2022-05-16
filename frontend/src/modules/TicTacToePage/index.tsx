@@ -1,6 +1,10 @@
 import { Button, Flex, Grid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { saveWinnerOrMultiplyDetails } from "../../apis";
+import {
+  saveToGameHistory,
+  saveUserScore,
+  saveWinnerOrMultiplyDetails,
+} from "../../apis";
 import { TicTacToeBox } from "../../components";
 import { winningCombinations } from "../../consts/ticTacToe";
 import { useAxios } from "../../context/AxiosContext";
@@ -8,6 +12,7 @@ import { useSocket } from "../../context/SocketContext";
 import { useUser } from "../../context/UserContext";
 import { TicTacToeContainer } from "../modules.style";
 import { v4 as uuidv4 } from "uuid";
+import { checkLevel, levelNameFromScore } from "../../utils";
 
 const TicTacToePage = () => {
   const [game, setGame] = useState(Array(9).fill(""));
@@ -20,6 +25,8 @@ const TicTacToePage = () => {
   const [opponents, setOpponents] = useState<Array<any>>();
   const [player, setPlayer] = useState<string>("");
   const [colorIndexes, setColorIndexes] = useState<Array<any>>([]);
+  const [activeGame, setActiveGame] = useState<any>([]);
+
   const { socket } = useSocket();
   const { user } = useUser();
   const axios = useAxios();
@@ -53,6 +60,7 @@ const TicTacToePage = () => {
   useEffect(() => {
     const fetchGameDetails = (async () => {
       await axios.get(`/game`).then((res) => {
+        setActiveGame(res.data[0]);
         setRoom(res?.data[0]?.room);
         setOpponents(res?.data[0]?.opponents);
       });
@@ -116,6 +124,25 @@ const TicTacToePage = () => {
         type: 2,
         winner: user.data.username,
       });
+    saveToGameHistory({
+      opponents,
+      room,
+      gameName: "TicTacToe",
+      winner: user.data.username,
+      points: 1,
+      speed: 0,
+    });
+    saveUserScore(user.data.username, {
+      levelNumber: checkLevel(user.data?.overallPoints + 1),
+      levelName: levelNameFromScore(user.data?.overallPoints + 1),
+      game: {
+        ...activeGame,
+        opponents,
+        room,
+        type: 2,
+        winner: user.data.username,
+      },
+    });
   }, [winner]);
 
   console.log(socket);

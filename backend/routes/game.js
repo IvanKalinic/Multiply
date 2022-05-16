@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const ActiveGame = require("../models/ActiveGame");
+const GameHistory = require("../models/GameHistory");
 
 router.post("/save", async (req, res) => {
   try {
@@ -54,5 +55,30 @@ router.delete("/deleteActiveGame", async (req, res) => {
   }
 });
 
+router.get("/gameHistory/:name", async (req, res) => {
+  try {
+    const games = await GameHistory.find({ gameName: req.params.name });
+    res.status(200).json(games);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.post("/gameHistory", async (req, res) => {
+  try {
+    const newGame = new GameHistory({
+      opponents: req.body.opponents,
+      gameName: req.body.gameName,
+      room: req.body.room,
+      winner: req.body?.winner,
+      points: req.body?.points,
+      speed: req.body?.speed,
+    });
+    const activeGame = await newGame.save();
+    res.status(200).json(activeGame);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 // route for deleting active game after it is finished
 module.exports = router;

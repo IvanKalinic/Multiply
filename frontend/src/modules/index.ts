@@ -4,6 +4,7 @@ import LoginUser from "./LoginUser";
 import AdminAppPage from "./AdminAppPage";
 import UserAppPage from "./UserAppPage";
 import AddNewUser from "./AddNewUser";
+import Statistics from "./Statistics";
 
 export {
   HomePage,
@@ -12,4 +13,5 @@ export {
   AdminAppPage,
   UserAppPage,
   AddNewUser,
+  Statistics,
 };

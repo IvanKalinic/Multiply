@@ -13,6 +13,7 @@ import { HomePage } from "../modules";
 
 const ErrorComponent = lazy(() => import("../components/Error"));
 const AdminAppPage = lazy(() => import("../modules/AdminAppPage"));
+const Statistics = lazy(() => import("../modules/Statistics"));
 const UserAppPage = lazy(() => import("../modules/UserAppPage"));
 const AddNewUser = lazy(() => import("../modules/AddNewUser"));
 const LoginAdmin = lazy(() => import("../modules/LoginAdmin"));
@@ -39,6 +40,7 @@ const AppRoutes = ({
         <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/statistics" element={<Statistics />} />
             <Route path="/adminApp" element={<AdminAppPage />} />
             <Route path="/userApp" element={<UserAppPage />} />
             <Route path="/multiplySetup" element={<MultiplySetup />} />

@@ -18,6 +18,7 @@ const ActiveGameSchema = new mongoose.Schema(
     winner: {
       type: String,
     },
+    //multiply
     category: {
       type: String,
       required: false,
@@ -26,15 +27,14 @@ const ActiveGameSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    gameBoard:{
-      type:Array,
-      required:false
-    }, 
-    questions:{
-      type:Array,
-      required:false
-    }
-
+    gameBoard: {
+      type: Array,
+      required: false,
+    },
+    questions: {
+      type: Array,
+      required: false,
+    },
   },
   { timestamps: true }
 );

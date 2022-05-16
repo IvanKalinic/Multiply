@@ -1,14 +1,22 @@
 import { useCallback, useState } from "react";
-import { saveWinnerOrMultiplyDetails } from "../../../../apis";
+import {
+  saveToGameHistory,
+  saveUserScore,
+  saveWinnerOrMultiplyDetails,
+} from "../../../../apis";
 import { MAX_PLAYER_CHOICES } from "../../../../consts";
 import { useGame } from "../../../../context/GameContext";
+import { useOpponents } from "../../../../context/OpponentsContext";
 import { useSocket } from "../../../../context/SocketContext";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
 import { useUser } from "../../../../context/UserContext";
 import {
+  checkLevel,
   diagonalDown,
   diagonalUp,
+  getGameName,
   horizontal,
+  levelNameFromScore,
   vertical,
 } from "../../../../utils";
 import { NumberWrapper } from "../../styles";
@@ -29,17 +37,9 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
     setSelectedNumber,
   } = useGame();
 
-  const {
-    myTurn,
-    setMyTurn,
-    turnNumber,
-    setTurnNumber,
-    playerType,
-    setPlayer,
-    room,
-    game,
-    setGame,
-  } = useTurnBased();
+  const { playerType, setPlayer, room, game, setGame } = useTurnBased();
+
+  const { opponents } = useOpponents();
 
   const { user } = useUser();
   const { socket } = useSocket();
@@ -82,8 +82,21 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
 
         saveWinnerOrMultiplyDetails({
           room,
-          type: 2,
+          type: 1,
           winner: user.data.username,
+        });
+        saveToGameHistory({
+          opponents,
+          room,
+          gameName: "Multiply",
+          winner: user.data.username,
+          points: 4,
+          speed: 0,
+        });
+        saveUserScore(user.data.username, {
+          levelNumber: checkLevel(user.data?.overallPoints + 4),
+          levelName: levelNameFromScore(user.data?.overallPoints + 4),
+          game,
         });
       }
 

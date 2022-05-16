@@ -96,7 +96,7 @@ const MultiplySetup = () => {
           <Flex>
             <Box mt="4" mr="4">
               <SelectDropdown
-                message=" 1st opponent"
+                message="1st opponent"
                 array={users}
                 setSelectedOptions={setSelectedOptions}
                 selectedOptions={selectedOptions}

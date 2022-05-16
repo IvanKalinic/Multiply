@@ -3,6 +3,7 @@ import { Flex, Text } from "@chakra-ui/react";
 import { useUser } from "../../context/UserContext";
 import { useAdmin } from "../../context/AdminContext";
 import { NavbarWrapper } from "../components.style";
+import "./index.scss";
 
 interface Props {
   user: any;
@@ -39,9 +40,17 @@ const Navbar = ({ user, admin }: Props) => {
       </span>
       {(!!user || !!admin) && (
         <Flex justifyContent="center">
+          {!!admin && (
+            <span style={{ fontSize: "1.25rem", marginRight: "1.25rem" }}>
+              <Link to="/statistics" className="statistics-link">
+                Statistics
+              </Link>
+            </span>
+          )}
           <span style={{ fontSize: "1.25rem", marginRight: "1.25rem" }}>
             {user ? user?.data?.username : admin ? admin?.data?.username : null}
           </span>
+
           {user || admin ? (
             <span
               style={{

@@ -110,7 +110,7 @@ const QuestionItem = ({
 
   return (
     <Box>
-      <Heading mb="10" mt="20">
+      <Heading mb="10" mt="20" fontSize="1.5rem">
         What is the result of {question?.question} ?
       </Heading>
       <Flex
@@ -133,11 +133,13 @@ const QuestionItem = ({
           ))}
         </Flex>
       </Flex>
-      <ArrowWrapper src={ArrowRight} alt="arrow" onClick={handleNext} />
-      {warning.question && <Warning text="You must select an option" />}
-      {warning.item && (
-        <Warning text="Select one of game board colored items" />
-      )}
+      <Flex flexDirection="row-reverse">
+        <ArrowWrapper src={ArrowRight} alt="arrow" onClick={handleNext} />
+        {warning.question && <Warning text="You must select an option" />}
+        {warning.item && (
+          <Warning text="Select one of game board colored items" />
+        )}
+      </Flex>
     </Box>
   );
 };

@@ -22,10 +22,12 @@ const SelectDropdown = ({
       const number = message.includes("1") ? 0 : 1;
       let aggArray = selectedOptions.opponents;
       aggArray[number] = e.target.value;
+
       setSelectedOptions({
         ...selectedOptions,
         [selection]: aggArray,
       });
+
       return;
     }
     setSelectedOptions({
