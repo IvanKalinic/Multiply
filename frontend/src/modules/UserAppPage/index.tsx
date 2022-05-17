@@ -1,8 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getActiveGame } from "../../apis";
+import Hangman from "../../components/Hangman";
 import { useOpponents } from "../../context/OpponentsContext";
 import { useUser } from "../../context/UserContext";
+import MemoryGame from "../Games/MemoryGame";
 import GameStart from "../GameStart";
 import TicTacToePage from "../TicTacToePage";
 
@@ -31,9 +33,13 @@ const UserAppPage = () => {
     <Flex justifyContent="center" alignItems="center">
       {!!gameType && gameType === 2 ? (
         <TicTacToePage />
-      ) : (
-        gameType === 1 && <GameStart />
-      )}
+      ) : gameType === 1 ? (
+        <GameStart />
+      ) : gameType === 3 ? (
+        <MemoryGame />
+      ) : gameType === 4 ? (
+        <Hangman />
+      ) : null}
     </Flex>
   );
 };

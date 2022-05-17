@@ -52,6 +52,7 @@ const GameStart = () => {
   const fetchGameDetails = async (hasOpponent: boolean) => {
     await axios.get(`/game`).then((res) => {
       setRoom(res?.data[0]?.room);
+      //FETCHAT SVE U KOJIMA JE USER U OPPONENTS ARRAYU, I DOK SE MAPIRA PROVJERIT JELI IGRA IMAGE WINNERA, AKO NEMA UZMI NULTU, AKO IMA UZMI PRVU SLJEDECU
       setOpponents(res?.data[0]?.opponents);
       setCategory(res?.data[0]?.category);
       setDifficulty(res?.data[0]?.difficulty);
