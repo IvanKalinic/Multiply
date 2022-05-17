@@ -5,7 +5,8 @@ const GameHistory = require("../models/GameHistory");
 router.post("/save", async (req, res) => {
   try {
     const newActiveGame = new ActiveGame({
-      opponents: req.body.opponents,
+      opponents: !!req.body.opponents ? req.body.opponents : [],
+      user: !!req.body.user ? req.body.user : "",
       type: req.body.type,
       room: req.body.room,
       difficulty: req.body?.difficulty,
@@ -47,8 +48,15 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
 
 router.delete("/deleteActiveGame", async (req, res) => {
   try {
-    const activeGame = await ActiveGame.find({});
-    await activeGame[0].deleteOne();
+    const activeGame = await ActiveGame.find({
+      // winer: { $not: { $in: [null, undefined, ""] } },
+    });
+    activeGame.map(async (game) => {
+      if (!!game?.winner) {
+        await game.deleteOne();
+      }
+    });
+    // await activeGame[0].deleteOne();
     res.status(200).json("Active game was deleted.");
   } catch (err) {
     res.status(500).json(err);

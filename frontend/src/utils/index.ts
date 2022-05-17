@@ -76,26 +76,44 @@ export const randomRoomName = () => {
   ).join("");
 };
 
+const gameType = (gameName: string) => {
+  switch (gameName) {
+    case "multiply":
+      return 1;
+    case "tictactoe":
+      return 2;
+    case "memorygame":
+      return 3;
+    case "hangman":
+      return 4;
+    default:
+      return 0;
+  }
+};
+
 export const gameSetup = async (
-  opponents: Array<any>,
-  socket: any,
   navigate: any,
   game: string,
   category?: string,
   difficulty?: string,
-  questions?: Array<any>
+  questions?: Array<any>,
+  opponents?: Array<any>,
+  user?: string,
+  socket?: any
 ) => {
-  let room = randomRoomName();
+  console.log(game);
+  let room = !user ? randomRoomName() : null;
   try {
     saveActiveGame({
-      opponents,
-      type: game === "multiply" ? 1 : 2,
+      opponents: !!opponents?.length ? opponents : null,
+      user: !!user ? user : null,
+      type: gameType(game),
       room,
       category,
       difficulty,
       questions,
     });
-    socket.emit("create", room);
+    if (!!socket) socket.emit("create", room);
     navigate("/");
   } catch (err) {
     console.log(err);

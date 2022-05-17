@@ -33,6 +33,16 @@ const AdminAppPage = () => {
                 <Link to="/multiplySetup">Multiply</Link>
               </Text>
             </Button>
+            <Button mr="4" mb="2rem" w={300}>
+              <Text fontSize="1.3rem">
+                <Link to="/memorySetup">Memory Game</Link>
+              </Text>
+            </Button>
+            <Button mr="4" mb="2rem" w={300}>
+              <Text fontSize="1.3rem">
+                <Link to="/hangmanSetup">Hangman</Link>
+              </Text>
+            </Button>
           </Flex>
         </Flex>
       </MenuWrapper>

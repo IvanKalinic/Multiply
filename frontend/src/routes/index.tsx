@@ -21,6 +21,9 @@ const LoginUser = lazy(() => import("../modules/LoginUser"));
 const GameStart = lazy(() => import("../modules/GameStart"));
 const TicTacToePage = lazy(() => import("../modules/TicTacToePage"));
 const MultiplySetup = lazy(() => import("../modules/GamesSetup/MultiplySetup"));
+const SingleGameSetup = lazy(
+  () => import("../modules/GamesSetup/SingleGameSetup")
+);
 const TicTacToeSetup = lazy(
   () => import("../modules/GamesSetup/TicTacToeSetup")
 );
@@ -45,6 +48,14 @@ const AppRoutes = ({
             <Route path="/userApp" element={<UserAppPage />} />
             <Route path="/multiplySetup" element={<MultiplySetup />} />
             <Route path="/ticTacToeSetup" element={<TicTacToeSetup />} />
+            <Route
+              path="/memorySetup"
+              element={<SingleGameSetup name="memory" />}
+            />
+            <Route
+              path="/hangmanSetup"
+              element={<SingleGameSetup name="hangman" />}
+            />
             <Route path="/addNewUser" element={<AddNewUser />} />
             <Route path="/ticTacToe" element={<TicTacToePage />} />
             <Route path="/mulitplyGameStart" element={<GameStart />} />

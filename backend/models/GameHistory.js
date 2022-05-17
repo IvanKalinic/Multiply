@@ -19,9 +19,6 @@ const GameHistorySchema = new mongoose.Schema(
     points: {
       type: Number,
     },
-    speed: {
-      type: Number,
-    },
   },
   { timestamps: true }
 );

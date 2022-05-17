@@ -24,7 +24,7 @@ export const getActiveGame = async () => {
   return await axios.get(`${process.env.REACT_APP_SERVER_BASE_URL}/game`);
 };
 
-export const deleteActiveGame = async () => {
+export const deleteActiveGames = async () => {
   await axios.delete(
     `${process.env.REACT_APP_SERVER_BASE_URL}/game/deleteActiveGame`
   );
@@ -32,9 +32,9 @@ export const deleteActiveGame = async () => {
 
 export const deleteActiveGameIfThereIsAWinner = async () => {
   getActiveGame().then((data) => {
-    if (!!data.data[0]?.winner) {
-      deleteActiveGame();
-    }
+    // if (!!data.data[0]?.winner) {
+    deleteActiveGames(); // DELETION OF ALL GAMES THAT HAVE WINNER
+    // }
   });
 };
 

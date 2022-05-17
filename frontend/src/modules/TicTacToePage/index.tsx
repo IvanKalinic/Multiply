@@ -117,32 +117,33 @@ const TicTacToePage = () => {
   }, [room, opponents, user]);
 
   useEffect(() => {
-    if (winner && player === xo)
+    if (winner && player === xo) {
       saveWinnerOrMultiplyDetails({
         opponents,
         room,
         type: 2,
         winner: user.data.username,
       });
-    saveToGameHistory({
-      opponents,
-      room,
-      gameName: "TicTacToe",
-      winner: user.data.username,
-      points: 1,
-      speed: 0,
-    });
-    saveUserScore(user.data.username, {
-      levelNumber: checkLevel(user.data?.overallPoints + 1),
-      levelName: levelNameFromScore(user.data?.overallPoints + 1),
-      game: {
-        ...activeGame,
+      saveToGameHistory({
         opponents,
         room,
-        type: 2,
+        gameName: "TicTacToe",
         winner: user.data.username,
-      },
-    });
+        points: 1,
+        speed: 0,
+      });
+      saveUserScore(user.data.username, {
+        levelNumber: checkLevel(user.data?.overallPoints + 1),
+        levelName: levelNameFromScore(user.data?.overallPoints + 1),
+        game: {
+          opponents,
+          room,
+          type: 2,
+          winner: user.data.username,
+          points: 1,
+        },
+      });
+    }
   }, [winner]);
 
   console.log(socket);

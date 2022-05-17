@@ -42,13 +42,14 @@ const MultiplySetup = () => {
       setQuestions(data.data);
 
       gameSetup(
-        selectedOptions.opponents,
-        socket,
         navigate,
         "multiply",
         selectedOptions.category,
         selectedOptions.difficulty,
-        data.data
+        data.data,
+        selectedOptions.opponents,
+        "",
+        socket
       );
     });
   };

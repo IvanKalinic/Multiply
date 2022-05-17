@@ -3,29 +3,27 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteActiveGameIfThereIsAWinner } from "../../../apis";
 import SelectDropdown from "../../../components/Select";
+import Warning from "../../../components/Warning";
 import { listOfClasses } from "../../../consts";
 import { useAdmin } from "../../../context/AdminContext";
 import { useAxios } from "../../../context/AxiosContext";
-import { useOpponents } from "../../../context/OpponentsContext";
-import { useSocket } from "../../../context/SocketContext";
 import { MenuWrapper } from "../../../styles";
 import { gameSetup } from "../../../utils";
 
 type SelectedOpponents = {
-  opponents: Array<string>;
+  user: string;
   room: string;
-  firstOpponentsClass?: string;
-  secondOpponentsClass?: string;
+  userClass?: string;
 };
 
-const startValue = { opponents: ["", ""], room: "" };
+const startValue = { user: "", room: "" };
 
-const TicTacToeSetup = () => {
-  const { setOpponents } = useOpponents();
+const MemorySetup = ({ name }: { name: string }) => {
   const { admin } = useAdmin();
-  const { socket } = useSocket();
   const navigate = useNavigate();
   const axios = useAxios();
+
+  const [warning, setWarning] = useState<boolean>(false);
 
   const [users, setUsers] = useState<Array<any>>([]);
   const [selectedOptions, setSelectedOptions] =
@@ -49,16 +47,19 @@ const TicTacToeSetup = () => {
   }, [admin]);
 
   const generateGame = async () => {
-    setOpponents(selectedOptions.opponents);
+    if (!selectedOptions.user) {
+      setWarning(true);
+      return;
+    }
+
     gameSetup(
       navigate,
-      "tictactoe",
+      name === "memory" ? "memorygame" : "hangman",
       "",
       "",
       [],
-      selectedOptions.opponents,
-      "",
-      socket
+      [],
+      selectedOptions.user
     );
   };
 
@@ -66,11 +67,12 @@ const TicTacToeSetup = () => {
     return users.filter((user) => user.class === className);
   };
 
-  console.log(selectedOptions);
-  console.log(users);
-  console.log(
-    users.filter((user) => user.class === selectedOptions?.firstOpponentsClass)
-  );
+  useEffect(() => {
+    if (!!selectedOptions.user && warning) {
+      setWarning(false);
+    }
+  }, [selectedOptions]);
+
   return (
     <Flex justifyContent="center">
       <MenuWrapper>
@@ -79,69 +81,32 @@ const TicTacToeSetup = () => {
           justifyContent="center"
           alignItems="center"
         >
-          {/* listOfClasses */}
           <Flex>
             <Box mt="4" mr="4">
               <SelectDropdown
-                message=" 1st opponent's class"
+                message="User's class"
                 array={listOfClasses}
                 setSelectedOptions={setSelectedOptions}
                 selectedOptions={selectedOptions}
-                selection="firstOpponentsClass"
+                selection="userClass"
               />
             </Box>
-            <Box mt="4">
-              <SelectDropdown
-                message="2nd opponent's class"
-                array={listOfClasses}
-                setSelectedOptions={setSelectedOptions}
-                selectedOptions={selectedOptions}
-                selection="secondOpponentsClass"
-              />
-            </Box>
-          </Flex>
-          <Flex>
             <Box mt="4" mr="4">
               <SelectDropdown
                 message={
-                  !!selectedOptions?.firstOpponentsClass &&
-                  !filterUsersBasedOnClass(selectedOptions?.firstOpponentsClass)
-                    .length
+                  !!selectedOptions?.userClass &&
+                  !filterUsersBasedOnClass(selectedOptions?.userClass).length
                     ? "Empty class"
-                    : "1st opponent"
+                    : "User"
                 }
                 array={
-                  !!selectedOptions?.firstOpponentsClass
-                    ? filterUsersBasedOnClass(
-                        selectedOptions?.firstOpponentsClass
-                      )
+                  !!selectedOptions?.userClass
+                    ? filterUsersBasedOnClass(selectedOptions?.userClass)
                     : users
                 }
                 setSelectedOptions={setSelectedOptions}
                 selectedOptions={selectedOptions}
-                selection="opponents"
-              />
-            </Box>
-            <Box mt="4">
-              <SelectDropdown
-                message={
-                  !!selectedOptions?.secondOpponentsClass &&
-                  !filterUsersBasedOnClass(
-                    selectedOptions?.secondOpponentsClass
-                  ).length
-                    ? "Empty class"
-                    : "2nd opponent"
-                }
-                array={
-                  !!selectedOptions?.secondOpponentsClass
-                    ? filterUsersBasedOnClass(
-                        selectedOptions?.secondOpponentsClass
-                      )
-                    : users
-                }
-                setSelectedOptions={setSelectedOptions}
-                selectedOptions={selectedOptions}
-                selection="opponents"
+                selection="user"
               />
             </Box>
           </Flex>
@@ -155,10 +120,11 @@ const TicTacToeSetup = () => {
           >
             Start game
           </Button>
+          {warning && <Warning text="You must select user" />}
         </Flex>
       </MenuWrapper>
     </Flex>
   );
 };
 
-export default TicTacToeSetup;
+export default MemorySetup;

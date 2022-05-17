@@ -5,12 +5,14 @@ const ActiveGameSchema = new mongoose.Schema(
   {
     opponents: {
       type: Array,
-      required: true,
+    },
+    user: {
+      type: String,
     },
     type: {
       type: Number,
-      enum: [1, 2],
-      default: 1,
+      enum: [1, 2, 3, 4],
+      default: 0,
     },
     room: {
       type: String,
