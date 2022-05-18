@@ -1,8 +1,16 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { fetchQuestions } from "../../../apis";
+import {
+  fetchQuestions,
+  saveToGameHistory,
+  saveUserScore,
+  saveWinnerOrMultiplyDetails,
+} from "../../../apis";
+import Winner from "../../../components/Winner";
 import { categories, difficulties } from "../../../consts";
-import { randomValue } from "../../../utils";
+import { useUser } from "../../../context/UserContext";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import { checkLevel, levelNameFromScore, randomValue } from "../../../utils";
 import { MemoryCardsContainer } from "../../modules.style";
 import CardItem from "./CardItem";
 
@@ -12,17 +20,25 @@ const categoryNames = categories.map((diff) => diff.category);
 const MemoryGame = () => {
   const [items, setItems] = useState<Array<any>>([]);
   const [questions, setQuestions] = useState<Array<any>>([]);
-  const [randomDifficulty, setRandomDifficulty] = useState<string>("");
-  const [randomCategory, setRandomCategory] = useState<string>("");
+  const [randomDifficulty, setRandomDifficulty] = useLocalStorage(
+    "randDiff",
+    ""
+  );
+  const [randomCategory, setRandomCategory] = useLocalStorage("randCat", "");
 
   const [openedCard, setOpenedCard] = useState<Array<any>>([]);
   const [matched, setMatched] = useState<Array<any>>([]);
   const [win, setWin] = useState<number>(0);
+  const [winner, setWinner] = useState<boolean>(false);
+
+  const { user } = useUser();
 
   useEffect(() => {
+    if (!!randomCategory && !!randomDifficulty) return;
+
     setRandomDifficulty(randomValue(difficultyNames));
     setRandomCategory(randomValue(categoryNames));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!randomCategory && !randomDifficulty) return;
@@ -41,12 +57,12 @@ const MemoryGame = () => {
       let newValue = 0;
       do {
         newValue = randomIntFromInterval(0, questions.length - 1);
-      } while (i > 1 && indexesArray.find((value) => value === newValue));
+      } while (i > 0 && indexesArray.some((value) => value === newValue));
       // ako je prethodni razlicith od novog
       indexesArray[i] = newValue;
     }
   }, [questions]);
-
+  console.log(indexesArray);
   useEffect(() => {
     if (!!!indexesArray.length && !!!questions.length) return;
 
@@ -89,11 +105,43 @@ const MemoryGame = () => {
     if (openedCard.length === 2) setTimeout(() => setOpenedCard([]), 1000);
   }, [openedCard]);
 
-  if (win === 8) console.log("Winner");
+  useEffect(() => {
+    if (win === 8) {
+      setTimeout(() => setWinner(true), 500);
+      console.log("Winner");
+      saveWinnerOrMultiplyDetails({
+        type: 3,
+        winner: user.data.username,
+      });
+      saveToGameHistory({
+        gameName: "memorygame",
+        winner: user.data.username,
+        points: 3,
+        speed: 0,
+      });
+      saveUserScore(user.data.username, {
+        levelNumber: checkLevel(user.data?.overallPoints + 3),
+        levelName: levelNameFromScore(user.data?.overallPoints + 3),
+        game: {
+          type: 3,
+          winner: user.data.username,
+          points: 3,
+        },
+      });
+      setWin(0);
+      setRandomDifficulty("");
+      setRandomCategory("");
+    }
+  }, [win]);
+
+  console.log(win);
+  console.log(items);
 
   return (
-    <Flex>
-      <Heading fontSize="md">MemoryGame</Heading>
+    <Flex flexDirection="column" justifyContent="center">
+      <Heading fontSize="lg" mt="1rem" mb="2rem">
+        Memory Game
+      </Heading>
       <MemoryCardsContainer>
         {items?.map((item, index) => {
           let isFlipped = false;
@@ -110,6 +158,7 @@ const MemoryGame = () => {
           );
         })}
       </MemoryCardsContainer>
+      {!!winner && <Winner />}
     </Flex>
   );
 };

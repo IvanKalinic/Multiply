@@ -23,6 +23,7 @@ router.post("/save", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const activeGame = await ActiveGame.find({});
+    console.log(activeGame);
     res.status(200).json(activeGame);
   } catch (err) {
     res.status(500).json(err);
@@ -31,16 +32,60 @@ router.get("/", async (req, res) => {
 
 router.put("/winnerOrMultiplyDetails", async (req, res) => {
   try {
-    console.log(req.body);
     const activeGame = await ActiveGame.find({});
-    await activeGame[0].updateOne({ $set: req.body });
-    res
-      .status(200)
-      .json(
-        req.body.winner
-          ? "Active game was updated with winner"
-          : "Active game was updated with multiply details for opponent"
+    let gameToBeUpdated = {};
+
+    if (!req.body.winner && !!req.body.type && !!req.body.user) {
+      gameToBeUpdated = activeGame.find(
+        (game) => game.type === req.body.type && game?.opponents.includes(user)
       );
+      if (!!gameToBeUpdated) {
+        await gameToBeUpdated.updateOne({ $set: req.body });
+        res
+          .status(200)
+          .json(
+            req.body.winner
+              ? "Active game was updated with winner"
+              : "Active game was updated with multiply details for opponent"
+          );
+      }
+    } else {
+      // slučajevi kad nije mulitply -> imamo winnera
+      gameToBeUpdated = activeGame.find(
+        (game) =>
+          !!game?.opponents.length &&
+          game.opponents.includes(req.body.winner) &&
+          game.type === req.body.type
+      );
+      if (!!gameToBeUpdated) {
+        await gameToBeUpdated.updateOne({ $set: req.body });
+        res
+          .status(200)
+          .json(
+            req.body?.winner
+              ? "Active game was updated with winner"
+              : "Active game was updated with multiply details for opponent"
+          );
+        return;
+      }
+
+      gameToBeUpdated = activeGame.find(
+        (game) =>
+          !!game?.user &&
+          game.user === req.body.winner &&
+          game.type === req.body.type
+      );
+      if (!!gameToBeUpdated) {
+        await gameToBeUpdated.updateOne({ $set: req.body });
+        res
+          .status(200)
+          .json(
+            req.body.winner
+              ? "Active game was updated with winner"
+              : "Active game was updated with multiply details for opponent"
+          );
+      }
+    }
   } catch (err) {
     res.status(500).json(err);
   }

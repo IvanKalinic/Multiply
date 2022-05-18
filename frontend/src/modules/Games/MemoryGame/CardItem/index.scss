@@ -3,6 +3,8 @@
   background-color: #fff;
   cursor: pointer;
   background: none;
+  // width:8rem;
+  // height:8rem;
 
   &.flipped .inner {
     transform: rotateY(180deg);

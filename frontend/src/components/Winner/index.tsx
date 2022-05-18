@@ -50,7 +50,7 @@ const Winner = () => {
             Congrats!
           </Text>
           <Text mt="20" as="u">
-            <Link to="/">Let's play another one</Link>
+            <Link to="/">Let's play next game in your queue</Link>
           </Text>
         </Flex>
       </ModalContent>

@@ -16,11 +16,11 @@ export const TicTacToeContainer = styled.div`
 `;
 
 export const MemoryCardsContainer = styled.div`
-  height: 43.75rem;
-  width: 43.75rem;
+  height: 37.75rem;
+  width: 37.75rem;
   display: grid;
   grid-template: repeat(4, 1fr) / repeat(4, 1fr);
-  gap: 1rem;
+  gap: 0.3rem;
 `;
 
 const hideImageAnimation = keyframes`

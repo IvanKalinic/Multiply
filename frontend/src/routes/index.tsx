@@ -42,7 +42,7 @@ const AppRoutes = ({
         <Navbar user={user} admin={admin} />
         <Suspense fallback={<Spinner />}>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={!user ? <HomePage /> : <UserAppPage />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/adminApp" element={<AdminAppPage />} />
             <Route path="/userApp" element={<UserAppPage />} />

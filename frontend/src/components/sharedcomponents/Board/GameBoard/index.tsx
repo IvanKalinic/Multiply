@@ -83,7 +83,12 @@ export const GameBoard = ({ opponentArray }: Props) => {
 
     setBoardArray(initialArray);
     if (!!initialArray[0].length) {
-      saveWinnerOrMultiplyDetails({ gameBoard: initialArray, questions });
+      saveWinnerOrMultiplyDetails({
+        type: 1,
+        gameBoard: initialArray,
+        questions,
+        user: user.data.username,
+      });
     } else {
       getActiveGame().then((data) => {
         setBoardArray(data.data[0]?.gameBoard);
