@@ -43,7 +43,7 @@ const MultiplySetup = () => {
 
       gameSetup(
         navigate,
-        "multiply",
+        "Multiply",
         selectedOptions.category,
         selectedOptions.difficulty,
         data.data,

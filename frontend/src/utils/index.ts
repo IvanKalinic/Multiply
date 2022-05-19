@@ -78,13 +78,13 @@ export const randomRoomName = () => {
 
 const gameType = (gameName: string) => {
   switch (gameName) {
-    case "multiply":
+    case "Multiply":
       return 1;
-    case "tictactoe":
+    case "TicTacToe":
       return 2;
-    case "memorygame":
+    case "Memory game":
       return 3;
-    case "hangman":
+    case "Hangman":
       return 4;
     default:
       return 0;
@@ -123,7 +123,6 @@ export const gameSetup = async (
 export const randomValue = (array: Array<any>) => {
   return array[Math.floor(Math.random() * array.length)];
 };
-
 
 export const getGameName = (type: number) => {
   switch (type) {
@@ -198,3 +197,18 @@ export const arraySortSpeed = (fastestArray: Array<any>) => {
     );
   });
 };
+
+export const bestInGame = (bestGameArray: Array<any>) => {
+  // property is
+  const arrayWithUserNames = bestGameArray.map((row) => row.winner);
+  console.log(arrayWithUserNames);
+  let reducedArray = arrayWithUserNames.reduce((p, c) => {
+    p[c] = (p[c] || 0) + 1;
+    return p;
+  }, {});
+  console.log(reducedArray);
+
+  return Object.keys(reducedArray).sort((a, b) => {
+    return reducedArray[b] - reducedArray[a];
+  });
+}; 

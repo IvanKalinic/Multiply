@@ -11,12 +11,15 @@ import { getLevelUpperBound } from "../../utils";
 import "./index.scss";
 
 const Stats = ({ data }: { data: Array<any> }) => {
+  console.log(data);
   return (
     <MenuWrapper
       style={{
         width: "20vw",
-        height: "60vh",
+        height: "100vh",
+        paddingTop: "20vh",
         marginRight: "2rem",
+        paddingBottom: "2rem",
         visibility: !data?.length ? "hidden" : "visible",
         flexDirection: "column",
         boxShadow: "0 0.25rem 0.25rem rgba(0, 0, 0, 0.25)",
@@ -51,13 +54,24 @@ const Stats = ({ data }: { data: Array<any> }) => {
             </Flex>
             <CircularProgress
               value={
+                !!user.overallPoints
+                  ? ((user.overallPoints -
+                      getLevelUpperBound(user?.levelNumber - 1)) /
+                      (getLevelUpperBound(user?.levelNumber) -
+                        getLevelUpperBound(user?.levelNumber - 1))) *
+                    100
+                  : 0
+              }
+              color={
                 ((user.overallPoints -
                   getLevelUpperBound(user?.levelNumber - 1)) /
                   (getLevelUpperBound(user?.levelNumber) -
                     getLevelUpperBound(user?.levelNumber - 1))) *
-                100
+                  100 >
+                50
+                  ? "green.400"
+                  : "red.400"
               }
-              color="green.400"
               mt="-6vh"
               ml="2vw"
             >

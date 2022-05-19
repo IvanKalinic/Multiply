@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
   fetchAllUsers,
@@ -9,7 +9,7 @@ import SelectDropdown from "../../components/Select";
 import Stats from "../../components/Stats";
 import { gameOptions, listOfClasses } from "../../consts";
 import { MenuWrapper } from "../../styles";
-import { bestPlayerSort } from "../../utils";
+import { bestInGame, bestPlayerSort } from "../../utils";
 
 const statisticsCategories = [
   {
@@ -57,6 +57,7 @@ const Statistics = () => {
   };
 
   useEffect(() => {
+    // if there is no selected options
     if (
       Object.keys(selectedOptions).every(
         (val) =>
@@ -66,6 +67,7 @@ const Statistics = () => {
     )
       return;
 
+    //class is selected
     if (!!selectedOptions.classes) {
       fetchUsersFromClassName(selectedOptions.classes).then((res) => {
         console.log(res);
@@ -74,15 +76,17 @@ const Statistics = () => {
     }
     if (!!selectedOptions.games) {
       fetchGameScores(selectedOptions.games).then((res) => {
-        if (!!selectedOptions.classes) {
-          // setGameUsers(res.data.map(gameUser => {
-          // map po fetchanim userima  da poklapaju sa userima iz tog razreda
-          // }))
-        } else {
-          // setGameUsers(res.data)   --U OBA SLUČAJA POSLAT ARRAY U FUNKCIJU KOJA SORTIRA PO ŽELJENOM PARAMETRU I ONDA SETSTATE
-        }
-        setGameUsers(res.data);
-        // setDisplayArray((dispArray) => [...dispArray, gameUsers]);
+        console.log(res);
+        console.log(bestInGame(res.data));
+        //   if (!!selectedOptions.classes) {
+        //     // setGameUsers(res.data.map(gameUser => {
+        //     // map po fetchanim userima  da poklapaju sa userima iz tog razreda
+        //     // }))
+        //   } else {
+        //     // setGameUsers(res.data)   --U OBA SLUČAJA POSLAT ARRAY U FUNKCIJU KOJA SORTIRA PO ŽELJENOM PARAMETRU I ONDA SETSTATE
+        //   }
+        //   setGameUsers(res.data);
+        //   // setDisplayArray((dispArray) => [...dispArray, gameUsers]);
       });
     }
     if (!!selectedOptions.fastest || !!selectedOptions.top10) {

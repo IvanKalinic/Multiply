@@ -52,7 +52,7 @@ const TicTacToeSetup = () => {
     setOpponents(selectedOptions.opponents);
     gameSetup(
       navigate,
-      "tictactoe",
+      "TicTacToe",
       "",
       "",
       [],

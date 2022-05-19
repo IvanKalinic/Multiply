@@ -54,7 +54,7 @@ const MemorySetup = ({ name }: { name: string }) => {
 
     gameSetup(
       navigate,
-      name === "memory" ? "memorygame" : "hangman",
+      name === "memory" ? "Memory game" : "Hangman",
       "",
       "",
       [],

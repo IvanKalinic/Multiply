@@ -21,12 +21,9 @@ router.get("/:class", async (req, res) => {
 
 router.put("/:username", async (req, res) => {
   try {
+    console.log(req.body);
     const user = await User.find({ username: req.params.username });
-    // console.log(req.body.game.points);
-    // console.log(user[0].gamesPlayed);
-    // console.log(user[0]?.overallPoints + req.body.points);
-    // console.log(checkLevel(user[0]?.overallPoints + req.body.points));
-    // console.log([...user[0]?.gamesPlayed, req.body?.game]);
+
     await user[0].updateOne({
       $set: {
         overallPoints: !!req.body?.game?.points
@@ -35,9 +32,9 @@ router.put("/:username", async (req, res) => {
         speed: !!req.body?.speed
           ? (user[0]?.speed || 0) + req.body.speed
           : user[0]?.speed || 0,
-        gamesPlayed: !!req.body?.game
+        gamesPlayed: !!req.body.game
           ? [...user[0]?.gamesPlayed, req.body?.game]
-          : user[0]?.gamesPlayed || [],
+          : user[0]?.gamesPlayed,
         gamesWon:
           !!req.body?.game && user[0].username === req.body.game?.winner
             ? [...user[0]?.gamesWon, req.body?.game]

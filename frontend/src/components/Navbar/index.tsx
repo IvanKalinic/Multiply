@@ -48,7 +48,13 @@ const Navbar = ({ user, admin }: Props) => {
             </span>
           )}
           <span style={{ fontSize: "1.25rem", marginRight: "1.25rem" }}>
-            {user ? user?.data?.username : admin ? admin?.data?.username : null}
+            {user ? (
+              user?.data?.username
+            ) : admin ? (
+              <Link to="/adminApp" className="statistics-link">
+                {admin?.data?.username}
+              </Link>
+            ) : null}
           </span>
 
           {user || admin ? (

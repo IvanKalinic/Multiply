@@ -114,7 +114,7 @@ const MemoryGame = () => {
         winner: user.data.username,
       });
       saveToGameHistory({
-        gameName: "memorygame",
+        gameName: "Memory game",
         winner: user.data.username,
         points: 3,
         speed: 0,

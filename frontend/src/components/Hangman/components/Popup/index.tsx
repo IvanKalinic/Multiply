@@ -31,33 +31,37 @@ const Popup = ({
 
   const { user } = useUser();
 
-  if (checkWin(correctLetters, wrongLetters, selectedWord) === "win") {
-    finalMessage = "Congratulations! You won! 😃";
-    playable = false;
-    saveWinnerOrMultiplyDetails({
-      type: 4,
-      winner: user.data.username,
-    });
-    saveToGameHistory({
-      gameName: "hangman",
-      winner: user.data.username,
-      points: 2,
-      speed: 0,
-    });
-    saveUserScore(user.data.username, {
-      levelNumber: checkLevel(user.data?.overallPoints + 2),
-      levelName: levelNameFromScore(user.data?.overallPoints + 2),
-      game: {
+  useEffect(() => {
+    if (checkWin(correctLetters, wrongLetters, selectedWord) === "win") {
+      finalMessage = "Congratulations! You won! 😃";
+      playable = false;
+      saveWinnerOrMultiplyDetails({
         type: 4,
         winner: user.data.username,
+      });
+      saveToGameHistory({
+        gameName: "Hangman",
+        winner: user.data.username,
         points: 2,
-      },
-    });
-  } else if (checkWin(correctLetters, wrongLetters, selectedWord) === "lose") {
-    finalMessage = "Unfortunately you lost. 😕";
-    finalMessageRevealWord = `...the word was: ${selectedWord}`;
-    playable = false;
-  }
+        speed: 0,
+      });
+      saveUserScore(user.data.username, {
+        levelNumber: checkLevel(user.data?.overallPoints + 2),
+        levelName: levelNameFromScore(user.data?.overallPoints + 2),
+        game: {
+          type: 4,
+          winner: user.data.username,
+          points: 2,
+        },
+      });
+    } else if (
+      checkWin(correctLetters, wrongLetters, selectedWord) === "lose"
+    ) {
+      finalMessage = "Unfortunately you lost. 😕";
+      finalMessageRevealWord = `...the word was: ${selectedWord}`;
+      playable = false;
+    }
+  }, [correctLetters, wrongLetters, selectedWord]);
 
   useEffect(() => {
     setPlayable(playable);
@@ -69,7 +73,6 @@ const Popup = ({
         <h2>{finalMessage}</h2>
         <h3>{finalMessageRevealWord}</h3>
         <PopupButton onClick={playAgain}>
-          {" "}
           <Link to="/">Let's play next game in your queue</Link>
         </PopupButton>
       </PopupWrapper>
