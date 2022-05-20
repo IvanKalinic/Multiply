@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   fetchAllUsers,
   fetchGameScores,
+  fetchSpecificUser,
   fetchUsersFromClassName,
 } from "../../apis";
 import SelectDropdown from "../../components/Select";
@@ -69,25 +70,38 @@ const Statistics = () => {
 
     //class is selected
     if (!!selectedOptions.classes) {
+      if (!!users.length) setUsers([]);
       fetchUsersFromClassName(selectedOptions.classes).then((res) => {
         console.log(res);
         setUsers(bestPlayerSort(res.data));
       });
     }
+
     if (!!selectedOptions.games) {
+      if (!!gameUsers.length) setGameUsers([]);
+
       fetchGameScores(selectedOptions.games).then((res) => {
         console.log(res);
-        console.log(bestInGame(res.data));
-        //   if (!!selectedOptions.classes) {
-        //     // setGameUsers(res.data.map(gameUser => {
-        //     // map po fetchanim userima  da poklapaju sa userima iz tog razreda
-        //     // }))
-        //   } else {
-        //     // setGameUsers(res.data)   --U OBA SLUČAJA POSLAT ARRAY U FUNKCIJU KOJA SORTIRA PO ŽELJENOM PARAMETRU I ONDA SETSTATE
-        //   }
-        //   setGameUsers(res.data);
-        //   // setDisplayArray((dispArray) => [...dispArray, gameUsers]);
+        setGameUsers(bestInGame(res.data));
+        // console.log(usersWithKeys);
+        // usersWithKeys.forEach((user) => {
+        //   fetchSpecificUser(user.name).then((res) => {
+        //     console.log(res);
+        //     if (user.name === res.data[0].username)
+        //       setGameUsers((gameUsers) => [...gameUsers, res.data[0]]);
+        //   });
+        // });
       });
+      // console.log(gameUsers);
+      //   if (!!selectedOptions.classes) {
+      //     // setGameUsers(res.data.map(gameUser => {
+      //     // map po fetchanim userima  da poklapaju sa userima iz tog razreda
+      //     // }))
+      //   } else {
+      //     // setGameUsers(res.data)   --U OBA SLUČAJA POSLAT ARRAY U FUNKCIJU KOJA SORTIRA PO ŽELJENOM PARAMETRU I ONDA SETSTATE
+      //   }
+      //   setGameUsers(res.data);
+      //   // setDisplayArray((dispArray) => [...dispArray, gameUsers]);
     }
     if (!!selectedOptions.fastest || !!selectedOptions.top10) {
       fetchAllUsers().then((res) => {
@@ -105,10 +119,12 @@ const Statistics = () => {
     }
   }, [selectedOptions]);
 
+  // useEffect(() => {
   if (!!users.length) {
     displayArray[0] = selectedOptions.classes !== "" ? [...users] : null;
   }
   if (!!gameUsers.length) {
+    console.log("here");
     displayArray[1] = selectedOptions.games !== "" ? [...gameUsers] : null;
   }
   if (!!fastestUsers.length) {
@@ -117,6 +133,7 @@ const Statistics = () => {
   if (!!top10Users.length) {
     displayArray[3] = !!selectedOptions.top10 && [...top10Users];
   }
+  // });
 
   console.log(users);
   console.log(selectedOptions);

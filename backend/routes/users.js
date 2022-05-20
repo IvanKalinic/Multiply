@@ -10,7 +10,16 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:class", async (req, res) => {
+router.get("/username/:username", async (req, res) => {
+  try {
+    const user = await User.find({ username: req.params.username });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/class/:class", async (req, res) => {
   try {
     const users = await User.find({ class: req.params.class });
     res.status(200).json(users);

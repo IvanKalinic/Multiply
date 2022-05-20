@@ -47,7 +47,7 @@ export const saveActiveGame = async (payload: any) => {
 
 export const fetchUsersFromClassName = async (className: string) => {
   return await axios.get(
-    `${process.env.REACT_APP_SERVER_BASE_URL}/users/${className}`
+    `${process.env.REACT_APP_SERVER_BASE_URL}/users/class/${className}`
   );
 };
 
@@ -59,6 +59,11 @@ export const fetchGameScores = async (name: string) => {
 
 export const fetchAllUsers = async () => {
   return await axios.get(`${process.env.REACT_APP_SERVER_BASE_URL}/users`);
+};
+export const fetchSpecificUser = async (username: string) => {
+  return await axios.get(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/users/username/${username}`
+  );
 };
 interface PayloadType {
   overallPoints?:number;

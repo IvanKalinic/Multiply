@@ -1,4 +1,4 @@
-import { saveActiveGame } from "../apis";
+import { fetchSpecificUser, saveActiveGame } from "../apis";
 
 export const vertical = (boardArray: any) => {
   let column;
@@ -76,7 +76,7 @@ export const randomRoomName = () => {
   ).join("");
 };
 
-const gameType = (gameName: string) => {
+export const gameType = (gameName: string) => {
   switch (gameName) {
     case "Multiply":
       return 1;
@@ -152,6 +152,8 @@ export const checkLevel = (points: number) => {
 
 export const getLevelUpperBound = (levelNumber: number) => {
   switch (levelNumber) {
+    case 0:
+      return 0;
     case 1:
       return 10;
     case 2:
@@ -198,6 +200,12 @@ export const arraySortSpeed = (fastestArray: Array<any>) => {
   });
 };
 
+// const getUserDetails = (key: string, wins: number) => {
+//   console.log(fetchSpecificUser(key).then((res) => res.data[0]));
+//   let user = fetchSpecificUser(key).then((res) => res.data[0]);
+//   return { ...fetchSpecificUser(key).then((res) => res.data[0]), wins };
+// };
+
 export const bestInGame = (bestGameArray: Array<any>) => {
   // property is
   const arrayWithUserNames = bestGameArray.map((row) => row.winner);
@@ -205,10 +213,19 @@ export const bestInGame = (bestGameArray: Array<any>) => {
   let reducedArray = arrayWithUserNames.reduce((p, c) => {
     p[c] = (p[c] || 0) + 1;
     return p;
-  }, {});
+  }, []);
   console.log(reducedArray);
 
-  return Object.keys(reducedArray).sort((a, b) => {
+  // ["user13","user14","user16"]
+  let newArray = Object.keys(reducedArray).sort((a, b) => {
     return reducedArray[b] - reducedArray[a];
   });
-}; 
+
+  return newArray.map((key) => ({
+    name: key,
+    wins: reducedArray[key],
+  }));
+  // return Object.keys(reducedArray).sort((a, b) => {
+  //   return reducedArray[b] - reducedArray[a];
+  // });
+};;
