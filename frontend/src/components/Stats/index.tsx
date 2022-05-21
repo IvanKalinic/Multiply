@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { MenuWrapper } from "../../styles";
 import { getLevelUpperBound } from "../../utils";
+import Warning from "../Warning";
 import "./index.scss";
 import StatsItem from "./StatsItem";
 
@@ -35,9 +36,11 @@ const Stats = ({ data }: { data: Array<any> }) => {
       }}
       className="webkit-scrollbar"
     >
-      {data?.map((user) => (
-        <StatsItem userData={user} />
-      ))}
+      {data !== null ? (
+        data?.map((user) => <StatsItem userData={user} />)
+      ) : (
+        <Warning text="No users found" />
+      )}
     </MenuWrapper>
   );
 };

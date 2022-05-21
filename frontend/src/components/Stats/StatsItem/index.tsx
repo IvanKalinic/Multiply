@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { fetchSpecificUser } from "../../../apis";
 import { getLevelUpperBound } from "../../../utils";
+import Warning from "../../Warning";
 
 interface UserData {
   username: string;

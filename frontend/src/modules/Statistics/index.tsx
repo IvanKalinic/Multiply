@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   fetchAllUsers,
   fetchGameScores,
-  fetchSpecificUser,
   fetchUsersFromClassName,
 } from "../../apis";
 import SelectDropdown from "../../components/Select";
@@ -69,28 +68,22 @@ const Statistics = () => {
       return;
 
     //class is selected
+    if (!selectedOptions.classes) displayArray[0] = null;
     if (!!selectedOptions.classes) {
       if (!!users.length) setUsers([]);
       fetchUsersFromClassName(selectedOptions.classes).then((res) => {
         console.log(res);
         setUsers(bestPlayerSort(res.data));
+        displayArray[0] = [...users];
       });
     }
 
-    if (!!selectedOptions.games) {
-      if (!!gameUsers.length) setGameUsers([]);
-
+    if (!selectedOptions.games) displayArray[1] = null;
+    if (!!selectedOptions.games && !selectedOptions.classes) {
       fetchGameScores(selectedOptions.games).then((res) => {
         console.log(res);
         setGameUsers(bestInGame(res.data));
-        // console.log(usersWithKeys);
-        // usersWithKeys.forEach((user) => {
-        //   fetchSpecificUser(user.name).then((res) => {
-        //     console.log(res);
-        //     if (user.name === res.data[0].username)
-        //       setGameUsers((gameUsers) => [...gameUsers, res.data[0]]);
-        //   });
-        // });
+        displayArray[1] = bestInGame(res.data);
       });
       // console.log(gameUsers);
       //   if (!!selectedOptions.classes) {
@@ -119,12 +112,61 @@ const Statistics = () => {
     }
   }, [selectedOptions]);
 
+  useEffect(() => {
+    if (!!selectedOptions.classes) {
+      fetchUsersFromClassName(selectedOptions.classes).then((res) => {
+        let tempArray: Array<any> = [];
+
+        if (!res.data.length) return;
+
+        if (!selectedOptions.games) return;
+
+        fetchGameScores(selectedOptions.games).then((games) => {
+          console.log(games);
+          if (!games.data.length) return;
+          let bestGameUsers = bestInGame(games.data);
+          if (!bestGameUsers.length) return;
+          console.log("Here");
+
+          console.log(bestGameUsers);
+          console.log(res.data);
+          bestGameUsers.forEach((gameUser: any) => {
+            res.data.forEach((classUser: any) => {
+              if (gameUser.name === classUser.username) {
+                console.log(true);
+                tempArray.push(gameUser);
+              }
+            });
+          });
+
+          console.log(tempArray);
+
+          if (!tempArray.length) {
+            setGameUsers([]);
+            displayArray[1] = null;
+          }
+
+          setGameUsers(tempArray);
+          displayArray[1] = [...tempArray];
+        });
+      });
+    }
+    if (!!selectedOptions.games) {
+      setGameUsers([]);
+      displayArray[1] = null;
+    }
+  }, [selectedOptions.classes]);
+
+  console.log(gameUsers);
+  console.log(users);
+  console.log(selectedOptions);
+  console.log(displayArray);
+
   // useEffect(() => {
   if (!!users.length) {
     displayArray[0] = selectedOptions.classes !== "" ? [...users] : null;
   }
   if (!!gameUsers.length) {
-    console.log("here");
     displayArray[1] = selectedOptions.games !== "" ? [...gameUsers] : null;
   }
   if (!!fastestUsers.length) {
@@ -133,11 +175,6 @@ const Statistics = () => {
   if (!!top10Users.length) {
     displayArray[3] = !!selectedOptions.top10 && [...top10Users];
   }
-  // });
-
-  console.log(users);
-  console.log(selectedOptions);
-  console.log(displayArray);
 
   return (
     <Flex alignItems="center" justifyContent="center">
@@ -192,6 +229,5 @@ const Statistics = () => {
       </MenuWrapper>
     </Flex>
   );
-};
-
+};;
 export default Statistics;
