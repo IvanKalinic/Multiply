@@ -1,14 +1,5 @@
-import {
-  Box,
-  calc,
-  CircularProgress,
-  CircularProgressLabel,
-  Flex,
-  Heading,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { memo } from "react";
 import { MenuWrapper } from "../../styles";
-import { getLevelUpperBound } from "../../utils";
 import Warning from "../Warning";
 import "./index.scss";
 import StatsItem from "./StatsItem";
@@ -45,4 +36,4 @@ const Stats = ({ data }: { data: Array<any> }) => {
   );
 };
 
-export default Stats;
+export default memo(Stats);

@@ -4,7 +4,7 @@ import {
   Flex,
   Heading,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { fetchSpecificUser } from "../../../apis";
 import { getLevelUpperBound } from "../../../utils";
 import Warning from "../../Warning";
@@ -112,4 +112,4 @@ export const StatsItem = ({ userData }: { userData: any }) => {
   );
 };
 
-export default StatsItem;
+export default memo(StatsItem);

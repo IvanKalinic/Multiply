@@ -9,7 +9,7 @@ import SelectDropdown from "../../components/Select";
 import Stats from "../../components/Stats";
 import { gameOptions, listOfClasses } from "../../consts";
 import { MenuWrapper } from "../../styles";
-import { bestInGame, bestPlayerSort } from "../../utils";
+import { arraySortSpeed, bestInGame, bestPlayerSort } from "../../utils";
 
 const statisticsCategories = [
   {
@@ -70,7 +70,6 @@ const Statistics = () => {
     //class is selected
     if (!selectedOptions.classes) displayArray[0] = null;
     if (!!selectedOptions.classes) {
-      if (!!users.length) setUsers([]);
       fetchUsersFromClassName(selectedOptions.classes).then((res) => {
         console.log(res);
         setUsers(bestPlayerSort(res.data));
@@ -79,35 +78,36 @@ const Statistics = () => {
     }
 
     if (!selectedOptions.games) displayArray[1] = null;
-    if (!!selectedOptions.games && !selectedOptions.classes) {
-      fetchGameScores(selectedOptions.games).then((res) => {
-        console.log(res);
-        setGameUsers(bestInGame(res.data));
-        displayArray[1] = bestInGame(res.data);
-      });
-      // console.log(gameUsers);
-      //   if (!!selectedOptions.classes) {
-      //     // setGameUsers(res.data.map(gameUser => {
-      //     // map po fetchanim userima  da poklapaju sa userima iz tog razreda
-      //     // }))
-      //   } else {
-      //     // setGameUsers(res.data)   --U OBA SLUČAJA POSLAT ARRAY U FUNKCIJU KOJA SORTIRA PO ŽELJENOM PARAMETRU I ONDA SETSTATE
-      //   }
-      //   setGameUsers(res.data);
-      //   // setDisplayArray((dispArray) => [...dispArray, gameUsers]);
+    if (!!selectedOptions.games) {
+      if (!selectedOptions.classes) {
+        fetchGameScores(selectedOptions.games).then((res) => {
+          console.log(res);
+          setGameUsers(bestInGame(res.data));
+          displayArray[1] = bestInGame(res.data);
+        });
+      }
     }
-    if (!!selectedOptions.fastest || !!selectedOptions.top10) {
+    if (selectedOptions.fastest) {
+      if (!!selectedOptions.classes) {
+        console.log(users);
+        setFastestUsers(arraySortSpeed(users));
+        console.log(users);
+        displayArray[2] = arraySortSpeed(users);
+        // setFastestUsers(res.data.map()) isto ko i u proslom
+      } else {
+        fetchAllUsers().then((res) => {
+          setFastestUsers(arraySortSpeed(res.data));
+          displayArray[2] = arraySortSpeed(res.data);
+        });
+      }
+    }
+    if (!!top10Users.length) displayArray[3] = top10Users;
+    if (selectedOptions.top10) {
       fetchAllUsers().then((res) => {
-        if (!!selectedOptions.classes) {
-          // setFastestUsers(res.data.map()) isto ko i u proslom
-        } else {
-          if (!!selectedOptions.fastest) {
-            // setDisplayArray((dispArray) => [...dispArray, fastestUsers]);
-          }
-          if (!!selectedOptions.top10) {
-            // setDisplayArray((dispArray) => [...dispArray, top10Users]);
-          }
-        }
+        console.log(res.data);
+        setTop10Users(bestPlayerSort(res.data));
+        console.log(bestPlayerSort(res.data));
+        displayArray[3] = bestPlayerSort(res.data);
       });
     }
   }, [selectedOptions]);
@@ -126,10 +126,7 @@ const Statistics = () => {
           if (!games.data.length) return;
           let bestGameUsers = bestInGame(games.data);
           if (!bestGameUsers.length) return;
-          console.log("Here");
 
-          console.log(bestGameUsers);
-          console.log(res.data);
           bestGameUsers.forEach((gameUser: any) => {
             res.data.forEach((classUser: any) => {
               if (gameUser.name === classUser.username) {
@@ -139,15 +136,13 @@ const Statistics = () => {
             });
           });
 
-          console.log(tempArray);
-
           if (!tempArray.length) {
             setGameUsers([]);
             displayArray[1] = null;
           }
 
           setGameUsers(tempArray);
-          displayArray[1] = [...tempArray];
+          displayArray[1] = tempArray;
         });
       });
     }
@@ -155,26 +150,25 @@ const Statistics = () => {
       setGameUsers([]);
       displayArray[1] = null;
     }
-  }, [selectedOptions.classes]);
-
-  console.log(gameUsers);
-  console.log(users);
-  console.log(selectedOptions);
-  console.log(displayArray);
+  }, [selectedOptions]);
 
   // useEffect(() => {
-  if (!!users.length) {
-    displayArray[0] = selectedOptions.classes !== "" ? [...users] : null;
+  if (!!selectedOptions.classes && !!users.length) {
+    displayArray[0] = users;
   }
-  if (!!gameUsers.length) {
-    displayArray[1] = selectedOptions.games !== "" ? [...gameUsers] : null;
+  if (!!selectedOptions.games && !!gameUsers.length) {
+    displayArray[1] = gameUsers;
   }
-  if (!!fastestUsers.length) {
-    displayArray[2] = !!selectedOptions.fastest && [...fastestUsers];
+  if (selectedOptions.fastest && !!fastestUsers.length) {
+    displayArray[2] = fastestUsers;
   }
-  if (!!top10Users.length) {
-    displayArray[3] = !!selectedOptions.top10 && [...top10Users];
+  if (selectedOptions.top10 && !!top10Users.length) {
+    displayArray[3] = top10Users;
   }
+  // }, [selectedOptions, users, gameUsers, fastestUsers, top10Users]);
+
+  console.log(displayArray);
+  console.log(selectedOptions);
 
   return (
     <Flex alignItems="center" justifyContent="center">
@@ -188,15 +182,15 @@ const Statistics = () => {
         }}
       >
         <Flex mt="5vh">
-          {statisticsCategories.map((category, index) =>
-            !!category.options.length ? (
-              <Flex
-                w="20vw"
-                h="75vh"
-                mr="1rem"
-                key={index}
-                flexDirection="column"
-              >
+          {statisticsCategories.map((category, index) => (
+            <Flex
+              w="20vw"
+              h="75vh"
+              mr="1rem"
+              key={index}
+              flexDirection="column"
+            >
+              {!!category.options.length ? (
                 <SelectDropdown
                   message={`Select one of ${category.category}`}
                   array={category.options}
@@ -204,22 +198,21 @@ const Statistics = () => {
                   selectedOptions={selectedOptions}
                   selection={category.category}
                 />
-                <Stats key={category.category} data={displayArray[index]} />
-              </Flex>
-            ) : (
-              <Button
-                mr="4"
-                mb="2rem"
-                w="15vw"
-                h="3rem"
-                onClick={() => fetchCategory(category.category)}
-              >
-                <Text fontSize="1.3rem" fontStyle="normal">
-                  {category.category}
-                </Text>
-              </Button>
-            )
-          )}
+              ) : (
+                <Button
+                  mb="2rem"
+                  w="20vw"
+                  h="11.2vh"
+                  onClick={() => fetchCategory(category.category)}
+                >
+                  <Text fontSize="1.3rem" fontStyle="normal">
+                    {category.category}
+                  </Text>
+                </Button>
+              )}
+              <Stats key={category.category} data={displayArray[index]} />
+            </Flex>
+          ))}
         </Flex>
         <Flex justifyContent="center" alignItems="center" ml="2rem">
           {/* {Object.keys(selectedOptions).map((option, index) => (

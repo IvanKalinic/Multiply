@@ -186,18 +186,22 @@ export const levelNameFromScore = (points: number) => {
 };
 
 export const bestPlayerSort = (bestPlayers: Array<any>) => {
-  return bestPlayers.sort((user1, user2) => {
-    return user2.overallPoints - user1.overallPoints;
-  });
+  return bestPlayers
+    .sort((user1, user2) => user2.overallPoints - user1.overallPoints)
+    .slice(0, 10);
 };
 
 export const arraySortSpeed = (fastestArray: Array<any>) => {
-  return fastestArray.sort((user1, user2) => {
-    return (
-      user1.speed / user1.gamesPlayed?.length -
-      user2.speed / user2.gamesPlayed?.length
-    );
-  });
+  return fastestArray !== null
+    ? fastestArray
+        .sort((user1, user2) => {
+          return (
+            user1?.speed / user1?.gamesPlayed?.length -
+            user2?.speed / user2?.gamesPlayed?.length
+          );
+        })
+        .slice(0, 10)
+    : [];
 };
 
 // const getUserDetails = (key: string, wins: number) => {
