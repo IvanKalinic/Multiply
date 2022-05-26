@@ -56,6 +56,10 @@ const AppRoutes = ({
               path="/hangmanSetup"
               element={<SingleGameSetup name="hangman" />}
             />
+            <Route
+              path="/battleSetup"
+              element={<MultiplySetup battle={true} />}
+            />
             <Route path="/addNewUser" element={<AddNewUser />} />
             <Route path="/ticTacToe" element={<TicTacToePage />} />
             <Route path="/mulitplyGameStart" element={<GameStart />} />

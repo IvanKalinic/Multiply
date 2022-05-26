@@ -103,15 +103,19 @@ export const gameSetup = async (
 ) => {
   console.log(game);
   let room = !user ? randomRoomName() : null;
+
+  const battleArray = game === "Battle" ? [2, 3, 4, 1] : null;
+
   try {
     saveActiveGame({
       opponents: !!opponents?.length ? opponents : null,
       user: !!user ? user : null,
-      type: gameType(game),
+      type: game !== "Battle" ? gameType(game) : 0,
       room,
       category,
       difficulty,
       questions,
+      battleArray,
     });
     if (!!socket) socket.emit("create", room);
     navigate("/");

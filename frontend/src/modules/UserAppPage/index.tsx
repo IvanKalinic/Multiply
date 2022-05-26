@@ -22,6 +22,7 @@ const UserAppPage = () => {
     getActiveGame().then((data) => {
       console.log(data.data);
 
+      //logika za battle
       let foundGameType = data.data.find((row: any) => {
         if (
           (!!row?.opponents?.length &&

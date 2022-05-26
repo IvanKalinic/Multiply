@@ -22,7 +22,7 @@ type SelectedOptions = {
   opponents: Array<string>;
 };
 
-const MultiplySetup = () => {
+const MultiplySetup = ({ battle }: { battle?: boolean }) => {
   const { setQuestions, questions } = useGame();
   const { admin } = useAdmin();
   const { socket } = useSocket();
@@ -43,7 +43,7 @@ const MultiplySetup = () => {
 
       gameSetup(
         navigate,
-        "Multiply",
+        battle ? "Battle" : "Multiply",
         selectedOptions.category,
         selectedOptions.difficulty,
         data.data,

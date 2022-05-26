@@ -37,6 +37,11 @@ const ActiveGameSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
+    //battle
+    battleArray: {
+      type: Array,
+      required: false,
+    },
   },
   { timestamps: true }
 );

@@ -43,6 +43,11 @@ const AdminAppPage = () => {
                 <Link to="/hangmanSetup">Hangman</Link>
               </Text>
             </Button>
+            <Button mr="4" mb="2rem" w={300}>
+              <Text fontSize="1.3rem">
+                <Link to="/battleSetup">Battle</Link>
+              </Text>
+            </Button>
           </Flex>
         </Flex>
       </MenuWrapper>
