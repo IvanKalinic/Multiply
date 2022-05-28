@@ -11,7 +11,7 @@ const ActiveGameSchema = new mongoose.Schema(
     },
     type: {
       type: Number,
-      enum: [1, 2, 3, 4],
+      enum: [1, 2, 3, 4, 5],
       default: 0,
     },
     room: {

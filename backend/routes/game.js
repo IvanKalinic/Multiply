@@ -12,7 +12,7 @@ router.post("/save", async (req, res) => {
       difficulty: req.body?.difficulty,
       category: req.body?.category,
       questions: req.body?.questions,
-      battleArray: req.body?.battleArray ? battleArray : null,
+      battleArray: !!req.body?.battleArray ? req.body?.battleArray : null,
     });
     const activeGame = await newActiveGame.save();
     res.status(200).json(activeGame);
@@ -24,7 +24,6 @@ router.post("/save", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const activeGame = await ActiveGame.find({});
-    console.log(activeGame);
     res.status(200).json(activeGame);
   } catch (err) {
     res.status(500).json(err);
@@ -106,6 +105,37 @@ router.delete("/deleteActiveGame", async (req, res) => {
     res.status(200).json("Active game was deleted.");
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+router.put("/:winner", async (req, res) => {
+  try {
+    console.log(req.body.type);
+    const activeGame = await ActiveGame.find({});
+    let gameToBeUpdated = activeGame.find(
+      (game) => game.battleArray.length > 0
+    );
+    console.log(gameToBeUpdated);
+    let battleArrayUpdated = gameToBeUpdated.battleArray.map((row) => {
+      if (row.type === req.body?.type) {
+        return {
+          type: row.type,
+          winner: req.params.winner,
+        };
+      } else {
+        return row;
+      }
+    });
+    if (!!gameToBeUpdated && !!battleArrayUpdated) {
+      await gameToBeUpdated.updateOne({
+        $set: {
+          battleArray: battleArrayUpdated ?? null,
+        },
+      });
+      res.status(200).json(gameToBeUpdated.battleArray);
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 
