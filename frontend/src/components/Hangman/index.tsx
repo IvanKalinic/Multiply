@@ -6,7 +6,12 @@ import { BodyWrapper, GameContainer } from "./styles";
 
 let selectedWord = words[Math.floor(Math.random() * words.length)];
 
-const Hangman = () => {
+interface Props {
+  battle?: boolean;
+  setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Hangman = ({ battle, setRerenderGame }: Props) => {
   const [playable, setPlayable] = useState<boolean>(true);
   const [correctLetters, setCorrectLetters] = useState<Array<string>>([]);
   const [wrongLetters, setWrongLetters] = useState<Array<any>>([]);
@@ -64,6 +69,7 @@ const Hangman = () => {
         selectedWord={selectedWord}
         setPlayable={setPlayable}
         playAgain={playAgain}
+        battle={battle}
       />
       {showNotification && <Notification />}
     </BodyWrapper>

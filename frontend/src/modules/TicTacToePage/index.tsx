@@ -4,6 +4,7 @@ import {
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
+  updateBattleArrayInActiveGame,
 } from "../../apis";
 import { TicTacToeBox } from "../../components";
 import { winningCombinations } from "../../consts/ticTacToe";
@@ -13,8 +14,14 @@ import { useUser } from "../../context/UserContext";
 import { TicTacToeContainer } from "../modules.style";
 import { v4 as uuidv4 } from "uuid";
 import { checkLevel, levelNameFromScore } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
-const TicTacToePage = () => {
+interface Props {
+  battle?: boolean;
+  setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const TicTacToePage = ({ battle, setRerenderGame }: Props) => {
   const [game, setGame] = useState(Array(9).fill(""));
   const [turnNumber, setTurnNumber] = useState(0);
   const [myTurn, setMyTurn] = useState(true);
@@ -49,6 +56,13 @@ const TicTacToePage = () => {
     socket.emit("reqRestart", room);
   };
 
+  const nextGame = () => {
+    setRerenderGame!(3);
+    setMyTurn(true);
+    socket.emit("nextGame");
+    console.log("Next game");
+  };
+
   const restart = () => {
     setGame(Array(9).fill(""));
     setWinner(false);
@@ -60,9 +74,28 @@ const TicTacToePage = () => {
   useEffect(() => {
     const fetchGameDetails = (async () => {
       await axios.get(`/game`).then((res) => {
-        setActiveGame(res.data[0]);
-        setRoom(res?.data[0]?.room);
-        setOpponents(res?.data[0]?.opponents);
+        if (res.data.length > 1) {
+          res.data.map((row: any) => {
+            if (row?.user && row.user === user.data.username) {
+              setActiveGame(row);
+              setRoom(row.room);
+            }
+            console.log(res.data?.opponents);
+            if (
+              !!row?.opponents?.length &&
+              row.opponents.includes(user.data.username)
+            ) {
+              console.log(res.data);
+              setActiveGame(row);
+              setRoom(row.room);
+              setOpponents(row.opponents);
+            }
+          });
+        } else {
+          setActiveGame(res.data[0]);
+          setRoom(res?.data[0]?.room);
+          setOpponents(res?.data[0]?.opponents);
+        }
       });
     })();
   }, []);
@@ -89,6 +122,11 @@ const TicTacToePage = () => {
 
     socket?.on("restart", () => {
       restart();
+    });
+
+    socket?.on("nextGame", () => {
+      console.log("Here");
+      setRerenderGame!(3);
     });
 
     socket?.on("opponent_joined", () => {
@@ -118,36 +156,39 @@ const TicTacToePage = () => {
 
   useEffect(() => {
     if (winner && player === xo) {
-      saveWinnerOrMultiplyDetails({
-        opponents,
-        room,
-        type: 2,
-        winner: user.data.username,
-      });
-      saveToGameHistory({
-        opponents,
-        room,
-        gameName: "TicTacToe",
-        winner: user.data.username,
-        points: 1,
-        speed: 0,
-      });
-      saveUserScore(user.data.username, {
-        levelNumber: checkLevel(user.data?.overallPoints + 1),
-        levelName: levelNameFromScore(user.data?.overallPoints + 1),
-        game: {
+      if (battle) {
+        updateBattleArrayInActiveGame(2, user.data.username);
+      } else {
+        saveWinnerOrMultiplyDetails({
           opponents,
           room,
           type: 2,
           winner: user.data.username,
+        });
+        saveToGameHistory({
+          opponents,
+          room,
+          gameName: "TicTacToe",
+          winner: user.data.username,
           points: 1,
-        },
-      });
+          speed: 0,
+        });
+        saveUserScore(user.data.username, {
+          levelNumber: checkLevel(user.data?.overallPoints + 1),
+          levelName: levelNameFromScore(user.data?.overallPoints + 1),
+          game: {
+            opponents,
+            room,
+            type: 2,
+            winner: user.data.username,
+            points: 1,
+          },
+        });
+      }
     }
   }, [winner]);
 
-  console.log(socket);
-
+  console.log(winner);
   return (
     <TicTacToeContainer>
       Room: {room}
@@ -157,11 +198,16 @@ const TicTacToePage = () => {
       <br />
       {hasOpponent || xo === "O" ? "" : "Waiting for opponent..."}
       <Flex mb="2rem" flexDirection="column" alignItems="center">
-        {winner || turnNumber === 9 ? (
-          <Button onClick={sendRestart} mr="1rem" w="5rem">
-            Restart
-          </Button>
-        ) : null}
+        {(winner || turnNumber === 9) &&
+          (!battle ? (
+            <Button onClick={sendRestart} mr="1rem" w="5rem">
+              Restart
+            </Button>
+          ) : (
+            <Button onClick={nextGame} mr="1rem" w="5rem">
+              Next game
+            </Button>
+          ))}
         {winner ? (
           <span>We have a winner: {player === xo ? "You" : "Opponent"}</span>
         ) : turnNumber === 9 ? (

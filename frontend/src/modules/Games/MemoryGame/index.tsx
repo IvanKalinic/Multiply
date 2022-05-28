@@ -1,5 +1,6 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   fetchQuestions,
   saveToGameHistory,
@@ -17,7 +18,12 @@ import CardItem from "./CardItem";
 const difficultyNames = difficulties.map((diff) => diff.category);
 const categoryNames = categories.map((diff) => diff.category);
 
-const MemoryGame = () => {
+interface Props {
+  battle?: boolean;
+  setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const MemoryGame = ({ battle, setRerenderGame }: Props) => {
   const [items, setItems] = useState<Array<any>>([]);
   const [questions, setQuestions] = useState<Array<any>>([]);
   const [randomDifficulty, setRandomDifficulty] = useLocalStorage(
@@ -32,6 +38,7 @@ const MemoryGame = () => {
   const [winner, setWinner] = useState<boolean>(false);
 
   const { user } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!!randomCategory && !!randomDifficulty) return;
@@ -109,28 +116,37 @@ const MemoryGame = () => {
     if (win === 8) {
       setTimeout(() => setWinner(true), 500);
       console.log("Winner");
-      saveWinnerOrMultiplyDetails({
-        type: 3,
-        winner: user.data.username,
-      });
-      saveToGameHistory({
-        gameName: "Memory game",
-        winner: user.data.username,
-        points: 3,
-        speed: 0,
-      });
-      saveUserScore(user.data.username, {
-        levelNumber: checkLevel(user.data?.overallPoints + 3),
-        levelName: levelNameFromScore(user.data?.overallPoints + 3),
-        game: {
+      if (battle) {
+        saveWinnerOrMultiplyDetails({
+          type: 5,
+          winner: user.data.username,
+          battle: { type: 3 },
+        });
+        navigate("/");
+      } else {
+        saveWinnerOrMultiplyDetails({
           type: 3,
           winner: user.data.username,
+        });
+        saveToGameHistory({
+          gameName: "Memory game",
+          winner: user.data.username,
           points: 3,
-        },
-      });
-      setWin(0);
-      setRandomDifficulty("");
-      setRandomCategory("");
+          speed: 0,
+        });
+        saveUserScore(user.data.username, {
+          levelNumber: checkLevel(user.data?.overallPoints + 3),
+          levelName: levelNameFromScore(user.data?.overallPoints + 3),
+          game: {
+            type: 3,
+            winner: user.data.username,
+            points: 3,
+          },
+        });
+        setWin(0);
+        setRandomDifficulty("");
+        setRandomCategory("");
+      }
     }
   }, [win]);
 

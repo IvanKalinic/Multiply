@@ -202,7 +202,7 @@ const Statistics = () => {
                 <Button
                   mb="2rem"
                   w="20vw"
-                  h="11.2vh"
+                  h="7.2vh"
                   onClick={() => fetchCategory(category.category)}
                 >
                   <Text fontSize="1.3rem" fontStyle="normal">

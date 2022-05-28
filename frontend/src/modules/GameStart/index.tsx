@@ -1,5 +1,5 @@
 import { Flex, Heading } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchQuestions, getActiveGame } from "../../apis";
 import { ChatLogo, VideoCall } from "../../assets/icons/svgs";
 import { CircularBar } from "../../components/CircularProgressbar";
@@ -13,7 +13,12 @@ import { useTurnBased } from "../../context/TurnBasedContext";
 import { useUser } from "../../context/UserContext";
 import { MenuWrapper } from "../../styles";
 
-const GameStart = () => {
+interface Props {
+  battle?: boolean;
+  setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const GameStart = ({ battle, setRerenderGame }: Props) => {
   const { questions, setQuestions, setDisplayWin } = useGame();
   const { user, setUser } = useUser();
   const axios = useAxios();

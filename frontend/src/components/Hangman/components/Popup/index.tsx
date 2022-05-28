@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   saveToGameHistory,
   saveUserScore,
@@ -16,6 +16,7 @@ interface Props {
   selectedWord: string;
   setPlayable: (input: boolean) => void;
   playAgain: () => void;
+  battle?: boolean;
 }
 
 const Popup = ({
@@ -24,36 +25,47 @@ const Popup = ({
   selectedWord,
   setPlayable,
   playAgain,
+  battle,
 }: Props) => {
   let finalMessage = "";
   let finalMessageRevealWord = "";
   let playable = true;
 
   const { user } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (checkWin(correctLetters, wrongLetters, selectedWord) === "win") {
       finalMessage = "Congratulations! You won! 😃";
       playable = false;
-      saveWinnerOrMultiplyDetails({
-        type: 4,
-        winner: user.data.username,
-      });
-      saveToGameHistory({
-        gameName: "Hangman",
-        winner: user.data.username,
-        points: 2,
-        speed: 0,
-      });
-      saveUserScore(user.data.username, {
-        levelNumber: checkLevel(user.data?.overallPoints + 2),
-        levelName: levelNameFromScore(user.data?.overallPoints + 2),
-        game: {
+      if (battle) {
+        saveWinnerOrMultiplyDetails({
+          type: 5,
+          winner: user.data.username,
+          battle: { type: 4 },
+        });
+        navigate("/");
+      } else {
+        saveWinnerOrMultiplyDetails({
           type: 4,
           winner: user.data.username,
+        });
+        saveToGameHistory({
+          gameName: "Hangman",
+          winner: user.data.username,
           points: 2,
-        },
-      });
+          speed: 0,
+        });
+        saveUserScore(user.data.username, {
+          levelNumber: checkLevel(user.data?.overallPoints + 2),
+          levelName: levelNameFromScore(user.data?.overallPoints + 2),
+          game: {
+            type: 4,
+            winner: user.data.username,
+            points: 2,
+          },
+        });
+      }
     } else if (
       checkWin(correctLetters, wrongLetters, selectedWord) === "lose"
     ) {

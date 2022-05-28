@@ -104,13 +104,21 @@ export const gameSetup = async (
   console.log(game);
   let room = !user ? randomRoomName() : null;
 
-  const battleArray = game === "Battle" ? [2, 3, 4, 1] : null;
+  const battleArray =
+    game === "Battle"
+      ? [
+          { type: 2, winner: "" },
+          { type: 3, winner: "" },
+          { type: 4, winner: "" },
+          { type: 1, winner: "" },
+        ]
+      : null;
 
   try {
     saveActiveGame({
       opponents: !!opponents?.length ? opponents : null,
       user: !!user ? user : null,
-      type: game !== "Battle" ? gameType(game) : 0,
+      type: game !== "Battle" ? gameType(game) : 5,
       room,
       category,
       difficulty,

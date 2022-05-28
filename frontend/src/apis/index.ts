@@ -13,6 +13,16 @@ export const saveWinnerOrMultiplyDetails = async (activeGame: any) => {
   );
 };
 
+export const updateBattleArrayInActiveGame = async (
+  type: number,
+  winnerName: string
+) => {
+  await axios.put(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/${winnerName}`,
+    { type }
+  );
+};
+
 export const saveToGameHistory = async (game: any) => {
   await axios.post(
     `${process.env.REACT_APP_SERVER_BASE_URL}/game/gameHistory`,
