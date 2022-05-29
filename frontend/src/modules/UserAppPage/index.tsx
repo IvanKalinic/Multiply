@@ -9,6 +9,8 @@ import GameStart from "../GameStart";
 import TicTacToePage from "../TicTacToePage";
 import { useLocation } from "react-router-dom";
 import Warning from "../../components/Warning";
+import { isTemplateTail } from "typescript";
+import Winner from "../../components/Winner";
 
 const UserAppPage = () => {
   const { user } = useUser();
@@ -16,14 +18,19 @@ const UserAppPage = () => {
   const [componentToRender, setComponentToRender] = useState<any>();
   const [battleArrayGameType, setBattleArrayGameType] = useState<number>(0);
   const [rerenderGame, setRerenderGame] = useState(2); // 2,3,4,1
+
   // const location = useLocation();
   // it nows accidentaly work as global context
   // it should be replaced with global context storing opponents for all game types
 
   useEffect(() => {
     getActiveGame().then((data) => {
-      console.log(data.data);
+      // console.log(data.data);
 
+      if (rerenderGame === 1) {
+        setBattleArrayGameType(1);
+        return;
+      }
       //logika za battle
       let foundGameType = data.data.find((row: any) => {
         if (
@@ -43,16 +50,20 @@ const UserAppPage = () => {
           (row: any) => row.type === 5
         )?.battleArray;
         setBattleArrayGameType(
-          battleArray.find((item: any) => !item.winner)?.type
+          battleArray.find((item: any) =>
+            item.type === 2 || item.type === 1
+              ? !item.winner
+              : !item.winner.find((row: any) => row.name === user.data.username)
+          )?.type
         );
       }
     });
   }, [rerenderGame]);
 
   // console.log(location);
-  console.log(rerenderGame);
-  console.log(gameType);
-  console.log(battleArrayGameType);
+  // console.log(rerenderGame);
+  // console.log(gameType);
+  // console.log(battleArrayGameType);
 
   const returnUserGame = () => {
     switch (gameType) {
@@ -101,6 +112,6 @@ const UserAppPage = () => {
       {componentToRender}
     </Flex>
   );
-};;;;
+};;;;;;
 
 export default UserAppPage;

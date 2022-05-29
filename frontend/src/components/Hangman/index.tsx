@@ -70,6 +70,7 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
         setPlayable={setPlayable}
         playAgain={playAgain}
         battle={battle}
+        setRerenderGame={setRerenderGame}
       />
       {showNotification && <Notification />}
     </BodyWrapper>

@@ -43,9 +43,6 @@ export const CircularBar = () => {
   };
 
   useEffect(() => {
-    console.log(hasOpponent);
-    console.log(turnNumber);
-    console.log(myTurn);
     if (myTurn && (hasOpponent || !!turnNumber)) {
       play();
     }
@@ -98,12 +95,6 @@ export const CircularBar = () => {
     setIsPaused(true);
     isPausedRef.current = true;
   };
-
-  // useEffect(() => {
-  //   if (myTurn) {
-  //     play();
-  //   }
-  // }, [myTurn]);
 
   return (
     <Flex

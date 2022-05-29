@@ -25,7 +25,7 @@ export const words = [
   "jednoznamenkasti",
   "dvoznamenkasti",
   "troznamenkasti",
-  "geometrijsko tijelo",
+  "geometrija",
   "množenje",
   "zbrajanje",
   "dijeljenje",
@@ -36,7 +36,7 @@ export const words = [
   "razlika",
   "djeljenik",
   "djelitelj",
-  "matematička operacija",
+  "operacija",
 ];
 
 //ž,š,đ,č,ć

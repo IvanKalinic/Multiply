@@ -1,11 +1,11 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   fetchQuestions,
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
+  updateBattleArrayInActiveGame,
 } from "../../../apis";
 import Winner from "../../../components/Winner";
 import { categories, difficulties } from "../../../consts";
@@ -38,7 +38,6 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
   const [winner, setWinner] = useState<boolean>(false);
 
   const { user } = useUser();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!!randomCategory && !!randomDifficulty) return;
@@ -109,7 +108,7 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
       setMatched([...matched, firstMatched.id]);
     }
 
-    if (openedCard.length === 2) setTimeout(() => setOpenedCard([]), 1000);
+    if (openedCard.length === 2) setTimeout(() => setOpenedCard([]), 500);
   }, [openedCard]);
 
   useEffect(() => {
@@ -117,12 +116,7 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
       setTimeout(() => setWinner(true), 500);
       console.log("Winner");
       if (battle) {
-        saveWinnerOrMultiplyDetails({
-          type: 5,
-          winner: user.data.username,
-          battle: { type: 3 },
-        });
-        navigate("/");
+        updateBattleArrayInActiveGame(3, user.data.username);
       } else {
         saveWinnerOrMultiplyDetails({
           type: 3,
@@ -174,7 +168,7 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
           );
         })}
       </MemoryCardsContainer>
-      {!!winner && <Winner />}
+      {!!winner && <Winner setRerenderGame={setRerenderGame} />}
     </Flex>
   );
 };

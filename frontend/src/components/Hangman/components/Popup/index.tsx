@@ -1,12 +1,14 @@
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
+  updateBattleArrayInActiveGame,
 } from "../../../../apis";
 import { useUser } from "../../../../context/UserContext";
 import { checkLevel, levelNameFromScore } from "../../../../utils";
+import Winner from "../../../Winner";
 import { checkWin } from "../../helpers";
 import { PopupButton, PopupContainer, PopupWrapper } from "../../styles";
 
@@ -17,6 +19,7 @@ interface Props {
   setPlayable: (input: boolean) => void;
   playAgain: () => void;
   battle?: boolean;
+  setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Popup = ({
@@ -26,26 +29,28 @@ const Popup = ({
   setPlayable,
   playAgain,
   battle,
+  setRerenderGame,
 }: Props) => {
-  let finalMessage = "";
-  let finalMessageRevealWord = "";
   let playable = true;
 
+  const [finalMessageRevealWord, setFinalMessageRevealWord] = useState("");
+  const [finalMessage, setFinalMessage] = useState("");
   const { user } = useUser();
-  const navigate = useNavigate();
+
+  // const handleNext = () => {
+  //   if (battle) {
+  //     updateBattleArrayInActiveGame(4, user.data.username);
+  //     setRerenderGame!(1);
+  //   }
+  // };
 
   useEffect(() => {
     if (checkWin(correctLetters, wrongLetters, selectedWord) === "win") {
-      finalMessage = "Congratulations! You won! 😃";
+      // finalMessage = "Congratulations! You won! 😃";
+      setFinalMessage("Congratulations! You won! 😃");
       playable = false;
-      if (battle) {
-        saveWinnerOrMultiplyDetails({
-          type: 5,
-          winner: user.data.username,
-          battle: { type: 4 },
-        });
-        navigate("/");
-      } else {
+
+      if (!battle) {
         saveWinnerOrMultiplyDetails({
           type: 4,
           winner: user.data.username,
@@ -69,8 +74,8 @@ const Popup = ({
     } else if (
       checkWin(correctLetters, wrongLetters, selectedWord) === "lose"
     ) {
-      finalMessage = "Unfortunately you lost. 😕";
-      finalMessageRevealWord = `...the word was: ${selectedWord}`;
+      setFinalMessage("Unfortunately you lost. 😕");
+      setFinalMessageRevealWord(`...the word was: ${selectedWord}`);
       playable = false;
     }
   }, [correctLetters, wrongLetters, selectedWord]);
@@ -79,17 +84,40 @@ const Popup = ({
     setPlayable(playable);
   });
 
+  useEffect(() => {
+    if (!correctLetters.length) {
+      setFinalMessage("");
+      setFinalMessageRevealWord("");
+    }
+  }, [correctLetters]);
+
+  console.log(finalMessage);
+  console.log(checkWin(correctLetters, wrongLetters, selectedWord) === "win");
+
+  // if (!!finalMessage) updateBattleArrayInActiveGame(4, user.data.username);
+
   return (
-    <PopupContainer style={finalMessage !== "" ? { display: "flex" } : {}}>
-      <PopupWrapper>
-        <h2>{finalMessage}</h2>
-        <h3>{finalMessageRevealWord}</h3>
-        <PopupButton onClick={playAgain}>
-          <Link to="/">Let's play next game in your queue</Link>
-        </PopupButton>
-      </PopupWrapper>
-    </PopupContainer>
+    // <PopupContainer style={{ display: finalMessage !== "" ? "flex" : "" }}>
+    //   <PopupWrapper>
+    //     <h2>{finalMessage}</h2>
+    //     <h3>{finalMessageRevealWord}</h3>
+    //     <PopupButton onClick={!battle ? playAgain : handleNext}>
+    //       <Link to="/">Let's play next game in your queue</Link>
+    //     </PopupButton>
+    //   </PopupWrapper>
+    // </PopupContainer>
+    <div>
+      {!!finalMessage && (
+        <Winner
+          setRerenderGame={setRerenderGame}
+          finalMessage={finalMessage}
+          finalMessageRevealWord={finalMessageRevealWord}
+          user={user}
+          playAgain={playAgain}
+        />
+      )}
+    </div>
   );
-};
+};;
 
 export default Popup;

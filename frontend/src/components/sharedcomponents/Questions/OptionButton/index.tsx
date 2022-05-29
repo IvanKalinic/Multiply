@@ -42,7 +42,6 @@ const OptionButton = ({
     handleColor();
   }, [selectedOption, value, handleColor]);
 
-  console.log(myTurn);
 
   const disabledCase = useMemo(
     () => !!selectedOption || !myTurn,

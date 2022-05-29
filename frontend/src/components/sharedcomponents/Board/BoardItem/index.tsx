@@ -1,8 +1,10 @@
 import { useCallback, useState } from "react";
 import {
+  fetchActiveGameBattleArray,
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
+  updateBattleArrayInActiveGame,
 } from "../../../../apis";
 import { MAX_PLAYER_CHOICES } from "../../../../consts";
 import { useGame } from "../../../../context/GameContext";
@@ -25,9 +27,10 @@ interface Props {
   id: number;
   boardArray: any;
   index: number;
+  battle?: boolean;
 }
 
-export const BoardItem = ({ value, id, boardArray, index }: Props) => {
+export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
   const [color, setColor] = useState<boolean>(false);
   const {
     setDisplayWin,
@@ -58,18 +61,29 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
     if (diagonalDown(boardArray)) return true;
   }, [boardArray]);
 
+  console.log(boardArray);
+  console.log(gameOver());
+  console.log(diagonalUp(boardArray));
+
   const handleChange = () => {
+    if (
+      boardArray[index][id].clicked &&
+      boardArray[index][id].color !== user.color
+    )
+      return;
+
     if (selectedNumber) {
       !color
         ? setMaxClicks((prev) => prev + 1)
         : setMaxClicks((prev) => prev - 1);
 
       boardArray[index][id].clicked = !color;
-      console.log(user?.color);
       boardArray[index][id].color = user?.color ? user?.color : undefined;
       setColor(!color);
       if (maxClicks !== MAX_PLAYER_CHOICES) setSelectedNumber(0);
+
       if (gameOver()) {
+        console.log("Game over");
         setDisplayWin(true);
         socket.emit("reqTurn", {
           value: playerType,
@@ -77,27 +91,28 @@ export const BoardItem = ({ value, id, boardArray, index }: Props) => {
           game,
           winner: user?.data.username,
         });
-        console.log(user?.data.username);
         setPlayer(user?.data.username);
 
-        saveWinnerOrMultiplyDetails({
-          room,
-          type: 1,
-          winner: user.data.username,
-        });
-        saveToGameHistory({
-          opponents,
-          room,
-          gameName: "Multiply",
-          winner: user.data.username,
-          points: 4,
-          speed: 0,
-        });
-        saveUserScore(user.data.username, {
-          levelNumber: checkLevel(user.data?.overallPoints + 4),
-          levelName: levelNameFromScore(user.data?.overallPoints + 4),
-          game,
-        });
+        if (!battle) {
+          saveWinnerOrMultiplyDetails({
+            room,
+            type: 1,
+            winner: user.data.username,
+          });
+          saveToGameHistory({
+            opponents,
+            room,
+            gameName: "Multiply",
+            winner: user.data.username,
+            points: 4,
+            speed: 0,
+          });
+          saveUserScore(user.data.username, {
+            levelNumber: checkLevel(user.data?.overallPoints + 4),
+            levelName: levelNameFromScore(user.data?.overallPoints + 4),
+            game,
+          });
+        }
       }
 
       setGame(boardArray);

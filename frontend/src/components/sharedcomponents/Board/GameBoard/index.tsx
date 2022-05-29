@@ -1,6 +1,11 @@
 import { Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { getActiveGame, saveWinnerOrMultiplyDetails } from "../../../../apis";
+import {
+  fetchActiveGameBattleArray,
+  getActiveGame,
+  saveWinnerOrMultiplyDetails,
+  updateBattleArrayInActiveGame,
+} from "../../../../apis";
 import { GAMEBOARD_DIMENSION, MAX_PLAYER_CHOICES } from "../../../../consts";
 import { useGame } from "../../../../context/GameContext";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
@@ -9,14 +14,13 @@ import BadLuck from "../../../BadLuck";
 import Winner from "../../../Winner";
 import { GameBoardWrapper } from "../../styles";
 import BoardColumn from "../BoardColumn";
-
-// import { v4 as uuidv4 } from "uuid";
-
 interface Props {
   opponentArray?: Array<any>;
+  battle?: boolean;
+  battleWinner?: string;
 }
 
-export const GameBoard = ({ opponentArray }: Props) => {
+export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
   const [boardArray, setBoardArray] = useState<any>([]);
   const [displayMessage, setDisplayMessage] = useState<boolean>(false);
 
@@ -33,23 +37,29 @@ export const GameBoard = ({ opponentArray }: Props) => {
 
   const [questions, setQuestions] = useState<Array<any>>([]);
 
-  const { winner, setWinner } = useTurnBased();
+  const { winner, setWinner, player } = useTurnBased();
 
-  const initialArray: any = [];
+  let initialArray: any = [];
   let aggArray: Array<number> = [];
 
   const randomValues = () => {
     let currentArray: Array<any> = [];
 
     if (!questions.length) {
-      getActiveGame().then((data) => {
-        currentArray = [...data.data[0]?.questions];
-      });
+      if (battle) {
+        fetchActiveGameBattleArray(user.data.username).then((res) => {
+          currentArray = res.data.questions;
+        });
+      } else {
+        getActiveGame().then((data) => {
+          currentArray = data?.data[0]?.questions;
+        });
+      }
     } else {
       currentArray = [...questions];
     }
 
-    const randomArray: Array<any> = [];
+    let randomArray: Array<any> = [];
     for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
       let randomNumber: number = 0;
       if (!!currentArray.length) {
@@ -71,33 +81,72 @@ export const GameBoard = ({ opponentArray }: Props) => {
   };
 
   useEffect(() => {
-    if (!!boardArray[0]?.length || !!opponentArray?.length) return;
-
-    getActiveGame().then((data) => {
-      setQuestions(data.data[0]?.questions);
-    });
-
-    for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
-      initialArray[i] = randomValues();
+    if (!!opponentArray?.length) {
+      updateBattleArrayInActiveGame(
+        1,
+        user.data.username,
+        boardArray,
+        questions,
+        false
+      );
+      return;
     }
 
-    setBoardArray(initialArray);
-    if (!!initialArray[0].length) {
-      saveWinnerOrMultiplyDetails({
-        type: 1,
-        gameBoard: initialArray,
-        questions,
-        user: user.data.username,
+    if (battle) {
+      fetchActiveGameBattleArray(user.data.username).then((res) => {
+        if (!questions.length && !!res.data?.questions.length) {
+          setQuestions(res.data?.questions);
+        }
       });
     } else {
       getActiveGame().then((data) => {
-        setBoardArray(data.data[0]?.gameBoard);
+        setQuestions(data.data[0]?.questions);
       });
+    }
+
+    for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
+      initialArray[i] = randomValues();
+      console.log(initialArray[i]);
+    }
+
+    setBoardArray(initialArray);
+
+    if (!!initialArray[0].length) {
+      // if (battle) {
+      //   updateBattleArrayInActiveGame(
+      //     1,
+      //     user.data.username,
+      //     initialArray,
+      //     questions,
+      //     false
+      //   );
+      // }
+      // else {
+      if (!battle) {
+        saveWinnerOrMultiplyDetails({
+          type: 1,
+          gameBoard: initialArray,
+          questions,
+          user: user.data.username,
+        });
+      }
+      // }
+    } else {
+      if (battle) {
+        fetchActiveGameBattleArray(user.data.username).then((res) => {
+          if (!!res.data?.gameBoard.length && !boardArray.length)
+            setBoardArray(res.data?.gameBoard);
+        });
+      } else {
+        getActiveGame().then((data) => {
+          setBoardArray(data.data[0]?.gameBoard);
+        });
+      }
     }
 
     setDisplayWin(false);
     setMaxClicks(0);
-  }, [user, opponentArray]);
+  }, [user, opponentArray, questions]);
 
   const checkAbsent = useCallback(() => {
     let counter = 0;
@@ -137,6 +186,7 @@ export const GameBoard = ({ opponentArray }: Props) => {
         key={`col-${index}`}
         id={index}
         boardArray={boardArray}
+        battle={battle}
       />
     ));
   };
@@ -145,10 +195,23 @@ export const GameBoard = ({ opponentArray }: Props) => {
     setBoardArray(opponentArray);
   }, [opponentArray]);
 
+  useEffect(() => {
+    console.log(initialArray);
+    if (!!boardArray.length)
+      updateBattleArrayInActiveGame(
+        1,
+        user.data.username,
+        boardArray,
+        questions,
+        false
+      );
+    // if (!!initialArray.length) setBoardArray(initialArray);
+  }, [initialArray]);
+
   return (
     <>
       <Flex flexDirection="column">
-        {displayWin && <Winner />}
+        {displayWin && <Winner battleWinner={battleWinner} />}
         {absentItem && (
           <BadLuck text="Sorry, the selected value doesn't exist on the board" />
         )}
@@ -166,4 +229,4 @@ export const GameBoard = ({ opponentArray }: Props) => {
       </Flex>
     </>
   );
-};
+};;

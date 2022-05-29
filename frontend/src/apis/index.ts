@@ -13,13 +13,22 @@ export const saveWinnerOrMultiplyDetails = async (activeGame: any) => {
   );
 };
 
+export const fetchActiveGameBattleArray = async (userName: string) => {
+  return await axios.get(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/${userName}`
+  );
+};
+
 export const updateBattleArrayInActiveGame = async (
   type: number,
-  winnerName: string
+  winnerName: string,
+  gameBoard?: any,
+  questions?: any,
+  win?: false
 ) => {
   await axios.put(
     `${process.env.REACT_APP_SERVER_BASE_URL}/game/${winnerName}`,
-    { type }
+    { type, gameBoard, questions, win }
   );
 };
 
@@ -76,11 +85,13 @@ export const fetchSpecificUser = async (username: string) => {
   );
 };
 interface PayloadType {
-  overallPoints?:number;
-  speed?:number;
-  game?:any;
-  levelNumber?:number;
-  levelName?:string;
+  overallPoints?: number;
+  speed?: number;
+  game?: any;
+  levelNumber?: number;
+  levelName?: string;
+  battle?: boolean;
+  battleWinner?: string;
 }
 export const saveUserScore = async (username:string,payload: PayloadType) => {
   await axios.put(`${process.env.REACT_APP_SERVER_BASE_URL}/users/${username}`,payload)

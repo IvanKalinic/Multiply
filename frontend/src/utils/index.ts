@@ -10,7 +10,10 @@ export const vertical = (boardArray: any) => {
         column[j].clicked &&
         column[j + 1].clicked &&
         column[j + 2].clicked &&
-        column[j + 3].clicked
+        column[j + 3].clicked &&
+        column[j]?.color === column[j + 1]?.color &&
+        column[j + 1]?.color === column[j + 2]?.color &&
+        column[j + 2]?.color === column[j + 3]?.color
       ) {
         return true;
       }
@@ -26,7 +29,10 @@ export const horizontal = (boardArray: any) => {
         boardArray[i][j].clicked &&
         boardArray[i + 1][j].clicked &&
         boardArray[i + 2][j].clicked &&
-        boardArray[i + 3][j].clicked
+        boardArray[i + 3][j].clicked &&
+        boardArray[i][j]?.color === boardArray[i + 1][j]?.color &&
+        boardArray[i + 1][j]?.color === boardArray[i + 2][j]?.color &&
+        boardArray[i + 2][j]?.color === boardArray[i + 3][j]?.color
       ) {
         return true;
       }
@@ -42,7 +48,10 @@ export const diagonalUp = (boardArray: any) => {
         boardArray[i][j].clicked &&
         boardArray[i + 1][j + 1].clicked &&
         boardArray[i + 2][j + 2].clicked &&
-        boardArray[i + 3][j + 3].clicked
+        boardArray[i + 3][j + 3].clicked &&
+        boardArray[i][j]?.color === boardArray[i + 1][j + 1]?.color &&
+        boardArray[i + 1][j + 1]?.color === boardArray[i + 2][j + 2]?.color &&
+        boardArray[i + 2][j + 2]?.color === boardArray[i + 3][j + 3]?.color
       ) {
         return true;
       }
@@ -58,7 +67,10 @@ export const diagonalDown = (boardArray: any) => {
         boardArray[i][j].clicked &&
         boardArray[i + 1][j - 1].clicked &&
         boardArray[i + 2][j - 2].clicked &&
-        boardArray[i + 3][j - 3].clicked
+        boardArray[i + 3][j - 3].clicked &&
+        boardArray[i][j]?.color === boardArray[i + 1][j - 1]?.color &&
+        boardArray[i + 1][j - 1]?.color === boardArray[i + 2][j - 2]?.color &&
+        boardArray[i + 2][j - 2]?.color === boardArray[i + 3][j - 3]?.color
       ) {
         return true;
       }
@@ -108,8 +120,14 @@ export const gameSetup = async (
     game === "Battle"
       ? [
           { type: 2, winner: "" },
-          { type: 3, winner: "" },
-          { type: 4, winner: "" },
+          {
+            type: 3,
+            winner: [],
+          },
+          {
+            type: 4,
+            winner: [],
+          },
           { type: 1, winner: "" },
         ]
       : null;

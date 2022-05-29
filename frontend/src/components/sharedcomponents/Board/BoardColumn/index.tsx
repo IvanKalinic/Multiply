@@ -5,9 +5,10 @@ interface Props {
   column: Array<{ number: number; clicked: boolean }>;
   boardArray: any;
   id: number;
+  battle?: boolean;
 }
 
-const BoardColumn = ({ column, boardArray, id }: Props) => {
+const BoardColumn = ({ column, boardArray, id, battle }: Props) => {
   return (
     <Flex flexDirection="column">
       {column?.map((item, index) => (
@@ -17,6 +18,7 @@ const BoardColumn = ({ column, boardArray, id }: Props) => {
           id={index}
           index={id}
           boardArray={boardArray}
+          battle={battle}
         />
       ))}
     </Flex>
