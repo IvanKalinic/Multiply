@@ -36,6 +36,12 @@ const socket = (io) => {
       // io.to(room).emit("restart");
       socket.broadcast.emit("nextGame", gameNumber);
     });
+
+    socket.on("battleWinner", (gameNumber) => {
+      // const room = JSON.parse(data).room;
+      // io.to(room).emit("restart");
+      socket.broadcast.emit("battleWinner", gameNumber);
+    });
   });
 };
 
