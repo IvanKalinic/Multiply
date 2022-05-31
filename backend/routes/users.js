@@ -37,24 +37,26 @@ router.put("/:username", async (req, res) => {
       $set: {
         overallPoints: !!req.body?.game?.points
           ? (user[0]?.overallPoints || 0) + req.body.game.points
+          : !!req.body?.battlePoints
+          ? (user[0]?.overallPoints || 0) + req.body.battlePoints
           : user[0]?.overallPoints || 0,
         speed: !!req.body?.speed
           ? (user[0]?.speed || 0) + req.body.speed
           : user[0]?.speed || 0,
         gamesPlayed: !!req.body.game
-          ? [...user[0]?.gamesPlayed, req.body?.game]
-          : user[0]?.gamesPlayed,
+          ? user[0]?.gamesPlayed + 1
+          : user[0]?.gamesPlayed || 0,
         battlesPlayed: req.body?.battle
-          ? [...user[0]?.gamesPlayed, req.body?.battle]
-          : user[0]?.battlesPlayed,
+          ? user[0]?.battlesPlayed + 1
+          : user[0]?.battlesPlayed || 0,
         battlesWon:
           req.body?.battleWinner && user[0].username === req.body.battleWinner
-            ? [...user[0]?.battlesWon, req.body?.battleWinner]
-            : user[0]?.battlesWon || [],
+            ? user[0]?.battlesWon + 1
+            : user[0]?.battlesWon || 0,
         gamesWon:
           !!req.body?.game && user[0].username === req.body.game?.winner
-            ? [...user[0]?.gamesWon, req.body?.game]
-            : user[0]?.gamesWon || [],
+            ? user[0]?.gamesWon + 1
+            : user[0]?.gamesWon || 0,
         levelNumber: !!req.body?.levelNumber
           ? req.body.levelNumber
           : user[0]?.levelNumber || 1,

@@ -108,6 +108,21 @@ router.delete("/deleteActiveGame", async (req, res) => {
   }
 });
 
+router.delete("/deleteActiveGame/:username", async (req, res) => {
+  try {
+    const activeGame = await ActiveGame.find({
+      user: req.params.username,
+      // winer: { $not: { $in: [null, undefined, ""] } },
+    });
+    console.log(activeGame[0]);
+    await activeGame[0].deleteOne();
+    res.status(200).json(activeGame);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 router.get("/:winner", async (req, res) => {
   try {
     const activeGame = await ActiveGame.find({});
@@ -121,14 +136,14 @@ router.get("/:winner", async (req, res) => {
   }
 });
 
-router.put("/:winner", async (req, res) => {
+router.put("/battleArray/:winner", async (req, res) => {
   try {
     console.log(req.body);
     const activeGame = await ActiveGame.find({});
     let gameToBeUpdated = activeGame.find(
       (game) => game.battleArray.length > 0
     );
-    console.log(gameToBeUpdated);
+    console.log(gameToBeUpdated.battleArray);
     let battleArrayUpdated = gameToBeUpdated.battleArray.map((row) => {
       if (row.type === req.body?.type) {
         if (req.body?.type === 3 || req.body?.type === 4) {
@@ -143,13 +158,15 @@ router.put("/:winner", async (req, res) => {
           };
         }
       } else {
+        console.log("In else");
         return row;
       }
     });
+    console.log(battleArrayUpdated);
     if (!!gameToBeUpdated && !!battleArrayUpdated) {
       await gameToBeUpdated.updateOne({
         $set: {
-          battleArray: battleArrayUpdated ?? null,
+          battleArray: [...battleArrayUpdated],
           gameBoard: !!req.body?.gameBoard
             ? req.body.gameBoard
             : gameToBeUpdated.gameBoard,

@@ -36,19 +36,24 @@ const UserSchema = new mongoose.Schema(
       default: 0,
     },
     gamesPlayed: {
-      type: Array,
+      type: Number,
+      default: 0,
     },
     gamesWon: {
-      type: Array,
+      type: Number,
+      default: 0,
     },
     battlesPlayed: {
-      type: Array,
+      type: Number,
+      default: 0,
     },
     battlesWon: {
-      type: Array,
+      type: Number,
+      default: 0,
     },
     rank: {
       type: Number,
+      default: 0,
     },
     speed: {
       type: Number,
