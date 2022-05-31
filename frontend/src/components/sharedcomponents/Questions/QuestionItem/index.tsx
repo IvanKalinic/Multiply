@@ -98,14 +98,12 @@ const QuestionItem = ({
     setMyTurn((myTurn) => !myTurn);
     setTurnNumber((turnNumber) => turnNumber + 1);
     setPlayer(playerType);
-    console.log(game);
     socket.emit("reqTurn", {
       value: playerType,
       room,
       game,
       question: randomValue,
     });
-    console.log("Here");
   };
 
   return (

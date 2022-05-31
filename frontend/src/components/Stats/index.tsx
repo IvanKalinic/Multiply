@@ -5,8 +5,6 @@ import "./index.scss";
 import StatsItem from "./StatsItem";
 
 const Stats = ({ data }: { data: Array<any> }) => {
-  console.log(data);
-
   return (
     <MenuWrapper
       style={{

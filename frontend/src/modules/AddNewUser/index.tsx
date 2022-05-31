@@ -42,7 +42,6 @@ const AddNewUser = () => {
     }
   };
 
-  console.log(selectedOptions);
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <LoginWrapper style={{ width: "50%", flexDirection: "column" }}>

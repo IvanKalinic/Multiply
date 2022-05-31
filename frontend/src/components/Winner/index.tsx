@@ -19,6 +19,8 @@ interface Props {
   user?: any;
   battleWinner?: string;
   playAgain?: () => void;
+  gameOver?: boolean;
+  setGameOver?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Winner = ({
   setRerenderGame,
@@ -27,6 +29,8 @@ const Winner = ({
   user,
   battleWinner,
   playAgain,
+  gameOver,
+  setGameOver,
 }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -34,6 +38,7 @@ const Winner = ({
 
   const handleClose = () => {
     setIsOpen(false);
+    if (gameOver) setGameOver!(false);
     navigate("/");
   };
 
@@ -60,7 +65,7 @@ const Winner = ({
       <ModalOverlay />
       <ModalContent h={!finalMessage ? "300" : "15vh"}>
         <ModalCloseButton />
-        {!finalMessage ? (
+        {gameOver ? (
           <Flex
             flexDirection="column"
             justifyContent="center"
@@ -68,16 +73,33 @@ const Winner = ({
             flexWrap="wrap"
             textAlign="center"
           >
-            {!battleWinner && (
-              <Text fontSize="5xl" color="#9dbef5" mt="10">
-                <strong>
-                  {player !== "opp" && player !== "me" && player} won!
-                </strong>
-              </Text>
-            )}
+            <Text fontSize="5xl" color="#9dbef5" mt="10">
+              <strong>Game over!</strong>
+            </Text>
+            <Text mt="20" as="u">
+              <Link to="/userApp" onClick={nextGame}>
+                Let's play next game in your queue
+              </Link>
+            </Text>
+          </Flex>
+        ) : !finalMessage ? (
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            flexWrap="wrap"
+            textAlign="center"
+          >
+            <Text fontSize="5xl" color="#9dbef5" mt="10">
+              <strong>
+                {player !== "opp" && player !== "me" && player} won{" "}
+                {!!battleWinner && "this match"}!
+              </strong>
+            </Text>
+
             <Text fontSize="3xl" color="#9dbef5">
               {!!battleWinner
-                ? `${battleWinner} just won battle match and got 10 points award!`
+                ? `${battleWinner} won overall battle match and got 10 points award!`
                 : "Congrats!"}
             </Text>
             <Text mt="20" as="u">

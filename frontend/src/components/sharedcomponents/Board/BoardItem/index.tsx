@@ -13,6 +13,7 @@ import { useSocket } from "../../../../context/SocketContext";
 import { useTurnBased } from "../../../../context/TurnBasedContext";
 import { useUser } from "../../../../context/UserContext";
 import {
+  checkBattleArrayWinner,
   checkLevel,
   diagonalDown,
   diagonalUp,
@@ -61,11 +62,9 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
     if (diagonalDown(boardArray)) return true;
   }, [boardArray]);
 
-  console.log(boardArray);
-  console.log(gameOver());
-  console.log(diagonalUp(boardArray));
-
   const handleChange = () => {
+    if (gameOver()) return;
+
     if (
       boardArray[index][id].clicked &&
       boardArray[index][id].color !== user.color
@@ -83,7 +82,6 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
       if (maxClicks !== MAX_PLAYER_CHOICES) setSelectedNumber(0);
 
       if (gameOver()) {
-        console.log("Game over");
         setDisplayWin(true);
         socket.emit("reqTurn", {
           value: playerType,
@@ -112,9 +110,42 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
             levelName: levelNameFromScore(user.data?.overallPoints + 4),
             game,
           });
+        } else {
+          fetchActiveGameBattleArray(user.data.username).then((res) => {
+            saveUserScore(user.data.username, {
+              levelNumber: checkLevel(
+                user.data?.overallPoints +
+                  checkBattleArrayWinner(
+                    res.data.battleArray,
+                    user.data.username,
+                    user
+                  )
+                  ? 10
+                  : 0
+              ),
+              levelName: levelNameFromScore(
+                user.data?.overallPoints +
+                  checkBattleArrayWinner(
+                    res.data.battleArray,
+                    user.data.username,
+                    user
+                  )
+                  ? 10
+                  : 0
+              ),
+              game,
+              battle,
+              battleWinner: checkBattleArrayWinner(
+                res.data.battleArray,
+                user.data.username,
+                user
+              )
+                ? user.data.username
+                : null,
+            });
+          });
         }
       }
-
       setGame(boardArray);
     }
   };

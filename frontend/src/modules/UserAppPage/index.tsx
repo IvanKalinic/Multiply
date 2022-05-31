@@ -25,8 +25,6 @@ const UserAppPage = () => {
 
   useEffect(() => {
     getActiveGame().then((data) => {
-      // console.log(data.data);
-
       if (rerenderGame === 1) {
         setBattleArrayGameType(1);
         return;
@@ -60,10 +58,6 @@ const UserAppPage = () => {
     });
   }, [rerenderGame]);
 
-  // console.log(location);
-  // console.log(rerenderGame);
-  // console.log(gameType);
-  // console.log(battleArrayGameType);
 
   const returnUserGame = () => {
     switch (gameType) {

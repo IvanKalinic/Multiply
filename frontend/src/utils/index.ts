@@ -113,7 +113,6 @@ export const gameSetup = async (
   user?: string,
   socket?: any
 ) => {
-  console.log(game);
   let room = !user ? randomRoomName() : null;
 
   const battleArray =
@@ -234,21 +233,14 @@ export const arraySortSpeed = (fastestArray: Array<any>) => {
     : [];
 };
 
-// const getUserDetails = (key: string, wins: number) => {
-//   console.log(fetchSpecificUser(key).then((res) => res.data[0]));
-//   let user = fetchSpecificUser(key).then((res) => res.data[0]);
-//   return { ...fetchSpecificUser(key).then((res) => res.data[0]), wins };
-// };
-
 export const bestInGame = (bestGameArray: Array<any>) => {
   // property is
   const arrayWithUserNames = bestGameArray.map((row) => row.winner);
-  console.log(arrayWithUserNames);
+
   let reducedArray = arrayWithUserNames.reduce((p, c) => {
     p[c] = (p[c] || 0) + 1;
     return p;
   }, []);
-  console.log(reducedArray);
 
   // ["user13","user14","user16"]
   let newArray = Object.keys(reducedArray).sort((a, b) => {
@@ -259,7 +251,58 @@ export const bestInGame = (bestGameArray: Array<any>) => {
     name: key,
     wins: reducedArray[key],
   }));
-  // return Object.keys(reducedArray).sort((a, b) => {
-  //   return reducedArray[b] - reducedArray[a];
-  // });
-};;
+};
+
+export const checkBattleArrayWinner = (
+  battleArray: any,
+  multiplyWinner: string,
+  user: any
+) => {
+  let userPoints = 0;
+  let maxPoints = 0;
+  battleArray.map((item: any, index: number) => {
+    if (item.type === 2 || item.type === 1) {
+      maxPoints = maxPoints + index + 1;
+      if (item.winner === user.data.username) {
+        userPoints = userPoints + index + 1;
+        console.log(userPoints);
+      }
+    }
+    if (item.type == 3 || item.type === 4) {
+      let winNumber = item.winner.filter(
+        (item: any) => item.win === true
+      ).length;
+      console.log(winNumber);
+      if (!!winNumber) maxPoints = maxPoints + winNumber * (index + 1);
+      console.log(maxPoints);
+      console.log(item.winner);
+      if (
+        !!item.winner.find(
+          (winner: any) =>
+            winner.name === user.data.username && winner.win === true
+        )
+      ) {
+        console.log(index);
+        userPoints = userPoints + index + 1;
+        console.log(userPoints);
+      }
+    }
+    if (item.type === 1) {
+      // nije se još updatea pa dodaj odma bodove od ove igre
+      if (!item.winner) {
+        if (multiplyWinner === user.data.username) {
+          userPoints = userPoints + 4;
+          console.log(userPoints);
+        }
+      }
+    }
+  });
+  console.log(maxPoints);
+  console.log(userPoints);
+  console.log(multiplyWinner);
+  console.log(user.data.username);
+  return (
+    userPoints > maxPoints / 2 ||
+    (userPoints === maxPoints / 2 && multiplyWinner === user.data.username)
+  );
+};

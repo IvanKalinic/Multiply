@@ -1,5 +1,9 @@
 import { Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { deleteSpecificGame } from "../../apis";
+import { useUser } from "../../context/UserContext";
+import { CircularBar } from "../CircularProgressbar";
+import Winner from "../Winner";
 import { Figure, Popup, Word, WrongLetters, Notification } from "./components";
 import { palatalsCode, show, words } from "./helpers";
 import { BodyWrapper, GameContainer } from "./styles";
@@ -16,6 +20,10 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
   const [correctLetters, setCorrectLetters] = useState<Array<string>>([]);
   const [wrongLetters, setWrongLetters] = useState<Array<any>>([]);
   const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [winner, setWinner] = useState(false);
+
+  const { user } = useUser();
 
   useEffect(() => {
     const handleKeydown = (e: any) => {
@@ -53,6 +61,12 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
     selectedWord = words[Math.floor(Math.random() * words.length)];
   };
 
+  useEffect(() => {
+    if (gameOver) {
+      deleteSpecificGame(user.data.username);
+    }
+  }, [gameOver]);
+
   return (
     <BodyWrapper>
       <Heading mt="10rem" mb="-5rem">
@@ -71,6 +85,15 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
         playAgain={playAgain}
         battle={battle}
         setRerenderGame={setRerenderGame}
+        setWinner={setWinner}
+      />
+      {gameOver && <Winner setGameOver={setGameOver} gameOver={gameOver} />}
+      <CircularBar
+        winner={winner}
+        workSeconds={60}
+        breakSeconds={0}
+        setGameOver={setGameOver}
+        singleGame={true}
       />
       {showNotification && <Notification />}
     </BodyWrapper>

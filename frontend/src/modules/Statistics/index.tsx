@@ -71,7 +71,6 @@ const Statistics = () => {
     if (!selectedOptions.classes) displayArray[0] = null;
     if (!!selectedOptions.classes) {
       fetchUsersFromClassName(selectedOptions.classes).then((res) => {
-        console.log(res);
         setUsers(bestPlayerSort(res.data));
         displayArray[0] = [...users];
       });
@@ -81,7 +80,6 @@ const Statistics = () => {
     if (!!selectedOptions.games) {
       if (!selectedOptions.classes) {
         fetchGameScores(selectedOptions.games).then((res) => {
-          console.log(res);
           setGameUsers(bestInGame(res.data));
           displayArray[1] = bestInGame(res.data);
         });
@@ -89,9 +87,7 @@ const Statistics = () => {
     }
     if (selectedOptions.fastest) {
       if (!!selectedOptions.classes) {
-        console.log(users);
         setFastestUsers(arraySortSpeed(users));
-        console.log(users);
         displayArray[2] = arraySortSpeed(users);
         // setFastestUsers(res.data.map()) isto ko i u proslom
       } else {
@@ -104,9 +100,7 @@ const Statistics = () => {
     if (!!top10Users.length) displayArray[3] = top10Users;
     if (selectedOptions.top10) {
       fetchAllUsers().then((res) => {
-        console.log(res.data);
         setTop10Users(bestPlayerSort(res.data));
-        console.log(bestPlayerSort(res.data));
         displayArray[3] = bestPlayerSort(res.data);
       });
     }
@@ -122,7 +116,6 @@ const Statistics = () => {
         if (!selectedOptions.games) return;
 
         fetchGameScores(selectedOptions.games).then((games) => {
-          console.log(games);
           if (!games.data.length) return;
           let bestGameUsers = bestInGame(games.data);
           if (!bestGameUsers.length) return;
@@ -130,7 +123,6 @@ const Statistics = () => {
           bestGameUsers.forEach((gameUser: any) => {
             res.data.forEach((classUser: any) => {
               if (gameUser.name === classUser.username) {
-                console.log(true);
                 tempArray.push(gameUser);
               }
             });
@@ -166,9 +158,6 @@ const Statistics = () => {
     displayArray[3] = top10Users;
   }
   // }, [selectedOptions, users, gameUsers, fastestUsers, top10Users]);
-
-  console.log(displayArray);
-  console.log(selectedOptions);
 
   return (
     <Flex alignItems="center" justifyContent="center">
@@ -222,5 +211,5 @@ const Statistics = () => {
       </MenuWrapper>
     </Flex>
   );
-};;
+};;;
 export default Statistics;

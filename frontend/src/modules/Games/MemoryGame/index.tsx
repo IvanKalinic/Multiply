@@ -1,12 +1,14 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
+  deleteSpecificGame,
   fetchQuestions,
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
   updateBattleArrayInActiveGame,
 } from "../../../apis";
+import { CircularBar } from "../../../components/CircularProgressbar";
 import Winner from "../../../components/Winner";
 import { categories, difficulties } from "../../../consts";
 import { useUser } from "../../../context/UserContext";
@@ -36,6 +38,7 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
   const [matched, setMatched] = useState<Array<any>>([]);
   const [win, setWin] = useState<number>(0);
   const [winner, setWinner] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
 
   const { user } = useUser();
 
@@ -144,6 +147,12 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
     }
   }, [win]);
 
+  useEffect(() => {
+    if (gameOver) {
+      deleteSpecificGame(user.data.username);
+    }
+  }, [gameOver]);
+
   console.log(win);
   console.log(items);
 
@@ -169,6 +178,14 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
         })}
       </MemoryCardsContainer>
       {!!winner && <Winner setRerenderGame={setRerenderGame} />}
+      {gameOver && <Winner setGameOver={setGameOver} gameOver={gameOver} />}
+      <CircularBar
+        winner={winner}
+        workSeconds={60}
+        breakSeconds={0}
+        setGameOver={setGameOver}
+        singleGame={true}
+      />
     </Flex>
   );
 };

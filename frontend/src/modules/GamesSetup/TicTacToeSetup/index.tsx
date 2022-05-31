@@ -66,11 +66,6 @@ const TicTacToeSetup = () => {
     return users.filter((user) => user.class === className);
   };
 
-  console.log(selectedOptions);
-  console.log(users);
-  console.log(
-    users.filter((user) => user.class === selectedOptions?.firstOpponentsClass)
-  );
   return (
     <Flex justifyContent="center">
       <MenuWrapper>

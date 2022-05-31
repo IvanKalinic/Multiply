@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { PauseButton, PlayButton } from "../../assets/icons/svgs";
 import { useGame } from "../../context/GameContext";
@@ -9,10 +9,23 @@ import "./index.scss";
 
 const red = "#f54e4e";
 const green = "#4aec8c";
-const workSeconds = 10;
-const breakSeconds = 0;
+// const workSeconds = 10;
+// const breakSeconds = 0;
+interface Props {
+  workSeconds: number;
+  breakSeconds: number;
+  singleGame?: boolean;
+  winner?: boolean;
+  setGameOver?: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export const CircularBar = () => {
+export const CircularBar = ({
+  workSeconds,
+  breakSeconds,
+  singleGame,
+  winner,
+  setGameOver,
+}: Props) => {
   const { myTurn, setMyTurn, hasOpponent, turnNumber } = useTurnBased();
   const { socket } = useSocket();
   const { selectedOption } = useGame();
@@ -26,19 +39,22 @@ export const CircularBar = () => {
   const modeRef = useRef(mode);
 
   const tick = () => {
-    // if (!myTurn || !hasOpponent) return;
-
     secondsLeftRef.current--;
     setSecondsLeft(secondsLeftRef.current);
+
     if (secondsLeftRef.current === 0) {
       pause();
-      setMyTurn((myTurn) => !myTurn);
-      socket.emit("reqTurn", {
-        value: "",
-        room: "",
-        game: "",
-        question: "",
-      });
+      if (singleGame) {
+        setGameOver!(true);
+      } else {
+        setMyTurn((myTurn) => !myTurn);
+        socket.emit("reqTurn", {
+          value: "",
+          room: "",
+          game: "",
+          question: "",
+        });
+      }
     }
   };
 
@@ -51,6 +67,10 @@ export const CircularBar = () => {
   useEffect(() => {
     if (!!selectedOption) pause();
   }, [selectedOption]);
+
+  useEffect(() => {
+    if (winner) pause();
+  }, [winner]);
 
   useEffect(() => {
     if (!myTurn) return;

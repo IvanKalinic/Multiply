@@ -1,17 +1,13 @@
-import { Link } from "react-router-dom";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { HomeWrapper } from "../modules.style";
+import { Link } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
-import { useUser } from "../../context/UserContext";
 import { useSocket } from "../../context/SocketContext";
-import { CircularBar } from "../../components/CircularProgressbar";
-import Hangman from "../../components/Hangman";
-import MemoryGame from "../Games/MemoryGame";
+import { useUser } from "../../context/UserContext";
+import { HomeWrapper } from "../modules.style";
 
 const HomePage = () => {
   const { user } = useUser();
   const { admin } = useAdmin();
-  const { socket } = useSocket();
 
   return (
     <HomeWrapper>

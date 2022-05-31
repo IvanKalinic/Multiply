@@ -106,7 +106,6 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
 
     for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
       initialArray[i] = randomValues();
-      console.log(initialArray[i]);
     }
 
     setBoardArray(initialArray);
@@ -196,7 +195,6 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
   }, [opponentArray]);
 
   useEffect(() => {
-    console.log(initialArray);
     if (!!boardArray.length)
       updateBattleArrayInActiveGame(
         1,

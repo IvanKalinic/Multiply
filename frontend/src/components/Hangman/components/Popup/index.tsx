@@ -20,6 +20,7 @@ interface Props {
   playAgain: () => void;
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+  setWinner?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Popup = ({
@@ -30,6 +31,7 @@ const Popup = ({
   playAgain,
   battle,
   setRerenderGame,
+  setWinner,
 }: Props) => {
   let playable = true;
 
@@ -49,6 +51,8 @@ const Popup = ({
       // finalMessage = "Congratulations! You won! 😃";
       setFinalMessage("Congratulations! You won! 😃");
       playable = false;
+
+      setWinner!(true);
 
       if (!battle) {
         saveWinnerOrMultiplyDetails({
@@ -97,15 +101,6 @@ const Popup = ({
   // if (!!finalMessage) updateBattleArrayInActiveGame(4, user.data.username);
 
   return (
-    // <PopupContainer style={{ display: finalMessage !== "" ? "flex" : "" }}>
-    //   <PopupWrapper>
-    //     <h2>{finalMessage}</h2>
-    //     <h3>{finalMessageRevealWord}</h3>
-    //     <PopupButton onClick={!battle ? playAgain : handleNext}>
-    //       <Link to="/">Let's play next game in your queue</Link>
-    //     </PopupButton>
-    //   </PopupWrapper>
-    // </PopupContainer>
     <div>
       {!!finalMessage && (
         <Winner

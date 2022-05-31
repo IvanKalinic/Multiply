@@ -32,7 +32,6 @@ export const StatsItem = ({ userData }: { userData: any }) => {
     }
   }, [userData]);
 
-  console.log(user?.levelNumber);
 
   return (
     <Flex flexDirection="column" justifyContent="center" mt="2vh">

@@ -24,10 +24,10 @@ export const updateBattleArrayInActiveGame = async (
   winnerName: string,
   gameBoard?: any,
   questions?: any,
-  win?: false
+  win?: boolean
 ) => {
   await axios.put(
-    `${process.env.REACT_APP_SERVER_BASE_URL}/game/${winnerName}`,
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/battleArray/${winnerName}`,
     { type, gameBoard, questions, win }
   );
 };
@@ -46,6 +46,12 @@ export const getActiveGame = async () => {
 export const deleteActiveGames = async () => {
   await axios.delete(
     `${process.env.REACT_APP_SERVER_BASE_URL}/game/deleteActiveGame`
+  );
+};
+
+export const deleteSpecificGame = async (username: string) => {
+  await axios.delete(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/deleteActiveGame/${username}`
   );
 };
 
@@ -92,6 +98,7 @@ interface PayloadType {
   levelName?: string;
   battle?: boolean;
   battleWinner?: string;
+  battlePoints?: number;
 }
 export const saveUserScore = async (username:string,payload: PayloadType) => {
   await axios.put(`${process.env.REACT_APP_SERVER_BASE_URL}/users/${username}`,payload)

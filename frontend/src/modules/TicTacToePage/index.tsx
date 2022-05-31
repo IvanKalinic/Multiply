@@ -60,7 +60,6 @@ const TicTacToePage = ({ battle, setRerenderGame }: Props) => {
     setRerenderGame!(3);
     setMyTurn(true);
     socket.emit("nextGame");
-    console.log("Next game");
   };
 
   const restart = () => {
@@ -80,12 +79,10 @@ const TicTacToePage = ({ battle, setRerenderGame }: Props) => {
               setActiveGame(row);
               setRoom(row.room);
             }
-            console.log(res.data?.opponents);
             if (
               !!row?.opponents?.length &&
               row.opponents.includes(user.data.username)
             ) {
-              console.log(res.data);
               setActiveGame(row);
               setRoom(row.room);
               setOpponents(row.opponents);
@@ -125,7 +122,6 @@ const TicTacToePage = ({ battle, setRerenderGame }: Props) => {
     });
 
     socket?.on("nextGame", () => {
-      console.log("Here");
       setRerenderGame!(3);
     });
 
@@ -188,7 +184,6 @@ const TicTacToePage = ({ battle, setRerenderGame }: Props) => {
     }
   }, [winner]);
 
-  console.log(winner);
   return (
     <TicTacToeContainer>
       Room: {room}

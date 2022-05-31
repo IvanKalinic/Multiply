@@ -20,7 +20,11 @@ import { useSocket } from "../../context/SocketContext";
 import { useTurnBased } from "../../context/TurnBasedContext";
 import { useUser } from "../../context/UserContext";
 import { MenuWrapper } from "../../styles";
-import { checkLevel, levelNameFromScore } from "../../utils";
+import {
+  checkBattleArrayWinner,
+  checkLevel,
+  levelNameFromScore,
+} from "../../utils";
 
 interface Props {
   battle?: boolean;
@@ -103,7 +107,6 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
         await fetchQuestions(category, difficulty).then((data) => {
           setQuestions(data.data);
           if (battle) {
-            console.log(opponentArray);
             updateBattleArrayInActiveGame(
               1,
               user.data.username,
@@ -137,46 +140,73 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
         setPlayer(json.winner);
 
         if (battle) {
+          updateBattleArrayInActiveGame(1, json.winner, [], [], true);
           fetchActiveGameBattleArray(user.data.username).then((res) => {
-            saveWinnerOrMultiplyDetails({
-              room,
-              type: 5,
-              winner: checkBattleArrayWinner(res.data.battleArray, json.winner)
-                ? user.data.username
-                : json.winner,
-            });
-            saveToGameHistory({
-              opponents,
-              room,
-              gameName: "Battle",
-              winner: checkBattleArrayWinner(res.data.battleArray, json.winner)
-                ? user.data.username
-                : json.winner,
-              points: 10,
-              speed: 0,
-            });
+            console.log(
+              checkBattleArrayWinner(res.data.battleArray, json.winner, user)
+            );
+            // saveToGameHistory({
+            //   opponents,
+            //   room,
+            //   gameName: "Battle",
+            //   winner: checkBattleArrayWinner(
+            //     res.data.battleArray,
+            //     json.winner,
+            //     user
+            //   )
+            //     ? user.data.username
+            //     : json.winner,
+            //   points: 10,
+            //   speed: 0,
+            // })
             saveUserScore(user.data.username, {
-              levelNumber: checkLevel(user.data?.overallPoints + 10),
-              levelName: levelNameFromScore(user.data?.overallPoints + 10),
+              levelNumber: checkLevel(
+                user.data?.overallPoints +
+                  checkBattleArrayWinner(
+                    res.data.battleArray,
+                    json.winner,
+                    user
+                  )
+                  ? 10
+                  : 0
+              ),
+              levelName: levelNameFromScore(
+                user.data?.overallPoints +
+                  checkBattleArrayWinner(
+                    res.data.battleArray,
+                    json.winner,
+                    user
+                  )
+                  ? 10
+                  : 0
+              ),
               game,
               battle,
               battleWinner: checkBattleArrayWinner(
                 res.data.battleArray,
-                json.winner
+                json.winner,
+                user
               )
                 ? user.data.username
                 : json.winner,
+              battlePoints: checkBattleArrayWinner(
+                res.data.battleArray,
+                json.winner,
+                user
+              )
+                ? 10
+                : 0,
             });
           });
-          updateBattleArrayInActiveGame(1, user.data.username);
-          setBattleWinner(user.data.username);
-          socket.emit("battleWinner", user.data.username);
+          // setBattleWinner(json.winner);
+          socket.emit("battleWinner", json.winner);
         }
       }
     });
 
-    socket?.on("battleWinner", (user: string) => {
-      setBattleWinner(user);
+    socket?.on("battleWinner", (winner: string) => {
+      console.log(winner);
+      setBattleWinner(winner);
     });
 
     socket?.on("restart", () => {
@@ -186,41 +216,7 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
     socket?.on("opponent_joined", () => {
       setHasOpponent(true);
     });
-  }, [myTurn, socket]);
-
-  const checkBattleArrayWinner = (battleArray: any, multiplyWinner: string) => {
-    let userPoints = 0;
-    let maxPoints = 0;
-    battleArray.map((item: any, index: number) => {
-      if (item.type === 2 || item.type === 1) {
-        maxPoints = maxPoints + index;
-        if (item.winner === user.data.username) {
-          userPoints = userPoints + index;
-        }
-      }
-      if (item.type == 3 || item.type === 4) {
-        let winNumber = item.winner.filter(
-          (item: any) => item.win === true
-        ).length;
-        if (!!winNumber) maxPoints = maxPoints + winNumber * index;
-        if (item.winner.includes({ name: user.data.username, win: true })) {
-          userPoints = userPoints + index;
-        }
-      }
-      if (item.type === 1) {
-        // nije se još updatea pa dodaj odma bodove od ove igre
-        if (!item.winner) {
-          if (multiplyWinner === user.data.username) {
-            userPoints = userPoints + 4;
-          }
-        }
-      }
-    });
-    return (
-      userPoints > maxPoints / 2 ||
-      (userPoints === maxPoints / 2 && multiplyWinner === user.data.username)
-    );
-  };
+  }, [myTurn]);
 
   useEffect(() => {
     if (
@@ -284,7 +280,7 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
               <VideoCall />
               <ChatLogo />
             </Flex>
-            <CircularBar />
+            <CircularBar workSeconds={10} breakSeconds={0} />
           </MenuWrapper>
         )}
         <Pawns />
