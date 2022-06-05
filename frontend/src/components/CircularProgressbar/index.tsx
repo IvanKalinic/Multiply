@@ -116,6 +116,11 @@ export const CircularBar = ({
     isPausedRef.current = true;
   };
 
+  useEffect(() => {
+    if (singleGame) {
+      play();
+    }
+  }, [singleGame]);
   return (
     <Flex
       w="15rem"
@@ -137,11 +142,12 @@ export const CircularBar = ({
         })}
       />
       <Box mt="20" w="20" h="20">
-        {isPaused ? (
-          myTurn && <PlayButton onClick={play} />
-        ) : (
-          <PauseButton onClick={pause} />
-        )}
+        {!singleGame &&
+          (isPaused ? (
+            myTurn && <PlayButton onClick={play} />
+          ) : (
+            <PauseButton onClick={pause} />
+          ))}
       </Box>
     </Flex>
   );

@@ -1,6 +1,10 @@
 import { Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { deleteSpecificGame } from "../../apis";
+import {
+  deleteSpecificGame,
+  saveUserScore,
+  updateBattleArrayInActiveGame,
+} from "../../apis";
 import { useUser } from "../../context/UserContext";
 import { CircularBar } from "../CircularProgressbar";
 import Winner from "../Winner";
@@ -62,8 +66,13 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
   };
 
   useEffect(() => {
+    if (battle) {
+      updateBattleArrayInActiveGame(4, user.data.username, {}, {}, false);
+      return;
+    }
     if (gameOver) {
       deleteSpecificGame(user.data.username);
+      saveUserScore(user.data.username, { game: {} });
     }
   }, [gameOver]);
 

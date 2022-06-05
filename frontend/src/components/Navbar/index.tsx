@@ -8,9 +8,10 @@ import "./index.scss";
 interface Props {
   user: any;
   admin: any;
+  rank?: number;
 }
 
-const Navbar = ({ user, admin }: Props) => {
+const Navbar = ({ user, admin, rank }: Props) => {
   const { setUser } = useUser();
   const { setAdmin } = useAdmin();
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const Navbar = ({ user, admin }: Props) => {
     navigate("/");
   };
 
+  console.log(rank);
   return (
     <NavbarWrapper>
       <span
@@ -47,6 +49,7 @@ const Navbar = ({ user, admin }: Props) => {
               </Link>
             </span>
           )}
+
           <span style={{ fontSize: "1.25rem", marginRight: "1.25rem" }}>
             {user ? (
               user?.data?.username
@@ -56,6 +59,15 @@ const Navbar = ({ user, admin }: Props) => {
               </Link>
             ) : null}
           </span>
+
+          <span
+            style={{
+              fontSize: "1.25rem",
+              marginRight: "1.25rem",
+              marginLeft: "-0.75rem",
+              borderBottom: "1px solid",
+            }}
+          >{`#${rank}`}</span>
 
           {user || admin ? (
             <span

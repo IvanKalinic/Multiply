@@ -155,7 +155,10 @@ const Statistics = () => {
     displayArray[2] = fastestUsers;
   }
   if (selectedOptions.top10 && !!top10Users.length) {
-    displayArray[3] = top10Users;
+    displayArray[3] = top10Users.map((user, index) => ({
+      ...user,
+      rank: index + 1,
+    }));
   }
   // }, [selectedOptions, users, gameUsers, fastestUsers, top10Users]);
 
@@ -189,9 +192,8 @@ const Statistics = () => {
                 />
               ) : (
                 <Button
-                  mb="2rem"
                   w="20vw"
-                  h="7.2vh"
+                  h="4.6rem"
                   onClick={() => fetchCategory(category.category)}
                 >
                   <Text fontSize="1.3rem" fontStyle="normal">

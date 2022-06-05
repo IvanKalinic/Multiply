@@ -26,7 +26,7 @@ const Stats = ({ data }: { data: Array<any> }) => {
       className="webkit-scrollbar"
     >
       {data !== null ? (
-        data?.map((user) => <StatsItem userData={user} />)
+        data?.map((user) => <StatsItem key={user._id} userData={user} />)
       ) : (
         <Warning text="No users found" />
       )}

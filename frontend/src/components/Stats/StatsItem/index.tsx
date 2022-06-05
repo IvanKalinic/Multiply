@@ -19,6 +19,7 @@ interface UserData {
   speed: number;
   levelNumber: number;
   level: string;
+  rank?: number;
 }
 
 export const StatsItem = ({ userData }: { userData: any }) => {
@@ -26,28 +27,40 @@ export const StatsItem = ({ userData }: { userData: any }) => {
 
   useEffect(() => {
     if (!!userData.name) {
-      fetchSpecificUser(userData.name).then((res) => setUser(res.data[0]));
+      fetchSpecificUser(userData.name).then((res) => {
+        console.log(res);
+        setUser(res.data[0]);
+      });
     } else {
       setUser(userData);
     }
   }, [userData]);
 
-
   return (
     <Flex flexDirection="column" justifyContent="center" mt="2vh">
       {!!user ? (
         <>
-          <Heading size="md" ml="-8vw">
+          <Heading size="md" ml={!user?.rank ? "-8vw" : "-5vw"}>
             {user?.username}
+            {!!user?.rank && (
+              <span
+                style={{
+                  fontWeight: "bold",
+                  marginLeft: "3rem",
+                  color: "green",
+                }}
+              >{`#${user.rank}`}</span>
+            )}
           </Heading>
           <Flex alignItems="center" justifyContent="flex-start">
             <Flex flexDirection="column" alignItems="flex-start">
               <h3>
-                Games (W/P): {user?.gamesWon.length}/{user?.gamesPlayed.length}
+                Games (W/P): {user?.gamesWon?.length || 0}/
+                {user?.gamesPlayed?.length || 0}
               </h3>
               <h3>
-                Battles (W/P): {user?.battlesWon.length}/
-                {user?.battlesPlayed.length}
+                Battles (W/P): {user?.battlesWon?.length || 0}/
+                {user?.battlesPlayed?.length || 0}
               </h3>
               <h3>Points: {user?.overallPoints}</h3>
               <h3>Speed: {user?.speed}</h3>
@@ -59,7 +72,9 @@ export const StatsItem = ({ userData }: { userData: any }) => {
               >
                 {!userData.wins
                   ? `${
-                      (user?.gamesWon?.length / user?.gamesPlayed?.length) * 100
+                      ((user?.gamesWon?.length || 0) /
+                        user?.gamesPlayed?.length) *
+                      100
                     }% won`
                   : `${userData.wins} wins in this game`}
               </h5>

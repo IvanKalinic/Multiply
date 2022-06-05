@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, memo } from "react";
+import React, { lazy, Suspense, memo, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,6 +10,8 @@ import Navbar from "../components/Navbar";
 import { useUser } from "../context/UserContext";
 import { useAdmin } from "../context/AdminContext";
 import { HomePage } from "../modules";
+import { fetchAllUsers } from "../apis";
+import { bestPlayerSort } from "../utils";
 
 const ErrorComponent = lazy(() => import("../components/Error"));
 const AdminAppPage = lazy(() => import("../modules/AdminAppPage"));
@@ -36,10 +38,24 @@ const AppRoutes = ({
   const { user } = useUser();
   const { admin } = useAdmin();
 
+  const [rank, setRank] = useState<number>(0);
+
+  useEffect(() => {
+    if (user) {
+      fetchAllUsers().then((res) => {
+        bestPlayerSort(res.data).forEach((row, index) => {
+          if (row.username === user.data.username) {
+            setRank(index + 1);
+          }
+        });
+      });
+    }
+  }, [user]);
+
   return (
     <Router>
       <div style={{ width: "100%" }}>
-        <Navbar user={user} admin={admin} />
+        <Navbar user={user} admin={admin} rank={rank} />
         <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path="/" element={!user ? <HomePage /> : <UserAppPage />} />

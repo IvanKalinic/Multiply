@@ -1,4 +1,4 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
   fetchActiveGameBattleArray,
@@ -255,9 +255,10 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
 
   return (
     <>
-      <Heading position="absolute" fontSize="md" top="2">
-        Turn: {myTurn ? "You" : "Opponent"}
-      </Heading>
+      <Button position="absolute" fontSize="md" top="1.5rem">
+        <span style={{ color: "rgb(157, 190, 245)" }}>Turn: </span>
+        {myTurn ? "You" : "Opponent"}
+      </Button>
       <Flex justifyContent="center" alignItems="center">
         {questions && (
           <MenuWrapper style={{ width: "75vw", height: "80vh" }}>

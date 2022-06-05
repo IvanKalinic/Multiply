@@ -2,15 +2,11 @@ import { CircularProgress, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { getActiveGame } from "../../apis";
 import Hangman from "../../components/Hangman";
-import { useOpponents } from "../../context/OpponentsContext";
+import Warning from "../../components/Warning";
 import { useUser } from "../../context/UserContext";
 import MemoryGame from "../Games/MemoryGame";
 import GameStart from "../GameStart";
 import TicTacToePage from "../TicTacToePage";
-import { useLocation } from "react-router-dom";
-import Warning from "../../components/Warning";
-import { isTemplateTail } from "typescript";
-import Winner from "../../components/Winner";
 
 const UserAppPage = () => {
   const { user } = useUser();
@@ -45,19 +41,21 @@ const UserAppPage = () => {
 
       if (foundGameType === 5) {
         let battleArray = data.data.find(
-          (row: any) => row.type === 5
+          (row: any) =>
+            row.type === 5 && row.opponents.includes(user.data?.username)
         )?.battleArray;
+
         setBattleArrayGameType(
-          battleArray.find((item: any) =>
-            item.type === 2 || item.type === 1
-              ? !item.winner
-              : !item.winner.find((row: any) => row.name === user.data.username)
+          battleArray.find(
+            (item: any) =>
+              // item.type === 2 || item.type === 1
+              !item.winner || !item.winner.length
+            // : !item.winner.find((row: any) => row.name === user.data.username)
           )?.type
         );
       }
     });
   }, [rerenderGame]);
-
 
   const returnUserGame = () => {
     switch (gameType) {
@@ -101,11 +99,14 @@ const UserAppPage = () => {
     setComponentToRender(returnUserGame());
   }, [gameType, battleArrayGameType]);
 
+  console.log(battleArrayGameType);
+  console.log(rerenderGame);
+
   return (
     <Flex justifyContent="center" alignItems="center">
       {componentToRender}
     </Flex>
   );
-};;;;;;
+};
 
 export default UserAppPage;

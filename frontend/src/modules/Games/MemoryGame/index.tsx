@@ -148,8 +148,13 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
   }, [win]);
 
   useEffect(() => {
+    if (battle) {
+      updateBattleArrayInActiveGame(3, user.data.username, {}, {}, false);
+      return;
+    }
     if (gameOver) {
       deleteSpecificGame(user.data.username);
+      saveUserScore(user.data.username, { game: {} });
     }
   }, [gameOver]);
 
