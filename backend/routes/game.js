@@ -141,7 +141,9 @@ router.put("/battleArray/:winner", async (req, res) => {
     console.log(req.body);
     const activeGame = await ActiveGame.find({});
     let gameToBeUpdated = activeGame.find(
-      (game) => game.battleArray.length > 0
+      (game) =>
+        game.battleArray.length > 0 &&
+        game.opponents.includes(req.params.winner)
     );
     console.log(gameToBeUpdated.battleArray);
     let battleArrayUpdated = gameToBeUpdated.battleArray.map((row) => {
@@ -149,7 +151,13 @@ router.put("/battleArray/:winner", async (req, res) => {
         if (req.body?.type === 3 || req.body?.type === 4) {
           return {
             type: row.type,
-            winner: [...row.winner, { name: req.params.winner, win: true }],
+            winner: [
+              ...row.winner,
+              {
+                name: req.params.winner,
+                win: req.body?.win === false ? false : true,
+              },
+            ],
           };
         } else {
           return {
