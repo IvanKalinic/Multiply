@@ -17,6 +17,7 @@ interface Props {
   singleGame?: boolean;
   winner?: boolean;
   setGameOver?: React.Dispatch<React.SetStateAction<boolean>>;
+  setTimeSpent?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const CircularBar = ({
@@ -25,6 +26,7 @@ export const CircularBar = ({
   singleGame,
   winner,
   setGameOver,
+  setTimeSpent,
 }: Props) => {
   const { myTurn, setMyTurn, hasOpponent, turnNumber } = useTurnBased();
   const { socket } = useSocket();
@@ -41,6 +43,7 @@ export const CircularBar = ({
   const tick = () => {
     secondsLeftRef.current--;
     setSecondsLeft(secondsLeftRef.current);
+    if (singleGame) setTimeSpent!(workSeconds - secondsLeftRef.current);
 
     if (secondsLeftRef.current === 0) {
       pause();
@@ -121,6 +124,7 @@ export const CircularBar = ({
       play();
     }
   }, [singleGame]);
+
   return (
     <Flex
       w="15rem"

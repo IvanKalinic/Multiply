@@ -20,6 +20,7 @@ const UserAppPage = () => {
   // it should be replaced with global context storing opponents for all game types
 
   useEffect(() => {
+    console.log("Here");
     getActiveGame().then((data) => {
       if (rerenderGame === 1) {
         setBattleArrayGameType(1);
@@ -55,18 +56,26 @@ const UserAppPage = () => {
         );
       }
     });
-  }, [rerenderGame]);
+  });
+
+  console.log(rerenderGame);
+  console.log(gameType);
 
   const returnUserGame = () => {
     switch (gameType) {
       case 1:
-        return <GameStart />;
+        return <GameStart setRerenderGame={setRerenderGame} />;
       case 2:
-        return <TicTacToePage />;
+        return (
+          <TicTacToePage
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
+        );
       case 3:
-        return <MemoryGame />;
+        return <MemoryGame setRerenderGame={setRerenderGame} />;
       case 4:
-        return <Hangman />;
+        return <Hangman setRerenderGame={setRerenderGame} />;
       case 5:
         return returnNextGame();
       case 0:
@@ -98,9 +107,6 @@ const UserAppPage = () => {
   useEffect(() => {
     setComponentToRender(returnUserGame());
   }, [gameType, battleArrayGameType]);
-
-  console.log(battleArrayGameType);
-  console.log(rerenderGame);
 
   return (
     <Flex justifyContent="center" alignItems="center">

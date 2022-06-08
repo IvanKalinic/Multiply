@@ -26,6 +26,7 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [winner, setWinner] = useState(false);
+  const [timeSpent, setTimeSpent] = useState<number>(0);
 
   const { user } = useUser();
 
@@ -95,6 +96,7 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
         battle={battle}
         setRerenderGame={setRerenderGame}
         setWinner={setWinner}
+        timeSpent={timeSpent}
       />
       {gameOver && <Winner setGameOver={setGameOver} gameOver={gameOver} />}
       <CircularBar
@@ -103,6 +105,7 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
         breakSeconds={0}
         setGameOver={setGameOver}
         singleGame={true}
+        setTimeSpent={setTimeSpent}
       />
       {showNotification && <Notification />}
     </BodyWrapper>

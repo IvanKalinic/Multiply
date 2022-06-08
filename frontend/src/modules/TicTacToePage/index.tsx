@@ -1,27 +1,31 @@
 import { Button, Flex, Grid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
+  deleteActiveGameIfThereIsAWinner,
+  getActiveGame,
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
   updateBattleArrayInActiveGame,
 } from "../../apis";
 import { TicTacToeBox } from "../../components";
+import { ArrowWrapper } from "../../components/sharedcomponents/Questions/QuestionItem/styles";
 import { winningCombinations } from "../../consts/ticTacToe";
 import { useAxios } from "../../context/AxiosContext";
 import { useSocket } from "../../context/SocketContext";
 import { useUser } from "../../context/UserContext";
-import { TicTacToeContainer } from "../modules.style";
-import { v4 as uuidv4 } from "uuid";
+import { MenuWrapper } from "../../styles";
 import { checkLevel, levelNameFromScore } from "../../utils";
-import { useNavigate } from "react-router-dom";
-
+import { TicTacToeContainer } from "../modules.style";
+import ArrowRight from "../../assets/icons/arrow-right.png";
 interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+  setGameType?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const TicTacToePage = ({ battle, setRerenderGame }: Props) => {
+const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
   const [game, setGame] = useState(Array(9).fill(""));
   const [turnNumber, setTurnNumber] = useState(0);
   const [myTurn, setMyTurn] = useState(true);
@@ -184,47 +188,85 @@ const TicTacToePage = ({ battle, setRerenderGame }: Props) => {
     }
   }, [winner]);
 
+  console.log(winner);
+  console.log(player === xo);
+
+  const nextGameInQueue = () => {
+    console.log("ssa");
+    getActiveGame().then((data) => {
+      let nextGame = data.data.find((game: any) => !game.winner)?.type;
+      console.log(nextGame);
+      if (!!nextGame) {
+        setGameType!(6);
+        deleteActiveGameIfThereIsAWinner();
+        setRerenderGame!(nextGame);
+      } else {
+        setGameType!(0);
+        setRerenderGame!(0);
+      }
+      if (nextGame === 2) restart();
+    });
+  };
   return (
     <TicTacToeContainer>
-      Room: {room}
-      <br />
-      <br />
-      Turn: {myTurn ? "You" : "Opponent"}
-      <br />
-      {hasOpponent || xo === "O" ? "" : "Waiting for opponent..."}
-      <Flex mb="2rem" flexDirection="column" alignItems="center">
-        {(winner || turnNumber === 9) &&
-          (!battle ? (
-            <Button onClick={sendRestart} mr="1rem" w="5rem">
-              Restart
-            </Button>
-          ) : (
-            <Button onClick={nextGame} mr="1rem" w="5rem">
-              Next game
-            </Button>
-          ))}
-        {winner ? (
-          <span>We have a winner: {player === xo ? "You" : "Opponent"}</span>
-        ) : turnNumber === 9 ? (
-          <span>It's a tie!</span>
-        ) : (
-          <br />
-        )}
-      </Flex>
-      <Grid templateColumns="repeat(3, 1fr)" gap={0}>
-        {game.map((value, index) => (
-          <TicTacToeBox
-            key={uuidv4()}
-            onClick={() => sendTurn(index)}
-            value={value}
-            color={
-              index === colorIndexes[0] ||
-              index === colorIndexes[1] ||
-              index === colorIndexes[2]
-            }
+      {(winner || turnNumber === 9) && (
+        <Button
+          onClick={battle ? nextGame : nextGameInQueue}
+          w="15rem"
+          fontSize="md"
+          top="-6vh"
+          style={{ fontSize: "1.2rem" }}
+        >
+          Next game
+          <ArrowWrapper
+            src={ArrowRight}
+            alt="arrow"
+            style={{ width: "3rem", height: "3rem", marginLeft: "1rem" }}
           />
-        ))}
-      </Grid>
+        </Button>
+      )}
+      <Button
+        position="absolute"
+        fontSize="md"
+        mb={winner ? "25rem" : "27rem"}
+        width="20rem"
+        style={{ fontSize: "1.5rem" }}
+      >
+        {!winner && turnNumber !== 9 && (
+          <span style={{ color: "rgb(157, 190, 245)" }}>Turn: </span>
+        )}
+        {winner && player === xo
+          ? "You won"
+          : winner && player !== xo
+          ? "You lost"
+          : !winner && turnNumber === 9
+          ? "It's a tie!"
+          : myTurn
+          ? "You"
+          : "Opponent"}
+      </Button>
+
+      <span style={{ marginTop: "0.5rem" }}>
+        {hasOpponent || xo === "O" ? "" : "Waiting for opponent..."}
+      </span>
+      <Flex justifyContent="center">
+        <MenuWrapper style={{ width: "30rem", height: "25rem" }}>
+          <Grid templateColumns="repeat(3, 1fr)" gap={1}>
+            {game.map((value, index) => (
+              <TicTacToeBox
+                key={uuidv4()}
+                onClick={() => sendTurn(index)}
+                value={value}
+                color={
+                  index === colorIndexes[0] ||
+                  index === colorIndexes[1] ||
+                  index === colorIndexes[2]
+                }
+              />
+            ))}
+          </Grid>
+        </MenuWrapper>
+      </Flex>
     </TicTacToeContainer>
   );
 };

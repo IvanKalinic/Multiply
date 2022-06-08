@@ -14,12 +14,11 @@ export const Box = ({ value, onClick, color }: Props) => {
 };
 
 export const TicTacToeBox = styled.div`
-  width: 5rem;
-  height: 5rem;
-  border: 1px solid #000;
+  width: 6rem;
+  height: 6rem;
+  border: 2px solid #000;
   text-align: center;
-  line-height: 4.5rem;
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: bold;
   cursor: pointer;
   color: ${({ color }: { color: any }) => (color ? "red" : "black")};

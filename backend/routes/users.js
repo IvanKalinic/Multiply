@@ -56,7 +56,7 @@ router.put("/:username", async (req, res) => {
             : user[0]?.battlesWon || 0,
         gamesWon:
           !!req.body?.game && user[0].username === req.body.game?.winner
-            ? user[0]?.gamesWon + 1
+            ? (user[0]?.gamesWon || 0) + 1
             : user[0]?.gamesWon || 0,
         levelNumber: !!req.body?.levelNumber
           ? req.body.levelNumber

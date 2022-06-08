@@ -21,6 +21,7 @@ interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
   setWinner?: React.Dispatch<React.SetStateAction<boolean>>;
+  timeSpent?: number;
 }
 
 const Popup = ({
@@ -32,6 +33,7 @@ const Popup = ({
   battle,
   setRerenderGame,
   setWinner,
+  timeSpent,
 }: Props) => {
   let playable = true;
 
@@ -63,15 +65,16 @@ const Popup = ({
           gameName: "Hangman",
           winner: user.data.username,
           points: 2,
-          speed: 0,
+          speed: timeSpent,
         });
         saveUserScore(user.data.username, {
-          levelNumber: checkLevel(user.data?.overallPoints + 2),
-          levelName: levelNameFromScore(user.data?.overallPoints + 2),
+          levelNumber: checkLevel(user.data?.overallPoints + 3),
+          levelName: levelNameFromScore(user.data?.overallPoints + 3),
+          speed: timeSpent,
           game: {
             type: 4,
             winner: user.data.username,
-            points: 2,
+            points: 3,
           },
         });
       }

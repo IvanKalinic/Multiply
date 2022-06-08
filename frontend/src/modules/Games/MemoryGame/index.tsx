@@ -2,6 +2,7 @@ import { Flex, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
   deleteSpecificGame,
+  fetchActiveGameBattleArray,
   fetchQuestions,
   saveToGameHistory,
   saveUserScore,
@@ -39,14 +40,22 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
   const [win, setWin] = useState<number>(0);
   const [winner, setWinner] = useState<boolean>(false);
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [timeSpent, setTimeSpent] = useState<number>(0);
 
   const { user } = useUser();
 
   useEffect(() => {
-    if (!!randomCategory && !!randomDifficulty) return;
+    if (battle) {
+      fetchActiveGameBattleArray(user.data.username).then((res) => {
+        setRandomCategory(res?.data?.category);
+        setRandomDifficulty(res?.data?.difficulty);
+      });
+    } else {
+      if (!!randomCategory && !!randomDifficulty) return;
 
-    setRandomDifficulty(randomValue(difficultyNames));
-    setRandomCategory(randomValue(categoryNames));
+      setRandomDifficulty(randomValue(difficultyNames));
+      setRandomCategory(randomValue(categoryNames));
+    }
   }, [user]);
 
   useEffect(() => {
@@ -114,6 +123,8 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
     if (openedCard.length === 2) setTimeout(() => setOpenedCard([]), 500);
   }, [openedCard]);
 
+  console.log(timeSpent);
+
   useEffect(() => {
     if (win === 8) {
       setTimeout(() => setWinner(true), 500);
@@ -129,15 +140,16 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
           gameName: "Memory game",
           winner: user.data.username,
           points: 3,
-          speed: 0,
+          speed: timeSpent,
         });
         saveUserScore(user.data.username, {
-          levelNumber: checkLevel(user.data?.overallPoints + 3),
-          levelName: levelNameFromScore(user.data?.overallPoints + 3),
+          levelNumber: checkLevel(user.data?.overallPoints + 2),
+          levelName: levelNameFromScore(user.data?.overallPoints + 2),
+          speed: timeSpent,
           game: {
             type: 3,
-            winner: user.data.username,
-            points: 3,
+            winner: user.data?.username,
+            points: 2,
           },
         });
         setWin(0);
@@ -190,6 +202,7 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
         breakSeconds={0}
         setGameOver={setGameOver}
         singleGame={true}
+        setTimeSpent={setTimeSpent}
       />
     </Flex>
   );

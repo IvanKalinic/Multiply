@@ -26,7 +26,6 @@ const Navbar = ({ user, admin, rank }: Props) => {
     navigate("/");
   };
 
-  console.log(rank);
   return (
     <NavbarWrapper>
       <span
@@ -60,14 +59,16 @@ const Navbar = ({ user, admin, rank }: Props) => {
             ) : null}
           </span>
 
-          <span
-            style={{
-              fontSize: "1.25rem",
-              marginRight: "1.25rem",
-              marginLeft: "-0.75rem",
-              borderBottom: "1px solid",
-            }}
-          >{`#${rank}`}</span>
+          {!admin && !!rank && (
+            <span
+              style={{
+                fontSize: "1.25rem",
+                marginRight: "1.25rem",
+                marginLeft: "-0.75rem",
+                borderBottom: "1px solid",
+              }}
+            >{`#${rank}`}</span>
+          )}
 
           {user || admin ? (
             <span
