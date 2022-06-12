@@ -1,5 +1,5 @@
 import { CircularProgress, Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getActiveGame } from "../../apis";
 import Hangman from "../../components/Hangman";
 import Warning from "../../components/Warning";
@@ -46,7 +46,7 @@ const UserAppPage = () => {
             row.type === 5 && row.opponents.includes(user.data?.username)
         )?.battleArray;
 
-        setBattleArrayGameType(
+        console.log(
           battleArray.find(
             (item: any) =>
               // item.type === 2 || item.type === 1
@@ -54,17 +54,31 @@ const UserAppPage = () => {
             // : !item.winner.find((row: any) => row.name === user.data.username)
           )?.type
         );
+
+        setBattleArrayGameType(
+          battleArray.find((item: any) =>
+            item.type === 2 || item.type === 1
+              ? !item.winner || !item.winner.length
+              : !item.winner.find((row: any) => row.name === user.data.username)
+          )?.type
+        );
       }
     });
-  });
+  }, [rerenderGame]);
 
   console.log(rerenderGame);
   console.log(gameType);
+  console.log(battleArrayGameType);
 
   const returnUserGame = () => {
     switch (gameType) {
       case 1:
-        return <GameStart setRerenderGame={setRerenderGame} />;
+        return (
+          <GameStart
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
+        );
       case 2:
         return (
           <TicTacToePage
@@ -73,9 +87,19 @@ const UserAppPage = () => {
           />
         );
       case 3:
-        return <MemoryGame setRerenderGame={setRerenderGame} />;
+        return (
+          <MemoryGame
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
+        );
       case 4:
-        return <Hangman setRerenderGame={setRerenderGame} />;
+        return (
+          <Hangman
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
+        );
       case 5:
         return returnNextGame();
       case 0:
@@ -88,15 +112,37 @@ const UserAppPage = () => {
   const returnNextGame = () => {
     switch (battleArrayGameType) {
       case 1:
-        return <GameStart battle={true} setRerenderGame={setRerenderGame} />;
+        return (
+          <GameStart
+            battle={true}
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
+        );
       case 2:
         return (
-          <TicTacToePage battle={true} setRerenderGame={setRerenderGame} />
+          <TicTacToePage
+            battle={true}
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
         );
       case 3:
-        return <MemoryGame battle={true} setRerenderGame={setRerenderGame} />;
+        return (
+          <MemoryGame
+            battle={true}
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
+        );
       case 4:
-        return <Hangman battle={true} setRerenderGame={setRerenderGame} />;
+        return (
+          <Hangman
+            battle={true}
+            setRerenderGame={setRerenderGame}
+            setGameType={setGameType}
+          />
+        );
       case 0:
         return <Warning text="There is no new games assigned to you" />;
       default:
@@ -106,7 +152,7 @@ const UserAppPage = () => {
 
   useEffect(() => {
     setComponentToRender(returnUserGame());
-  }, [gameType, battleArrayGameType]);
+  }, [gameType, battleArrayGameType, rerenderGame]);
 
   return (
     <Flex justifyContent="center" alignItems="center">

@@ -1,12 +1,9 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
   fetchActiveGameBattleArray,
   fetchQuestions,
-  getActiveGame,
-  saveToGameHistory,
   saveUserScore,
-  saveWinnerOrMultiplyDetails,
   updateBattleArrayInActiveGame,
 } from "../../apis";
 import { ChatLogo, VideoCall } from "../../assets/icons/svgs";
@@ -29,9 +26,10 @@ import {
 interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+  setGameType?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const GameStart = ({ battle, setRerenderGame }: Props) => {
+const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
   const { questions, setQuestions, setDisplayWin } = useGame();
   const { user, setUser } = useUser();
   const axios = useAxios();
@@ -58,7 +56,6 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
   const [difficulty, setDifficulty] = useState<string>("");
   const [opponentArray, setOpponentArray] = useState<Array<any>>([]);
   const [questionFromOpponent, setQuestionFromOpponent] = useState<number>(0);
-  // const [ticked,setTicked] = useState<boolean>(false);
   const [battleWinner, setBattleWinner] = useState("");
 
   const restart = () => {
@@ -69,32 +66,16 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
   };
 
   const fetchGameDetails = async (hasOpponent: boolean) => {
-    if (battle) {
-      fetchActiveGameBattleArray(user.data.username).then((res) => {
-        setRoom(res.data.room);
-        setOpponents(res?.data?.opponents);
-        setCategory(res?.data?.category);
-        setDifficulty(res?.data?.difficulty);
-        if (hasOpponent) {
-          // if (res?.data?.gameBoard && !opponentArray.length)
-          setOpponentArray(res?.data?.gameBoard);
-          // if (res?.data?.questions)
-          setQuestions(res?.data?.questions);
-        }
-      });
-    } else {
-      await axios.get(`/game`).then((res) => {
-        setRoom(res?.data[0]?.room);
-        //FETCHAT SVE U KOJIMA JE USER U OPPONENTS ARRAYU, I DOK SE MAPIRA PROVJERIT JELI IGRA IMAGE WINNERA, AKO NEMA UZMI NULTU, AKO IMA UZMI PRVU SLJEDECU
-        setOpponents(res?.data[0]?.opponents);
-        setCategory(res?.data[0]?.category);
-        setDifficulty(res?.data[0]?.difficulty);
-        if (hasOpponent) {
-          setOpponentArray(res?.data[0]?.gameBoard);
-          setQuestions(res?.data[0]?.questions);
-        }
-      });
-    }
+    fetchActiveGameBattleArray(user.data.username).then((res) => {
+      setRoom(res.data.room);
+      setOpponents(res?.data?.opponents);
+      setCategory(res?.data?.category);
+      setDifficulty(res?.data?.difficulty);
+      if (hasOpponent) {
+        setOpponentArray(res?.data?.gameBoard);
+        setQuestions(res?.data?.questions);
+      }
+    });
   };
 
   useEffect(() => {
@@ -142,23 +123,6 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
         if (battle) {
           updateBattleArrayInActiveGame(1, json.winner, [], [], true);
           fetchActiveGameBattleArray(user.data.username).then((res) => {
-            console.log(
-              checkBattleArrayWinner(res.data.battleArray, json.winner, user)
-            );
-            // saveToGameHistory({
-            //   opponents,
-            //   room,
-            //   gameName: "Battle",
-            //   winner: checkBattleArrayWinner(
-            //     res.data.battleArray,
-            //     json.winner,
-            //     user
-            //   )
-            //     ? user.data.username
-            //     : json.winner,
-            //   points: 10,
-            //   speed: 0,
-            // })
             saveUserScore(user.data.username, {
               levelNumber: checkLevel(
                 user.data?.overallPoints +
@@ -205,7 +169,6 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
     });
 
     socket?.on("battleWinner", (winner: string) => {
-      console.log(winner);
       setBattleWinner(winner);
     });
 
@@ -238,17 +201,11 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
         setMyTurn(false);
         if (!user?.color) setUser({ ...user, color: awayColor });
 
-        if (battle) {
-          fetchActiveGameBattleArray(user.data.username).then((res) => {
-            if (res.data?.questions) setQuestions(res.data?.questions);
-            if (res.data?.gameBoard) setOpponentArray(res.data?.gameBoard);
-          });
-        } else {
-          getActiveGame().then((data) => {
-            if (data.data?.questions) setQuestions(data.data?.questions);
-            if (data.data?.gameBoard) setOpponentArray(data.data?.gameBoard);
-          });
-        }
+        fetchActiveGameBattleArray(user.data.username).then((res) => {
+          console.log(res);
+          if (res.data?.questions) setQuestions(res.data.questions);
+          if (res.data?.gameBoard) setOpponentArray(res.data.gameBoard);
+        });
       }
     }
   }, [room, opponents, user]);
@@ -269,6 +226,8 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
               opponentArray={opponentArray}
               battle={battle}
               battleWinner={battleWinner}
+              setGameType={setGameType}
+              setRerenderGame={setRerenderGame}
             />
             <Flex
               flexDirection="column"
@@ -277,10 +236,7 @@ const GameStart = ({ battle, setRerenderGame }: Props) => {
               position="fixed"
               left="3.1vw"
               top="12vh"
-            >
-              <VideoCall />
-              <ChatLogo />
-            </Flex>
+            ></Flex>
             <CircularBar workSeconds={10} breakSeconds={0} />
           </MenuWrapper>
         )}

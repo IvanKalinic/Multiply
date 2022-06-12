@@ -27,7 +27,7 @@ const QuestionItem = ({
   length,
 }: Props) => {
   const [options, setOptions] = useState<Array<number>>([]);
-  // const [selectedOption, setSelectedOption] = useState<number>(0);
+
   const [warning, setWarning] = useState<WarningType>({
     question: false,
     item: false,

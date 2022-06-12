@@ -2,7 +2,6 @@ import { Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import {
   fetchActiveGameBattleArray,
-  getActiveGame,
   saveWinnerOrMultiplyDetails,
   updateBattleArrayInActiveGame,
 } from "../../../../apis";
@@ -18,9 +17,17 @@ interface Props {
   opponentArray?: Array<any>;
   battle?: boolean;
   battleWinner?: string;
+  setGameType?: React.Dispatch<React.SetStateAction<number>>;
+  setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
+export const GameBoard = ({
+  opponentArray,
+  battle,
+  battleWinner,
+  setGameType,
+  setRerenderGame,
+}: Props) => {
   const [boardArray, setBoardArray] = useState<any>([]);
   const [displayMessage, setDisplayMessage] = useState<boolean>(false);
 
@@ -37,7 +44,7 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
 
   const [questions, setQuestions] = useState<Array<any>>([]);
 
-  const { winner, setWinner, player } = useTurnBased();
+  const { setWinner } = useTurnBased();
 
   let initialArray: any = [];
   let aggArray: Array<number> = [];
@@ -46,15 +53,9 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
     let currentArray: Array<any> = [];
 
     if (!questions.length) {
-      if (battle) {
-        fetchActiveGameBattleArray(user.data.username).then((res) => {
-          currentArray = res.data.questions;
-        });
-      } else {
-        getActiveGame().then((data) => {
-          currentArray = data?.data[0]?.questions;
-        });
-      }
+      fetchActiveGameBattleArray(user.data.username).then((res) => {
+        currentArray = res.data.questions;
+      });
     } else {
       currentArray = [...questions];
     }
@@ -81,47 +82,22 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
   };
 
   useEffect(() => {
-    if (!!opponentArray?.length) {
-      updateBattleArrayInActiveGame(
-        1,
-        user.data.username,
-        boardArray,
-        questions,
-        false
-      );
-      return;
-    }
+    if (!!boardArray.lenght) return;
 
-    if (battle) {
-      fetchActiveGameBattleArray(user.data.username).then((res) => {
-        if (!questions.length && !!res.data?.questions.length) {
-          setQuestions(res.data?.questions);
-        }
-      });
-    } else {
-      getActiveGame().then((data) => {
-        setQuestions(data.data[0]?.questions);
-      });
-    }
+    fetchActiveGameBattleArray(user.data.username).then((res) => {
+      if (!questions?.length && !!res.data?.questions?.length) {
+        setQuestions(res.data?.questions);
+      }
+    });
 
     for (let i = 0; i < GAMEBOARD_DIMENSION; i++) {
       initialArray[i] = randomValues();
     }
 
-    setBoardArray(initialArray);
+    if (!opponentArray?.length) setBoardArray(initialArray);
 
     if (!!initialArray[0].length) {
-      // if (battle) {
-      //   updateBattleArrayInActiveGame(
-      //     1,
-      //     user.data.username,
-      //     initialArray,
-      //     questions,
-      //     false
-      //   );
-      // }
-      // else {
-      if (!battle) {
+      if (!battle && !boardArray.length) {
         saveWinnerOrMultiplyDetails({
           type: 1,
           gameBoard: initialArray,
@@ -129,23 +105,11 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
           user: user.data.username,
         });
       }
-      // }
-    } else {
-      if (battle) {
-        fetchActiveGameBattleArray(user.data.username).then((res) => {
-          if (!!res.data?.gameBoard.length && !boardArray.length)
-            setBoardArray(res.data?.gameBoard);
-        });
-      } else {
-        getActiveGame().then((data) => {
-          setBoardArray(data.data[0]?.gameBoard);
-        });
-      }
     }
 
     setDisplayWin(false);
-    setMaxClicks(0);
-  }, [user, opponentArray, questions]);
+    if (battle) setMaxClicks(0);
+  }, [user, opponentArray, questions, battle]);
 
   const checkAbsent = useCallback(() => {
     let counter = 0;
@@ -178,6 +142,13 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
     }
   }, [displayWin]);
 
+  useEffect(() => {
+    fetchActiveGameBattleArray(user.data.username).then((res) => {
+      if (!!res.data?.gameBoard?.length && !boardArray.length)
+        if (!opponentArray?.length) setBoardArray(res.data.gameBoard);
+    });
+  }, []);
+
   const renderList = (array: Array<any>) => {
     return array?.map((column: any, index: number) => (
       <BoardColumn
@@ -191,11 +162,25 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
   };
 
   useEffect(() => {
-    setBoardArray(opponentArray);
+    let counter = 0;
+    if (!!opponentArray?.length) {
+      opponentArray.forEach((item) => {
+        if (item.some((value: any) => !!value.color)) counter++;
+      });
+      if (counter === 0) return;
+    }
+
+    console.log("Here");
+    if (!!opponentArray?.length) {
+      setBoardArray(opponentArray);
+    }
   }, [opponentArray]);
 
   useEffect(() => {
-    if (!!boardArray.length)
+    // fetchActiveGameBattleArray(user.data.username).then((res) => {
+    //   if (res.data?.gameBoard) setBoardArray(res.data.gameBoard);
+    // });
+    if (!!boardArray.length) {
       updateBattleArrayInActiveGame(
         1,
         user.data.username,
@@ -203,13 +188,29 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
         questions,
         false
       );
-    // if (!!initialArray.length) setBoardArray(initialArray);
-  }, [initialArray]);
+    }
+  }, [boardArray]);
+
+  // setTimeout(() => {
+  //   saveWinnerOrMultiplyDetails({
+  //     type: 1,
+  //     winner: user.data.username,
+  //   });
+  //   setDisplayWin(true);
+  // }, 500);
 
   return (
     <>
       <Flex flexDirection="column">
-        {displayWin && <Winner battleWinner={battleWinner} />}
+        {displayWin && (
+          <Winner
+            battleWinner={battleWinner}
+            multiply
+            battle={battle}
+            setGameType={setGameType}
+            setRerenderGame={setRerenderGame}
+          />
+        )}
         {absentItem && (
           <BadLuck text="Sorry, the selected value doesn't exist on the board" />
         )}
@@ -227,4 +228,4 @@ export const GameBoard = ({ opponentArray, battle, battleWinner }: Props) => {
       </Flex>
     </>
   );
-};;
+};;;;

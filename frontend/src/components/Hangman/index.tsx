@@ -17,9 +17,10 @@ let selectedWord = words[Math.floor(Math.random() * words.length)];
 interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+  setGameType?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Hangman = ({ battle, setRerenderGame }: Props) => {
+const Hangman = ({ battle, setRerenderGame, setGameType }: Props) => {
   const [playable, setPlayable] = useState<boolean>(true);
   const [correctLetters, setCorrectLetters] = useState<Array<string>>([]);
   const [wrongLetters, setWrongLetters] = useState<Array<any>>([]);
@@ -98,7 +99,16 @@ const Hangman = ({ battle, setRerenderGame }: Props) => {
         setWinner={setWinner}
         timeSpent={timeSpent}
       />
-      {gameOver && <Winner setGameOver={setGameOver} gameOver={gameOver} />}
+      {gameOver && (
+        <Winner
+          setGameOver={setGameOver}
+          gameOver={gameOver}
+          hangman
+          battle={battle}
+          setGameType={setGameType}
+          setRerenderGame={setRerenderGame}
+        />
+      )}
       <CircularBar
         winner={winner}
         workSeconds={60}

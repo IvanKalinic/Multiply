@@ -24,6 +24,7 @@ router.post("/save", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const activeGame = await ActiveGame.find({});
+    console.log(activeGame);
     res.status(200).json(activeGame);
   } catch (err) {
     res.status(500).json(err);
@@ -34,11 +35,22 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
   try {
     const activeGame = await ActiveGame.find({});
     let gameToBeUpdated = {};
-
     if (!req.body.winner && !!req.body.type && !!req.body.user) {
-      gameToBeUpdated = activeGame.find(
-        (game) => game.type === req.body.type && game?.opponents.includes(user)
+      console.log(activeGame);
+      console.log(
+        activeGame.find(
+          (game) =>
+            game.type === req.body.type &&
+            game?.opponents.includes(req.body.user)
+        )
       );
+      gameToBeUpdated = activeGame.find(
+        (game) =>
+          game.type === req.body.type && game?.opponents.includes(req.body.user)
+      );
+
+      console.log("afdsads");
+      console.log(gameToBeUpdated.category);
       if (!!gameToBeUpdated) {
         await gameToBeUpdated.updateOne({ $set: req.body });
         res
@@ -112,11 +124,20 @@ router.delete("/deleteActiveGame/:username", async (req, res) => {
   try {
     const activeGame = await ActiveGame.find({
       user: req.params.username,
-      // winer: { $not: { $in: [null, undefined, ""] } },
     });
-    console.log(activeGame[0]);
     await activeGame[0].deleteOne();
     res.status(200).json(activeGame);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/activeGame/:username", async (req, res) => {
+  try {
+    const activeGame = await ActiveGame.find({
+      opponents: req.params.username,
+    });
+    res.status(200).json(activeGame[0]);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -129,7 +150,6 @@ router.get("/:winner", async (req, res) => {
     let gameToBeUpdated = activeGame.find(
       (game) => game.battleArray.length > 0
     );
-    console.log(gameToBeUpdated);
     res.status(200).json(gameToBeUpdated);
   } catch (err) {
     res.status(500).json(err);
@@ -138,15 +158,13 @@ router.get("/:winner", async (req, res) => {
 
 router.put("/battleArray/:winner", async (req, res) => {
   try {
-    console.log(req.body);
     const activeGame = await ActiveGame.find({});
     let gameToBeUpdated = activeGame.find(
       (game) =>
-        game.battleArray.length > 0 &&
-        game.opponents.includes(req.params.winner)
+        game.battleArray?.length > 0 &&
+        game.opponents?.includes(req.params.winner)
     );
-    console.log(gameToBeUpdated.battleArray);
-    let battleArrayUpdated = gameToBeUpdated.battleArray.map((row) => {
+    let battleArrayUpdated = gameToBeUpdated?.battleArray.map((row) => {
       if (row.type === req.body?.type) {
         if (req.body?.type === 3 || req.body?.type === 4) {
           return {
@@ -170,8 +188,8 @@ router.put("/battleArray/:winner", async (req, res) => {
         return row;
       }
     });
-    console.log(battleArrayUpdated);
     if (!!gameToBeUpdated && !!battleArrayUpdated) {
+      console.log("Gameboard:", req.body.gameBoard);
       await gameToBeUpdated.updateOne({
         $set: {
           battleArray: [...battleArrayUpdated],

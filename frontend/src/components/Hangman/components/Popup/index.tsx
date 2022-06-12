@@ -98,10 +98,6 @@ const Popup = ({
     }
   }, [correctLetters]);
 
-  console.log(finalMessage);
-  console.log(checkWin(correctLetters, wrongLetters, selectedWord) === "win");
-
-  // if (!!finalMessage) updateBattleArrayInActiveGame(4, user.data.username);
 
   return (
     <div>
@@ -110,8 +106,9 @@ const Popup = ({
           setRerenderGame={setRerenderGame}
           finalMessage={finalMessage}
           finalMessageRevealWord={finalMessageRevealWord}
-          user={user}
           playAgain={playAgain}
+          hangman
+          battle={battle}
         />
       )}
     </div>

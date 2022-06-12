@@ -24,9 +24,10 @@ const categoryNames = categories.map((diff) => diff.category);
 interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
+  setGameType?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const MemoryGame = ({ battle, setRerenderGame }: Props) => {
+const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
   const [items, setItems] = useState<Array<any>>([]);
   const [questions, setQuestions] = useState<Array<any>>([]);
   const [randomDifficulty, setRandomDifficulty] = useLocalStorage(
@@ -47,6 +48,8 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
   useEffect(() => {
     if (battle) {
       fetchActiveGameBattleArray(user.data.username).then((res) => {
+        console.log(res);
+        console.log(res?.data?.category);
         setRandomCategory(res?.data?.category);
         setRandomDifficulty(res?.data?.difficulty);
       });
@@ -82,7 +85,7 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
   }, [questions]);
   console.log(indexesArray);
   useEffect(() => {
-    if (!!!indexesArray.length && !!!questions.length) return;
+    if (!!!indexesArray.length && !!!questions?.length) return;
 
     if (!!items.length) return;
 
@@ -194,8 +197,23 @@ const MemoryGame = ({ battle, setRerenderGame }: Props) => {
           );
         })}
       </MemoryCardsContainer>
-      {!!winner && <Winner setRerenderGame={setRerenderGame} />}
-      {gameOver && <Winner setGameOver={setGameOver} gameOver={gameOver} />}
+      {!!winner && (
+        <Winner
+          setRerenderGame={setRerenderGame}
+          memory
+          battle={battle}
+          setGameType={setGameType}
+        />
+      )}
+      {gameOver && (
+        <Winner
+          setGameOver={setGameOver}
+          gameOver={gameOver}
+          memory
+          setGameType={setGameType}
+          setRerenderGame={setRerenderGame}
+        />
+      )}
       <CircularBar
         winner={winner}
         workSeconds={60}

@@ -192,7 +192,6 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
   console.log(player === xo);
 
   const nextGameInQueue = () => {
-    console.log("ssa");
     getActiveGame().then((data) => {
       let nextGame = data.data.find((game: any) => !game.winner)?.type;
       console.log(nextGame);

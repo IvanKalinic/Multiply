@@ -1,49 +1,60 @@
 import {
-  Text,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
+  Button,
   Flex,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { getActiveGame, updateBattleArrayInActiveGame } from "../../apis";
+import { useNavigate } from "react-router-dom";
+import {
+  deleteActiveGameIfThereIsAWinner,
+  getActiveGame,
+  updateBattleArrayInActiveGame,
+} from "../../apis";
 import { useTurnBased } from "../../context/TurnBasedContext";
+import { useUser } from "../../context/UserContext";
 import { PopupButton } from "../Hangman/styles";
 
 interface Props {
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
   finalMessage?: string;
   finalMessageRevealWord?: string;
-  user?: any;
   battleWinner?: string;
   playAgain?: () => void;
   gameOver?: boolean;
   setGameOver?: React.Dispatch<React.SetStateAction<boolean>>;
+  setGameType?: React.Dispatch<React.SetStateAction<number>>;
+  multiply?: boolean;
+  hangman?: boolean;
+  memory?: boolean;
+  battle?: boolean;
 }
 const Winner = ({
   setRerenderGame,
   finalMessage,
   finalMessageRevealWord,
-  user,
   battleWinner,
-  playAgain,
   gameOver,
   setGameOver,
+  multiply,
+  hangman,
+  memory,
+  battle,
+  setGameType,
 }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const navigate = useNavigate();
-  const { player, setPlayer } = useTurnBased();
+  const { player, setPlayer, room } = useTurnBased();
+  const [isHandleNext, setIsHandleNext] = useState<boolean>(false);
+  const { user } = useUser();
+  const [nextGameToPlay, setNextGameToPlay] = useState<any>(null);
 
   const handleClose = () => {
     setIsOpen(false);
     if (gameOver) setGameOver!(false);
-    navigate("/");
-  };
-
-  const nextGame = () => {
-    setRerenderGame!(4);
     navigate("/");
   };
 
@@ -55,10 +66,96 @@ const Winner = ({
     });
   }, [player]);
 
-  const handleNext = () => {
-    setRerenderGame!(1);
-    updateBattleArrayInActiveGame(4, user.data.username);
+  const handleNext = async () => {
+    if (!battle || battle === undefined) {
+      setIsHandleNext(true);
+    } else {
+      if (memory) {
+        setRerenderGame!(4);
+        updateBattleArrayInActiveGame(3, user.data.username);
+        return;
+      }
+      if (hangman) {
+        setRerenderGame!(1);
+        updateBattleArrayInActiveGame(4, user.data.username);
+        return;
+      }
+      if (multiply) {
+        setRerenderGame!(0);
+        updateBattleArrayInActiveGame(1, user.data.username);
+        return;
+      }
+      navigate("/");
+    }
   };
+
+  // const checkNext = async () => {
+  getActiveGame().then((data) => {
+    let arrayLength = data.data?.length;
+    let nextGame = null;
+    let nextGameIndex = data.data?.map((data: any, index: number) => {
+      console.log(data.opponents);
+      if (
+        (data.opponents.includes(user.data.username) ||
+          data.user === user.data.username) &&
+        !data.winner
+      ) {
+        return index + 1;
+      }
+    });
+    if (nextGameIndex < arrayLength) {
+      nextGame = data.data?.find(
+        (data: any, index: number) => index === nextGameIndex
+      );
+      setNextGameToPlay(nextGame);
+      console.log(nextGame);
+    }
+  });
+
+  useEffect(() => {
+    if (!isHandleNext) return;
+
+    if (!!nextGameToPlay) {
+      setGameType!(6);
+      deleteActiveGameIfThereIsAWinner();
+      setRerenderGame!(nextGameToPlay?.type);
+      handleClose();
+      navigate("/");
+    } else {
+      setGameType!(0);
+      setRerenderGame!(0);
+      handleClose();
+      navigate("/");
+    }
+  }, [nextGameToPlay, isHandleNext]);
+
+  // if (!!nextGame) {
+  //   setGameType!(6);
+  //   deleteActiveGameIfThereIsAWinner();
+  //   setRerenderGame!(nextGame);
+  // } else {
+  //   console.log("Here in else");
+  //   setGameType!(0);
+  //   setRerenderGame!(0);
+  // }
+  // handleClose();
+  // navigate("/");
+  // };
+
+  // if (isHandleNext) {
+  //   checkNext();
+  // }
+  // useEffect(() => {
+  //   if (isHandleNext) {
+  //     try {
+  //       getActiveGame().then((data) => {
+  //         console.log(data.data);
+  //       });
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  // }, [isHandleNext]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
@@ -73,14 +170,12 @@ const Winner = ({
             flexWrap="wrap"
             textAlign="center"
           >
-            <Text fontSize="5xl" color="#9dbef5" mt="10">
+            <Text fontSize="5xl" color="#9dbef5" mt="10" cursor="pointer">
               <strong>Game over!</strong>
             </Text>
-            <Text mt="20" as="u">
-              <Link to="/userApp" onClick={nextGame}>
-                Let's play next game in your queue
-              </Link>
-            </Text>
+            <Button mt="20" as="u" onClick={handleNext}>
+              Let's play next game in your queue
+            </Button>
           </Flex>
         ) : !finalMessage ? (
           <Flex
@@ -102,11 +197,9 @@ const Winner = ({
                 ? `${battleWinner} won overall battle match and got 10 points award!`
                 : "Congrats!"}
             </Text>
-            <Text mt="20" as="u">
-              <Link to="/userApp" onClick={nextGame}>
-                Let's play next game in your queue
-              </Link>
-            </Text>
+            <Button mt="20" as="u" onClick={handleNext} cursor="pointer">
+              Let's play next game in your queue
+            </Button>
           </Flex>
         ) : (
           <Flex
@@ -121,17 +214,15 @@ const Winner = ({
               <>
                 <h3>{finalMessageRevealWord}</h3>
                 <PopupButton>
-                  <Link to="/userApp" onClick={playAgain}>
-                    Play new one
-                  </Link>
+                  <Button mt="20" as="u" onClick={handleNext}>
+                    Let's play next game in your queue
+                  </Button>
                 </PopupButton>
               </>
             ) : (
-              <PopupButton>
-                <Link to="/userApp" onClick={handleNext}>
-                  Let's play next game in your queue
-                </Link>
-              </PopupButton>
+              <Button mt="20" as="u" onClick={handleNext} cursor="pointer">
+                Let's play next game in your queue
+              </Button>
             )}
           </Flex>
         )}

@@ -15,7 +15,7 @@ export const saveWinnerOrMultiplyDetails = async (activeGame: any) => {
 
 export const fetchActiveGameBattleArray = async (userName: string) => {
   return await axios.get(
-    `${process.env.REACT_APP_SERVER_BASE_URL}/game/${userName}`
+    `${process.env.REACT_APP_SERVER_BASE_URL}/game/activeGame/${userName}`
   );
 };
 

@@ -18,36 +18,36 @@ const AdminAppPage = () => {
             Hello teacher {admin.data.username} !
           </Text>
           <Flex mb="4" flexDirection="column">
-            <Button mr="4" mb="2rem" w={300}>
-              <Text fontSize="1.3rem">
-                <Link to="/addNewUser">Add new users here</Link>
-              </Text>
-            </Button>
-            <Button mr="4" mb="2rem" w={300}>
-              <Text fontSize="1.3rem">
-                <Link to="/ticTacToeSetup">Tic Tac Toe</Link>
-              </Text>
-            </Button>
-            <Button mr="4" mb="2rem" w={300}>
-              <Text fontSize="1.3rem">
-                <Link to="/multiplySetup">Multiply</Link>
-              </Text>
-            </Button>
-            <Button mr="4" mb="2rem" w={300}>
-              <Text fontSize="1.3rem">
-                <Link to="/memorySetup">Memory Game</Link>
-              </Text>
-            </Button>
-            <Button mr="4" mb="2rem" w={300}>
-              <Text fontSize="1.3rem">
-                <Link to="/hangmanSetup">Hangman</Link>
-              </Text>
-            </Button>
-            <Button mr="4" mb="2rem" w={300}>
-              <Text fontSize="1.3rem">
-                <Link to="/battleSetup">Battle</Link>
-              </Text>
-            </Button>
+            <Link to="/addNewUser">
+              <Button mr="4" mb="2rem" w={300} fontSize="1.3rem">
+                Add new users here
+              </Button>
+            </Link>
+            <Link to="/ticTacToeSetup">
+              <Button mr="4" mb="2rem" w={300} fontSize="1.3rem">
+                Tic Tac Toe
+              </Button>
+            </Link>
+            <Link to="/multiplySetup">
+              <Button mr="4" mb="2rem" w={300} fontSize="1.3rem">
+                Multiply
+              </Button>
+            </Link>
+            <Link to="/memorySetup">
+              <Button mr="4" mb="2rem" w={300} fontSize="1.3rem">
+                Memory Game
+              </Button>
+            </Link>
+            <Link to="/hangmanSetup">
+              <Button mr="4" mb="2rem" w={300} fontSize="1.3rem">
+                Hangman
+              </Button>
+            </Link>
+            <Link to="/battleSetup">
+              <Button mr="4" mb="2rem" w={300} fontSize="1.3rem">
+                Battle
+              </Button>
+            </Link>
           </Flex>
         </Flex>
       </MenuWrapper>

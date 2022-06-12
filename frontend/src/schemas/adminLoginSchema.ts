@@ -8,3 +8,8 @@ export const adminLoginSchema = z.object({
     .email("Adresa e-pošte nije valjana"),
   password: z.string().min(1, "Lozinka je obvezna"),
 });
+
+export const userLoginSchema = z.object({
+  username: z.string().min(1, "Korisničko ime je obvezno"),
+  password: z.string().min(1, "Lozinka je obvezna"),
+});

@@ -3,3 +3,8 @@ export type AdminLoginForm = {
   email: string;
   password: string;
 };
+
+export type UserLoginForm = {
+  username: string;
+  password: string;
+};

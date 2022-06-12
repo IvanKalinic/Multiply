@@ -15,11 +15,6 @@ const Pawns = () => {
       alignItems="center"
       style={{ position: "relative", left: "2rem" }}
     >
-      {/* {maxClicks !== 4 && (
-        <Text fontSize="2xl" mb="2" mr="-4" color="white">
-
-        </Text>
-      )} */}
       {pawnsArray.map(
         (item) =>
           item > maxClicks && (
