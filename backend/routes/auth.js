@@ -52,7 +52,7 @@ router.post("/registerUser", async (req, res) => {
 
 router.post("/loginAdmin", async (req, res) => {
   try {
-    const admin = await Admin.findOne({ email: req.body.email });
+    const admin = await Admin.findOne({ username: req.body.username });
     !admin && res.status(404).send("Admin not found");
 
     const validPassword = await bcrypt.compare(

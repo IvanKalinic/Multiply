@@ -1,7 +1,7 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteActiveGameIfThereIsAWinner } from "../../../apis";
+import { deleteActiveGames } from "../../../apis";
 import SelectDropdown from "../../../components/Select";
 import { listOfClasses } from "../../../consts";
 import { useAdmin } from "../../../context/AdminContext";
@@ -45,7 +45,7 @@ const TicTacToeSetup = () => {
       });
     })();
     //deleting active game before new one is setup
-    deleteActiveGameIfThereIsAWinner();
+      deleteActiveGames();
   }, [admin]);
 
   const generateGame = async () => {

@@ -55,13 +55,13 @@ export const deleteSpecificGame = async (username: string) => {
   );
 };
 
-export const deleteActiveGameIfThereIsAWinner = async () => {
-  getActiveGame().then((data) => {
-    // if (!!data.data[0]?.winner) {
-    deleteActiveGames(); // DELETION OF ALL GAMES THAT HAVE WINNER
-    // }
-  });
-};
+// export const deleteActiveGameIfThereIsAWinner = async () => {
+//   getActiveGame().then((data) => {
+//     // if (!!data.data[0]?.winner) {
+//     deleteActiveGames(); // DELETION OF ALL GAMES THAT HAVE WINNER
+//     // }
+//   });
+// };
 
 export const saveActiveGame = async (payload: any) => {
   await axios.post(

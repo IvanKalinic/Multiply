@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  deleteActiveGameIfThereIsAWinner,
+  deleteActiveGames,
   getActiveGame,
   updateBattleArrayInActiveGame,
 } from "../../apis";
@@ -117,7 +117,7 @@ const Winner = ({
 
     if (!!nextGameToPlay) {
       setGameType!(6);
-      deleteActiveGameIfThereIsAWinner();
+      deleteActiveGames();
       setRerenderGame!(nextGameToPlay?.type);
       handleClose();
       navigate("/");

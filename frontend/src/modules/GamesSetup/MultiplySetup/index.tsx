@@ -1,10 +1,7 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  deleteActiveGameIfThereIsAWinner,
-  fetchQuestions,
-} from "../../../apis";
+import { deleteActiveGames, fetchQuestions } from "../../../apis";
 import SelectDropdown from "../../../components/Select";
 import { categories, difficulties } from "../../../consts";
 import { useAdmin } from "../../../context/AdminContext";
@@ -64,7 +61,7 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
       });
     })();
     //deleting active game before new one is setup
-    deleteActiveGameIfThereIsAWinner();
+    deleteActiveGames();
   }, [admin]);
 
   return (

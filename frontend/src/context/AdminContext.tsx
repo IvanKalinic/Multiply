@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 type ContextType = {

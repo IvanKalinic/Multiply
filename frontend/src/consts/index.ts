@@ -57,7 +57,7 @@ export const categories = [
     value: 1,
   },
   {
-    category: "Subtraction",
+    category: "Substraction",
     value: 2,
   },
   {
@@ -65,7 +65,7 @@ export const categories = [
     value: 3,
   },
   {
-    category: "Divison",
+    category: "Division",
     value: 4,
   },
 ];

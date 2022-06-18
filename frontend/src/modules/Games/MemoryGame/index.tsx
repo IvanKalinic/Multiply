@@ -4,6 +4,7 @@ import {
   deleteSpecificGame,
   fetchActiveGameBattleArray,
   fetchQuestions,
+  getActiveGame,
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
@@ -27,6 +28,19 @@ interface Props {
   setGameType?: React.Dispatch<React.SetStateAction<number>>;
 }
 
+export const getSign = (category: string) => {
+  switch (category) {
+    case "Addition":
+      return "+";
+    case "Substraction":
+      return "-";
+    case "Multiplication":
+      return "x";
+    case "Division":
+      return ":";
+  }
+};
+
 const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
   const [items, setItems] = useState<Array<any>>([]);
   const [questions, setQuestions] = useState<Array<any>>([]);
@@ -48,21 +62,35 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
   useEffect(() => {
     if (battle) {
       fetchActiveGameBattleArray(user.data.username).then((res) => {
-        console.log(res);
-        console.log(res?.data?.category);
         setRandomCategory(res?.data?.category);
         setRandomDifficulty(res?.data?.difficulty);
       });
     } else {
       if (!!randomCategory && !!randomDifficulty) return;
 
-      setRandomDifficulty(randomValue(difficultyNames));
-      setRandomCategory(randomValue(categoryNames));
+      getActiveGame().then((data) => {
+        let userGame = data.data.find(
+          (item: any) => item.user === user.data.username
+        );
+
+        setRandomDifficulty(userGame?.difficulty);
+        setRandomCategory(userGame?.category);
+      });
     }
   }, [user]);
 
   useEffect(() => {
     if (!randomCategory && !randomDifficulty) return;
+
+    if (randomDifficulty === "Customize") {
+      getActiveGame().then((data) => {
+        let userGame = data.data.find(
+          (item: any) => item.user === user.data.username
+        );
+        setQuestions(userGame?.questions);
+      });
+      return;
+    }
 
     fetchQuestions(randomCategory, randomDifficulty).then((data) =>
       setQuestions(data.data)
@@ -74,28 +102,41 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
   useEffect(() => {
     if (!questions.length) return;
 
+    if (randomDifficulty === "Customize") {
+      indexesArray = [0, 1, 2, 3, 4, 5, 6, 7];
+      return;
+    }
+
     for (let i = 0; i < 8; i++) {
       let newValue = 0;
       do {
         newValue = randomIntFromInterval(0, questions.length - 1);
-      } while (i > 0 && indexesArray.some((value) => value === newValue));
-      // ako je prethodni razlicith od novog
+      } while (
+        i > 0 &&
+        indexesArray.some(
+          (value) =>
+            value === newValue ||
+            questions[value].correctAnswer === questions[newValue].correctAnswer
+        )
+      );
+      // ako je prethodni razlicith od novog ili ako sadrži isti odgovor
       indexesArray[i] = newValue;
     }
   }, [questions]);
-  console.log(indexesArray);
+
   useEffect(() => {
     if (!!!indexesArray.length && !!!questions?.length) return;
 
     if (!!items.length) return;
 
     const newArray: Array<any> = [];
+    const randomValuesArray: Array<any> = [];
 
     questions.forEach((item, index) => {
       indexesArray.forEach((indexItem) => {
         if (index === indexItem) {
           newArray.push({
-            id: item._id,
+            id: item._id ?? index,
             question: item.question,
             correctAnswer: item.correctAnswer,
           });
@@ -103,10 +144,59 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
       });
     });
 
+    let firstNumber = 0;
+    let secondNumber = 0;
+
+    newArray.forEach((item, index) => {
+      if (randomCategory === "Addition") {
+        firstNumber = randomIntFromInterval(1, item.correctAnswer - 1);
+        secondNumber = item.correctAnswer - firstNumber;
+      }
+      if (randomCategory === "Multiplication") {
+        const choices = [
+          1,
+          item.correctAnswer,
+          item.question.trim().replace(/\s/g, "").split("x")[0],
+          item.question.trim().replace(/\s/g, "").split("x")[1],
+        ];
+        let divisors = getDivisors(item.correctAnswer);
+
+        if (!!divisors.length) {
+          firstNumber = divisors[randomIntFromInterval(0, divisors.length - 1)];
+          secondNumber = item.correctAnswer / firstNumber;
+        } else {
+          firstNumber = choices[Math.floor(Math.random() * choices.length)];
+          secondNumber = item.correctAnswer / firstNumber; // npr. 300 -> [1,300,30,10]
+        }
+      }
+      if (randomCategory === "Substraction") {
+        secondNumber = randomIntFromInterval(
+          item.question.trim().replace(/\s/g, "").split("-")[1],
+          item.question.trim().replace(/\s/g, "").split("-")[0] * 2
+        );
+        firstNumber = item.correctAnswer + secondNumber;
+      }
+      if (randomCategory === "Division") {
+        secondNumber = randomIntFromInterval(
+          2,
+          item.question.trim().replace(/\s/g, "").split(":")[1] * 2
+        );
+        firstNumber = item.correctAnswer * secondNumber;
+      }
+
+      randomValuesArray.push({
+        id: item.id,
+        question: `${firstNumber} ${getSign(randomCategory)} ${secondNumber}`,
+        correctAnswer: item.correctAnswer,
+      });
+    });
+
     if (!!newArray.length) {
-      setItems([...newArray, ...newArray].sort(() => Math.random() - 0.5));
+      setItems(
+        [...newArray, ...randomValuesArray].sort(() => Math.random() - 0.5)
+      );
     }
-  }, [questions, indexesArray]);
+  }, [questions, indexesArray, randomCategory]);
 
   const flipCard = (index: number) => {
     setOpenedCard((opened) => [...opened, index]);
@@ -123,10 +213,8 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
       setMatched([...matched, firstMatched.id]);
     }
 
-    if (openedCard.length === 2) setTimeout(() => setOpenedCard([]), 500);
+    if (openedCard.length === 2) setTimeout(() => setOpenedCard([]), 400);
   }, [openedCard]);
-
-  console.log(timeSpent);
 
   useEffect(() => {
     if (win === 8) {
@@ -173,9 +261,6 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
     }
   }, [gameOver]);
 
-  console.log(win);
-  console.log(items);
-
   return (
     <Flex flexDirection="column" justifyContent="center">
       <Heading fontSize="lg" mt="1rem" mb="2rem">
@@ -216,7 +301,7 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
       )}
       <CircularBar
         winner={winner}
-        workSeconds={60}
+        workSeconds={1000}
         breakSeconds={0}
         setGameOver={setGameOver}
         singleGame={true}
@@ -230,4 +315,16 @@ export default MemoryGame;
 
 export const randomIntFromInterval = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+export const getDivisors = (n: number) => {
+  const divisors: number[] = [];
+  //without 1 or n
+  for (let i = 2; i * i <= n; ++i) {
+    if (n % i === 0) {
+      divisors.push(i);
+      if (i !== n / i) divisors.push(n / i);
+    }
+  }
+  return divisors;
 };

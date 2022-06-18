@@ -2,13 +2,14 @@ import { Button, Flex, Grid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
-  deleteActiveGameIfThereIsAWinner,
+  deleteActiveGames,
   getActiveGame,
   saveToGameHistory,
   saveUserScore,
   saveWinnerOrMultiplyDetails,
   updateBattleArrayInActiveGame,
 } from "../../apis";
+import ArrowRight from "../../assets/icons/arrow-right.png";
 import { TicTacToeBox } from "../../components";
 import { ArrowWrapper } from "../../components/sharedcomponents/Questions/QuestionItem/styles";
 import { winningCombinations } from "../../consts/ticTacToe";
@@ -18,7 +19,6 @@ import { useUser } from "../../context/UserContext";
 import { MenuWrapper } from "../../styles";
 import { checkLevel, levelNameFromScore } from "../../utils";
 import { TicTacToeContainer } from "../modules.style";
-import ArrowRight from "../../assets/icons/arrow-right.png";
 interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
@@ -197,7 +197,7 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
       console.log(nextGame);
       if (!!nextGame) {
         setGameType!(6);
-        deleteActiveGameIfThereIsAWinner();
+        deleteActiveGames();
         setRerenderGame!(nextGame);
       } else {
         setGameType!(0);
