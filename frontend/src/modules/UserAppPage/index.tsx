@@ -152,7 +152,7 @@ const UserAppPage = () => {
 
   useEffect(() => {
     setComponentToRender(returnUserGame());
-  }, [gameType, battleArrayGameType, rerenderGame]);
+  }, [gameType, battleArrayGameType, rerenderGame, setGameType]);
 
   return (
     <Flex justifyContent="center" alignItems="center">

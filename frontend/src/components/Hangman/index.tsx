@@ -2,6 +2,7 @@ import { Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
   deleteSpecificGame,
+  getActiveGame,
   saveUserScore,
   updateBattleArrayInActiveGame,
 } from "../../apis";
@@ -11,9 +12,6 @@ import Winner from "../Winner";
 import { Figure, Popup, Word, WrongLetters, Notification } from "./components";
 import { palatalsCode, show, words } from "./helpers";
 import { BodyWrapper, GameContainer } from "./styles";
-
-let selectedWord = words[Math.floor(Math.random() * words.length)];
-
 interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;
@@ -28,8 +26,22 @@ const Hangman = ({ battle, setRerenderGame, setGameType }: Props) => {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [winner, setWinner] = useState(false);
   const [timeSpent, setTimeSpent] = useState<number>(0);
+  const [newWord, setNewWord] = useState("");
 
   const { user } = useUser();
+
+  useEffect(() => {
+    if (user) {
+      getActiveGame().then((data) => {
+        let userGame = data.data.find(
+          (item: any) => item.user === user.data.username
+        );
+        setNewWord(
+          userGame?.newWord ?? words[Math.floor(Math.random() * words.length)]
+        );
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     const handleKeydown = (e: any) => {
@@ -39,7 +51,7 @@ const Hangman = ({ battle, setRerenderGame, setGameType }: Props) => {
         palatalsCode.includes(keyCode)
       ) {
         const letter = key.toLowerCase();
-        if (selectedWord.includes(letter)) {
+        if (newWord.includes(letter)) {
           if (!correctLetters.includes(letter)) {
             setCorrectLetters((currentLetters) => [...currentLetters, letter]);
           } else {
@@ -57,14 +69,14 @@ const Hangman = ({ battle, setRerenderGame, setGameType }: Props) => {
     window.addEventListener("keydown", handleKeydown);
 
     return () => window.removeEventListener("keydown", handleKeydown);
-  }, [correctLetters, wrongLetters, playable]);
+  }, [correctLetters, wrongLetters, playable, newWord]);
 
   const playAgain = () => {
     setPlayable(true);
     setCorrectLetters([]);
     setWrongLetters([]);
     //random word again
-    selectedWord = words[Math.floor(Math.random() * words.length)];
+    setNewWord(words[Math.floor(Math.random() * words.length)]);
   };
 
   useEffect(() => {
@@ -86,12 +98,12 @@ const Hangman = ({ battle, setRerenderGame, setGameType }: Props) => {
       <GameContainer>
         <Figure wrongLetters={wrongLetters} />
         <WrongLetters wrongLetters={wrongLetters} />
-        <Word selectedWord={selectedWord} correctLetters={correctLetters} />
+        <Word selectedWord={newWord} correctLetters={correctLetters} />
       </GameContainer>
       <Popup
         correctLetters={correctLetters}
         wrongLetters={wrongLetters}
-        selectedWord={selectedWord}
+        selectedWord={newWord}
         setPlayable={setPlayable}
         playAgain={playAgain}
         battle={battle}
@@ -120,6 +132,6 @@ const Hangman = ({ battle, setRerenderGame, setGameType }: Props) => {
       {showNotification && <Notification />}
     </BodyWrapper>
   );
-};
+};;;
 
 export default Hangman;

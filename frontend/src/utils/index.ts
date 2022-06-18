@@ -111,7 +111,8 @@ export const gameSetup = async (
   questions?: Array<any>,
   opponents?: Array<any>,
   user?: string,
-  socket?: any
+  socket?: any,
+  newWord?: string
 ) => {
   let room = !user ? randomRoomName() : null;
 
@@ -141,6 +142,7 @@ export const gameSetup = async (
       difficulty,
       questions,
       battleArray,
+      newWord: newWord ?? null,
     });
     if (!!socket) socket.emit("create", room);
     navigate("/");

@@ -42,6 +42,10 @@ const ActiveGameSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
+    newWord: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );

@@ -103,12 +103,11 @@ const Winner = ({
         return index + 1;
       }
     });
-    if (nextGameIndex < arrayLength) {
+    if (!!nextGameIndex && nextGameIndex < arrayLength) {
       nextGame = data.data?.find(
         (data: any, index: number) => index === nextGameIndex
       );
       setNextGameToPlay(nextGame);
-      console.log(nextGame);
     }
   });
 
@@ -127,7 +126,7 @@ const Winner = ({
       handleClose();
       navigate("/");
     }
-  }, [nextGameToPlay, isHandleNext]);
+  }, [nextGameToPlay, isHandleNext, setGameType]);
 
   // if (!!nextGame) {
   //   setGameType!(6);

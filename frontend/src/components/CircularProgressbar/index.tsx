@@ -9,8 +9,6 @@ import "./index.scss";
 
 const red = "#f54e4e";
 const green = "#4aec8c";
-// const workSeconds = 10;
-// const breakSeconds = 0;
 interface Props {
   workSeconds: number;
   breakSeconds: number;
@@ -123,7 +121,7 @@ export const CircularBar = ({
     if (singleGame) {
       play();
     }
-  }, [singleGame]);
+  }, [singleGame, play]);
 
   return (
     <Flex

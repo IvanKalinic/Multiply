@@ -7,9 +7,11 @@ interface Props {
 }
 
 const Word = ({ selectedWord, correctLetters }: Props) => {
+  let wordToSplit = selectedWord;
+
   return (
     <WordWrapper>
-      {selectedWord.split("").map((letter, i) => {
+      {wordToSplit.split("").map((letter, i) => {
         return (
           <LetterWrapper key={uuidv4()}>
             {correctLetters.includes(letter) ? letter : ""}

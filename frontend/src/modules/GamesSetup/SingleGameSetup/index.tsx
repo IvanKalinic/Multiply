@@ -36,6 +36,7 @@ const MemorySetup = ({ name }: { name: string }) => {
 
   const [warning, setWarning] = useState<boolean>(false);
   const [customArrayWarning, setCustomArrayWarning] = useState<boolean>(false);
+  const [newWordWarning, setNewWordWarning] = useState<boolean>(false);
   const [isNewWindowOpen, setIsNewWindowOpen] = useState<boolean>(false);
   const customArray = Array(8).fill({
     question: "",
@@ -47,6 +48,7 @@ const MemorySetup = ({ name }: { name: string }) => {
   });
 
   const [customOperator, setCustomOperator] = useState("");
+  const [newWord, setNewWord] = useState<string>("");
 
   const [users, setUsers] = useState<Array<any>>([]);
   const [selectedOptions, setSelectedOptions] =
@@ -74,9 +76,19 @@ const MemorySetup = ({ name }: { name: string }) => {
       setWarning(true);
       return;
     }
-    if (isNewWindowOpen && !customArray.every((item) => !!item.question)) {
+    if (
+      isNewWindowOpen &&
+      !customArray.every((item) => !!item.question) &&
+      name === "memory"
+    ) {
       // ako nije potpuno
       setCustomArrayWarning(true);
+      return;
+    }
+
+    if (isNewWindowOpen && !newWord) {
+      // ako rijec nije unesena
+      setNewWordWarning(true);
       return;
     }
 
@@ -87,7 +99,9 @@ const MemorySetup = ({ name }: { name: string }) => {
       !isNewWindowOpen ? selectedOptions?.difficulty ?? "" : "Customize",
       !isNewWindowOpen ? [] : customArray,
       [],
-      selectedOptions.user
+      selectedOptions.user,
+      null,
+      newWord ?? null
     );
   };
 
@@ -116,42 +130,63 @@ const MemorySetup = ({ name }: { name: string }) => {
     console.log(customArray);
   }, [customArray]);
 
-  console.log(customArray);
+  const handleChange = (e: any) => {
+    setNewWord(e.target.value);
+  };
+
   return (
     <Flex justifyContent="center">
-      {name === "memory" && isNewWindowOpen && (
-        <MenuWrapper
-          style={{ width: "20rem", position: "fixed", right: "5rem" }}
-        >
-          <CloseButton
-            position="absolute"
-            right="1rem"
-            top="1.5rem"
-            onClick={() => setIsNewWindowOpen(false)}
-          />
-          <Heading position="absolute" top="1rem">
-            {selectedOptions?.category}
-          </Heading>
-          <Flex
-            justifyContent="center"
-            flexDirection="column"
-            alignItems="center"
+      {isNewWindowOpen &&
+        (name === "memory" ? (
+          <MenuWrapper
+            style={{ width: "20rem", position: "fixed", right: "5rem" }}
           >
-            {customArray.map((item, index) => (
-              <CustomizeItem
-                key={index}
-                index={index}
-                customArray={customArray}
-                category={selectedOptions?.category ?? ""}
-                customOperator={customOperator}
-              />
-            ))}
-            <Button colorScheme="blue" mt="1rem" onClick={handleConfirm}>
-              Confirm
-            </Button>
-          </Flex>
-        </MenuWrapper>
-      )}
+            <CloseButton
+              position="absolute"
+              right="1rem"
+              top="1.5rem"
+              onClick={() => setIsNewWindowOpen(false)}
+            />
+            <Heading position="absolute" top="1rem">
+              {selectedOptions?.category}
+            </Heading>
+            <Flex
+              justifyContent="center"
+              flexDirection="column"
+              alignItems="center"
+            >
+              {customArray.map((item, index) => (
+                <CustomizeItem
+                  key={index}
+                  index={index}
+                  customArray={customArray}
+                  category={selectedOptions?.category ?? ""}
+                  customOperator={customOperator}
+                />
+              ))}
+            </Flex>
+          </MenuWrapper>
+        ) : (
+          <MenuWrapper
+            style={{ width: "20rem", position: "fixed", right: "5rem" }}
+          >
+            <CloseButton
+              position="absolute"
+              right="1rem"
+              top="1.5rem"
+              onClick={() => setIsNewWindowOpen(false)}
+            />
+            <Heading position="absolute" top="1rem">
+              Hangman
+            </Heading>
+            <Input
+              width="80%"
+              backgroundColor="white"
+              placeholder="Enter new word"
+              onChange={(e) => handleChange(e)}
+            />
+          </MenuWrapper>
+        ))}
       <MenuWrapper>
         <Flex
           flexDirection="column"
@@ -230,7 +265,10 @@ const MemorySetup = ({ name }: { name: string }) => {
           </Button>
           {warning && <Warning text="You must select user" />}
           {customArrayWarning && (
-            <Warning text="You must enter a total of 8 pairs" />
+            <Warning text="You must enter a total of 8 pairs or exit pairs modal" />
+          )}
+          {newWordWarning && (
+            <Warning text="Please enter new word or exit new word modal" />
           )}
         </Flex>
       </MenuWrapper>

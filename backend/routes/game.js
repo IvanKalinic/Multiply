@@ -13,6 +13,7 @@ router.post("/save", async (req, res) => {
       category: req.body?.category,
       questions: req.body?.questions,
       battleArray: !!req.body?.battleArray ? req.body?.battleArray : null,
+      newWord: req.body?.newWord ?? null,
     });
     const activeGame = await newActiveGame.save();
     res.status(200).json(activeGame);
