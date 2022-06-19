@@ -20,7 +20,6 @@ const UserAppPage = () => {
   // it should be replaced with global context storing opponents for all game types
 
   useEffect(() => {
-    console.log("Here");
     getActiveGame().then((data) => {
       if (rerenderGame === 1) {
         setBattleArrayGameType(1);
@@ -46,15 +45,6 @@ const UserAppPage = () => {
             row.type === 5 && row.opponents.includes(user.data?.username)
         )?.battleArray;
 
-        console.log(
-          battleArray.find(
-            (item: any) =>
-              // item.type === 2 || item.type === 1
-              !item.winner || !item.winner.length
-            // : !item.winner.find((row: any) => row.name === user.data.username)
-          )?.type
-        );
-
         setBattleArrayGameType(
           battleArray.find((item: any) =>
             item.type === 2 || item.type === 1
@@ -64,11 +54,11 @@ const UserAppPage = () => {
         );
       }
     });
-  }, [rerenderGame]);
 
-  console.log(rerenderGame);
-  console.log(gameType);
-  console.log(battleArrayGameType);
+    return () => {
+      setBattleArrayGameType(0);
+    };
+  }, [rerenderGame]);
 
   const returnUserGame = () => {
     switch (gameType) {

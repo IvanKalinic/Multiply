@@ -41,7 +41,15 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
     setSelectedNumber,
   } = useGame();
 
-  const { playerType, setPlayer, room, game, setGame } = useTurnBased();
+  const {
+    playerType,
+    setPlayer,
+    room,
+    game,
+    setGame,
+    hasOpponent,
+    turnNumber,
+  } = useTurnBased();
 
   const { opponents } = useOpponents();
 
@@ -64,6 +72,8 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
 
   const handleChange = () => {
     if (gameOver()) return;
+
+    if (turnNumber === 0 && !hasOpponent && !game.length) return;
 
     if (
       boardArray[index][id].clicked &&
@@ -146,6 +156,7 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
           });
         }
       }
+
       setGame(boardArray);
     }
   };
@@ -160,18 +171,18 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
       onClick={handleChange}
       style={{
         backgroundColor: `${
-          selectedNumber === value && !boardArray[index][id].clicked
+          selectedNumber === value && !boardArray[index][id]?.clicked
             ? "#9ba4a8"
             : ""
         }`,
         pointerEvents: `${
           maxClicks === MAX_PLAYER_CHOICES &&
-          !boardArray[index][id].clicked &&
+          !boardArray[index][id]?.clicked &&
           !color
             ? "none"
             : (maxClicks < MAX_PLAYER_CHOICES &&
                 value !== selectedNumber &&
-                !boardArray[index][id].clicked &&
+                !boardArray[index][id]?.clicked &&
                 !color) ||
               (maxClicks < MAX_PLAYER_CHOICES && color)
             ? "none"

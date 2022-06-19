@@ -16,12 +16,8 @@ const socket = (io) => {
       socket.join(room);
     });
 
-    socket.on("join", (room) => {
-      socket.join(room);
-
-      // io.to(room).emit("opponent_joined");
-
-      socket.broadcast.emit("opponent_joined");
+    socket.on("join", (payload) => {
+      socket.broadcast.emit("opponent_joined", payload);
       console.log("OPP JOINED");
     });
 

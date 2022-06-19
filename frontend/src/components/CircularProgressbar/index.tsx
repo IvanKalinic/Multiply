@@ -5,6 +5,7 @@ import { PauseButton, PlayButton } from "../../assets/icons/svgs";
 import { useGame } from "../../context/GameContext";
 import { useSocket } from "../../context/SocketContext";
 import { useTurnBased } from "../../context/TurnBasedContext";
+import { useUser } from "../../context/UserContext";
 import "./index.scss";
 
 const red = "#f54e4e";
@@ -16,6 +17,7 @@ interface Props {
   winner?: boolean;
   setGameOver?: React.Dispatch<React.SetStateAction<boolean>>;
   setTimeSpent?: React.Dispatch<React.SetStateAction<number>>;
+  setWinner?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CircularBar = ({
@@ -25,6 +27,7 @@ export const CircularBar = ({
   winner,
   setGameOver,
   setTimeSpent,
+  setWinner,
 }: Props) => {
   const { myTurn, setMyTurn, hasOpponent, turnNumber } = useTurnBased();
   const { socket } = useSocket();
@@ -60,17 +63,21 @@ export const CircularBar = ({
   };
 
   useEffect(() => {
+    if (winner) return;
+
     if (myTurn && (hasOpponent || !!turnNumber)) {
       play();
     }
-  }, [myTurn, hasOpponent, turnNumber]);
+  }, [winner, myTurn, hasOpponent, turnNumber]);
 
   useEffect(() => {
     if (!!selectedOption) pause();
   }, [selectedOption]);
 
   useEffect(() => {
-    if (winner) pause();
+    if (winner) {
+      pause();
+    }
   }, [winner]);
 
   useEffect(() => {
@@ -118,10 +125,18 @@ export const CircularBar = ({
   };
 
   useEffect(() => {
+    if (winner) return;
+
     if (singleGame) {
       play();
     }
-  }, [singleGame, play]);
+  }, [singleGame, play, winner]);
+
+  useEffect(() => {
+    if (singleGame && workSeconds - secondsLeftRef.current === 0) {
+      setWinner!(false);
+    }
+  }, [singleGame, workSeconds, secondsLeft]);
 
   return (
     <Flex

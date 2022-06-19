@@ -90,26 +90,28 @@ const Winner = ({
   };
 
   // const checkNext = async () => {
-  getActiveGame().then((data) => {
-    let arrayLength = data.data?.length;
-    let nextGame = null;
-    let nextGameIndex = data.data?.map((data: any, index: number) => {
-      console.log(data.opponents);
-      if (
-        (data.opponents.includes(user.data.username) ||
-          data.user === user.data.username) &&
-        !data.winner
-      ) {
-        return index + 1;
+  if (!multiply && !battle) {
+    getActiveGame().then((data) => {
+      let arrayLength = data.data?.length;
+      let nextGame = null;
+      let nextGameIndex = data.data?.map((data: any, index: number) => {
+        console.log(data.opponents);
+        if (
+          (data.opponents.includes(user.data.username) ||
+            data.user === user.data.username) &&
+          !data.winner
+        ) {
+          return index + 1;
+        }
+      });
+      if (!!nextGameIndex && nextGameIndex < arrayLength) {
+        nextGame = data.data?.find(
+          (data: any, index: number) => index === nextGameIndex
+        );
+        setNextGameToPlay(nextGame);
       }
     });
-    if (!!nextGameIndex && nextGameIndex < arrayLength) {
-      nextGame = data.data?.find(
-        (data: any, index: number) => index === nextGameIndex
-      );
-      setNextGameToPlay(nextGame);
-    }
-  });
+  }
 
   useEffect(() => {
     if (!isHandleNext) return;
@@ -127,34 +129,6 @@ const Winner = ({
       navigate("/");
     }
   }, [nextGameToPlay, isHandleNext, setGameType]);
-
-  // if (!!nextGame) {
-  //   setGameType!(6);
-  //   deleteActiveGameIfThereIsAWinner();
-  //   setRerenderGame!(nextGame);
-  // } else {
-  //   console.log("Here in else");
-  //   setGameType!(0);
-  //   setRerenderGame!(0);
-  // }
-  // handleClose();
-  // navigate("/");
-  // };
-
-  // if (isHandleNext) {
-  //   checkNext();
-  // }
-  // useEffect(() => {
-  //   if (isHandleNext) {
-  //     try {
-  //       getActiveGame().then((data) => {
-  //         console.log(data.data);
-  //       });
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  // }, [isHandleNext]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
@@ -194,7 +168,7 @@ const Winner = ({
             <Text fontSize="3xl" color="#9dbef5">
               {!!battleWinner
                 ? `${battleWinner} won overall battle match and got 10 points award!`
-                : "Congrats!"}
+                : ""}
             </Text>
             <Button mt="20" as="u" onClick={handleNext} cursor="pointer">
               Let's play next game in your queue

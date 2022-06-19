@@ -16,11 +16,15 @@ export const QuestionSection = ({ currentQuestionFromOpponent }: Props) => {
 
   useEffect(() => {
     setCurrentQuestion(currentQuestionFromOpponent);
+
+    return () => {
+      setCurrentQuestion(-1);
+    };
   }, [currentQuestionFromOpponent]);
 
   return (
     <Box>
-      {questions && (
+      {!!questions.length && (
         <MenuWrapper
           style={{
             marginLeft: "-1.875rem",
@@ -29,7 +33,6 @@ export const QuestionSection = ({ currentQuestionFromOpponent }: Props) => {
             marginRight: "4rem",
             flexDirection: "column",
             marginTop: "-0.625rem",
-            // pointerEvents: "none",
           }}
         >
           <Details>

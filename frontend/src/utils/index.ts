@@ -1,4 +1,4 @@
-import { fetchSpecificUser, saveActiveGame } from "../apis";
+import { saveActiveGame } from "../apis";
 
 export const vertical = (boardArray: any) => {
   let column;
@@ -222,6 +222,12 @@ export const bestPlayerSort = (bestPlayers: Array<any>) => {
     .slice(0, 10);
 };
 
+export const normalBestPlayerSort = (bestPlayers: Array<any>) => {
+  return bestPlayers.sort(
+    (user1, user2) => user2.overallPoints - user1.overallPoints
+  );
+};
+
 export const arraySortSpeed = (fastestArray: Array<any>) => {
   return fastestArray !== null
     ? fastestArray
@@ -267,26 +273,20 @@ export const checkBattleArrayWinner = (
       maxPoints = maxPoints + index + 1;
       if (item.winner === user.data.username) {
         userPoints = userPoints + index + 1;
-        console.log(userPoints);
       }
     }
     if (item.type == 3 || item.type === 4) {
       let winNumber = item.winner.filter(
         (item: any) => item.win === true
       ).length;
-      console.log(winNumber);
       if (!!winNumber) maxPoints = maxPoints + winNumber * (index + 1);
-      console.log(maxPoints);
-      console.log(item.winner);
       if (
         !!item.winner.find(
           (winner: any) =>
             winner.name === user.data.username && winner.win === true
         )
       ) {
-        console.log(index);
         userPoints = userPoints + index + 1;
-        console.log(userPoints);
       }
     }
     if (item.type === 1) {
@@ -294,17 +294,33 @@ export const checkBattleArrayWinner = (
       if (!item.winner) {
         if (multiplyWinner === user.data.username) {
           userPoints = userPoints + 4;
-          console.log(userPoints);
         }
       }
     }
   });
-  console.log(maxPoints);
-  console.log(userPoints);
-  console.log(multiplyWinner);
-  console.log(user.data.username);
+
   return (
     userPoints > maxPoints / 2 ||
     (userPoints === maxPoints / 2 && multiplyWinner === user.data.username)
   );
+};
+
+export const splitAt = (index: number, array: Array<any>) => {
+  var a = array.slice(0, index);
+  var b = array.slice(index, array.length);
+  return [a, b];
+};
+
+export const shuffle = (array: Array<any>) => {
+  return array.slice(0).sort(() => {
+    return 0.5 - Math.random();
+  });
+};
+
+export const zip = (array: Array<any>) => {
+  return array[0].map((_: any, i: number) => {
+    return array.map((x) => {
+      return x[i];
+    });
+  });
 };

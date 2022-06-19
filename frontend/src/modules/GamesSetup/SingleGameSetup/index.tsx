@@ -126,10 +126,6 @@ const MemorySetup = ({ name }: { name: string }) => {
     setIsNewWindowOpen(true);
   };
 
-  const handleConfirm = useCallback(() => {
-    console.log(customArray);
-  }, [customArray]);
-
   const handleChange = (e: any) => {
     setNewWord(e.target.value);
   };

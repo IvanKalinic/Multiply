@@ -37,24 +37,14 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
     const activeGame = await ActiveGame.find({});
     let gameToBeUpdated = {};
     if (!req.body.winner && !!req.body.type && !!req.body.user) {
-      console.log(activeGame);
-      console.log(
-        activeGame.find(
-          (game) =>
-            game.type === req.body.type &&
-            game?.opponents.includes(req.body.user)
-        )
-      );
       gameToBeUpdated = activeGame.find(
         (game) =>
           game.type === req.body.type && game?.opponents.includes(req.body.user)
       );
-
-      console.log("afdsads");
-      console.log(gameToBeUpdated.category);
+      console.log(gameToBeUpdated);
       if (!!gameToBeUpdated) {
         await gameToBeUpdated.updateOne({ $set: req.body });
-        res
+        return res
           .status(200)
           .json(
             req.body.winner
@@ -72,14 +62,13 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
       );
       if (!!gameToBeUpdated) {
         await gameToBeUpdated.updateOne({ $set: req.body });
-        res
+        return res
           .status(200)
           .json(
             req.body?.winner
               ? "Active game was updated with winner"
               : "Active game was updated with multiply details for opponent"
           );
-        return;
       }
 
       gameToBeUpdated = activeGame.find(
@@ -90,7 +79,7 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
       );
       if (!!gameToBeUpdated) {
         await gameToBeUpdated.updateOne({ $set: req.body });
-        res
+        return res
           .status(200)
           .json(
             req.body.winner

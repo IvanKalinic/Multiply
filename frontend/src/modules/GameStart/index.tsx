@@ -6,7 +6,6 @@ import {
   saveUserScore,
   updateBattleArrayInActiveGame,
 } from "../../apis";
-import { ChatLogo, VideoCall } from "../../assets/icons/svgs";
 import { CircularBar } from "../../components/CircularProgressbar";
 import Pawns from "../../components/Pawns";
 import { GameBoard, QuestionSection } from "../../components/sharedcomponents";
@@ -80,6 +79,11 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
 
   useEffect(() => {
     fetchGameDetails(hasOpponent);
+
+    return () => {
+      setOpponentArray([]);
+      setQuestions([]);
+    };
   }, [hasOpponent]);
 
   useEffect(() => {
@@ -99,6 +103,10 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
         });
       }
     })();
+
+    return () => {
+      setQuestions([]);
+    };
   }, [category, difficulty]);
 
   useEffect(() => {
@@ -112,6 +120,7 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
 
       if (!!json.game.length) {
         setGame(json.game);
+        console.log(json.game);
         setOpponentArray(json.game);
       }
       if (json.value) setPlayer(json.value);
@@ -176,10 +185,11 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
       restart();
     });
 
-    socket?.on("opponent_joined", () => {
-      setHasOpponent(true);
+    socket?.on("opponent_joined", (payload: any) => {
+      if (!!opponents?.length && opponents.includes(payload.user))
+        setHasOpponent(true);
     });
-  }, [myTurn]);
+  }, [myTurn, opponents]);
 
   useEffect(() => {
     if (
@@ -197,17 +207,21 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
       // means you are player 2
       else {
         setPlayerType("opp");
-        socket.emit("join", room);
+        socket.emit("join", { room, user: user.data.username });
         setMyTurn(false);
         if (!user?.color) setUser({ ...user, color: awayColor });
 
         fetchActiveGameBattleArray(user.data.username).then((res) => {
-          console.log(res);
           if (res.data?.questions) setQuestions(res.data.questions);
           if (res.data?.gameBoard) setOpponentArray(res.data.gameBoard);
         });
       }
     }
+
+    return () => {
+      setQuestions([]);
+      setOpponentArray([]);
+    };
   }, [room, opponents, user]);
 
   return (

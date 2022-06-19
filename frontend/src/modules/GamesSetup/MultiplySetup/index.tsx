@@ -7,9 +7,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { useNavigate } from "react-router-dom";
-import { deleteActiveGames, fetchQuestions } from "../../../apis";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  deleteActiveGames,
+  fetchAllUsers,
+  fetchQuestions,
+} from "../../../apis";
 import SelectDropdown from "../../../components/Select";
 import Warning from "../../../components/Warning";
 import { categories, difficulties, listOfClasses } from "../../../consts";
@@ -18,7 +21,13 @@ import { useAxios } from "../../../context/AxiosContext";
 import { useGame } from "../../../context/GameContext";
 import { useSocket } from "../../../context/SocketContext";
 import { MenuWrapper } from "../../../styles";
-import { gameSetup } from "../../../utils";
+import {
+  gameSetup,
+  normalBestPlayerSort,
+  shuffle,
+  splitAt,
+  zip,
+} from "../../../utils";
 import PairsItem from "./PairsItem";
 
 const startValue = { category: "", difficulty: "", opponents: ["", ""] };
@@ -45,8 +54,11 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
   const [randomGeneratedUsers, setRandomGeneratedUsers] = useState<Array<any>>(
     []
   );
+  const [bestPlayers, setBestPlayers] = useState<Array<any>>([]);
   const [isNewWindowOpen, setIsNewWindowOpen] = useState<boolean>(false);
   const [oddUsersNumber, setOddUsersNumber] = useState<boolean>(false);
+  const [arePairsGenerated, setArePairsGenerated] = useState<boolean>(false);
+  const [previousSelection, setPreviousSelection] = useState<Array<any>>([]);
 
   const generateGame = async () => {
     await fetchQuestions(
@@ -63,7 +75,7 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
             selectedOptions.category,
             selectedOptions.difficulty,
             data.data,
-            pairs,
+            pairs.map((pair: any) => pair.username),
             "",
             socket
           );
@@ -104,26 +116,6 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
     return users.filter((user) => user.class === className);
   };
 
-  const splitAt = (index: number, array: Array<any>) => {
-    var a = array.slice(0, index);
-    var b = array.slice(index, array.length);
-    return [a, b];
-  };
-
-  const shuffle = (array: Array<any>) => {
-    return array.slice(0).sort(() => {
-      return 0.5 - Math.random();
-    });
-  };
-
-  const zip = (array: Array<any>) => {
-    return array[0].map((_: any, i: number) => {
-      return array.map((x) => {
-        return x[i];
-      });
-    });
-  };
-
   const generateRandomPairs = () => {
     const currentUsers = !!selectedOptions.opponentsClass?.length
       ? filterUsersBasedOnClass(selectedOptions.opponentsClass)
@@ -131,6 +123,9 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
 
     if (!!currentUsers.length) {
       setOddUsersNumber(currentUsers.length % 2 !== 0);
+      fetchAllUsers().then((res) => {
+        setBestPlayers(normalBestPlayerSort(res.data));
+      });
       setRandomGeneratedUsers(
         zip(splitAt(currentUsers.length / 2, shuffle(currentUsers))).map(
           (item: any) => item.map((user: any) => user.category)
@@ -140,14 +135,62 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
 
     setIsNewWindowOpen(true);
   };
-  console.log(randomGeneratedUsers);
 
-  // const handleOnDragEnd = () => {}
+  useEffect(() => {
+    if (!!randomGeneratedUsers.length && !!bestPlayers.length) {
+      setRandomGeneratedUsers(
+        randomGeneratedUsers.map((users) =>
+          users.map((user: any) => ({
+            username: user,
+            rank:
+              bestPlayers.findIndex(
+                (player: any) => player?.username === user
+              ) + 1,
+          }))
+        )
+      );
+    }
+  }, [bestPlayers]);
+
+  const generatePairsByLevel = () => {
+    if (arePairsGenerated) {
+      setRandomGeneratedUsers(previousSelection);
+      setArePairsGenerated(false);
+      return;
+    }
+
+    let bestUsersSort: Array<any> = [];
+    try {
+      if (!!randomGeneratedUsers.length) {
+        setPreviousSelection(randomGeneratedUsers);
+        bestUsersSort = [
+          ...randomGeneratedUsers[0],
+          ...randomGeneratedUsers[1],
+        ].sort((user1, user2) => {
+          return user1?.rank - user2?.rank;
+        });
+      }
+
+      setRandomGeneratedUsers(
+        bestUsersSort
+          .map((user: any, i: number) => {
+            if (2 * i < bestUsersSort.length)
+              return [bestUsersSort[2 * i], bestUsersSort[2 * i + 1]];
+          })
+          .filter((array: any) => !!array?.length)
+      );
+
+      setArePairsGenerated(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Flex justifyContent="center">
       {!!randomGeneratedUsers.length && isNewWindowOpen && (
         <MenuWrapper
-          style={{ width: "20rem", position: "fixed", right: "5rem" }}
+          style={{ width: "25rem", position: "fixed", right: "5rem" }}
         >
           <CloseButton
             position="absolute"
@@ -155,51 +198,51 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
             top="1.5rem"
             onClick={() => setIsNewWindowOpen(false)}
           />
-          <Heading position="absolute" top="1rem" fontSize="xl">
-            Random pairs <br /> for: {selectedOptions?.opponentsClass}
+          <Heading position="absolute" top="1.8rem" fontSize="xl">
+            Pairs for: {selectedOptions?.opponentsClass}
           </Heading>
-          {/* <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable droppableId="generatedUsers">
-              {(provided) => ( */}
-          <Flex
-            justifyContent="center"
-            flexDirection="column"
-            alignItems="center"
-            // {...provided.droppableProps}
-            // ref={provided.innerRef}
-          >
-            {randomGeneratedUsers.map((item, index) => (
-              // <Draggable key={item} draggableId={item} index={index}>
-              //   {(provided) => (
-              <PairsItem
-                // {...provided.draggableProps}
-                // {...provided.dragHandleProps}
-                // ref={provided.innerRef}
-                index={index}
-                pairs={item}
-                randomGeneratedUsers={randomGeneratedUsers}
-              />
-              // )}
-              // </Draggable>
-            ))}
-            <Box mt="2rem">
-              {oddUsersNumber && (
-                <Warning
-                  text={
-                    <div>
-                      Not all users are paired because <br /> of odd number of
-                      users. Please add <br /> new user in order to pair all of
-                      them.
-                    </div>
-                  }
-                />
-              )}
-            </Box>
-            {/* {provided.placeholder} */}
+          <Flex flexDirection="column" alignItems="center">
+            <Button
+              colorScheme="blue"
+              w="90%"
+              h="3rem"
+              mb="2rem"
+              onClick={generatePairsByLevel}
+            >
+              {!arePairsGenerated
+                ? "Pair users by rank"
+                : "Return previous selection"}
+            </Button>
+            <Flex
+              justifyContent="center"
+              flexDirection="column"
+              alignItems="center"
+            >
+              {randomGeneratedUsers?.map((item, index) => (
+                <PairsItem key={index} pairs={item} />
+              ))}
+              <Box mt="2rem">
+                {oddUsersNumber && (
+                  <Warning
+                    text={
+                      <>
+                        Not all users are paired because <br /> of odd number of
+                        users. Please add <br /> new user in order to pair all
+                        of them.
+                      </>
+                    }
+                  />
+                )}
+                {oddUsersNumber && (
+                  <Link to="/addNewUser">
+                    <Button mt="3rem" w="90%" h="3rem">
+                      Add new users here
+                    </Button>
+                  </Link>
+                )}
+              </Box>
+            </Flex>
           </Flex>
-          {/* )} */}
-          {/* </Droppable>
-          </DragDropContext> */}
         </MenuWrapper>
       )}
       <MenuWrapper style={{ width: "30rem", height: "25rem" }}>
@@ -229,18 +272,23 @@ const MultiplySetup = ({ battle }: { battle?: boolean }) => {
               selection="difficulty"
             />
           </Box>
-          <Flex alignItems="center" justifyContent="center">
-            <Box mt="4" mr="4">
+          <Flex>
+            <Box mt="4" ml="1rem" w="10rem">
               <SelectDropdown
-                message="Opponents class"
+                message="Opp. class"
                 array={listOfClasses}
                 setSelectedOptions={setSelectedOptions}
                 selectedOptions={selectedOptions}
                 selection="opponentsClass"
               />
             </Box>
-            <Box mt="4" mr="4">
-              <Button colorScheme="blue" h="3rem" onClick={generateRandomPairs}>
+            <Box mt="4" mr="4" ml="1rem">
+              <Button
+                colorScheme="blue"
+                h="3rem"
+                w="10.3rem"
+                onClick={generateRandomPairs}
+              >
                 Generate pairs
               </Button>
             </Box>

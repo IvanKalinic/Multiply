@@ -43,7 +43,6 @@ const QuestionItem = ({
   } = useGame();
   const { socket } = useSocket();
   const {
-    myTurn,
     setMyTurn,
     turnNumber,
     setTurnNumber,
@@ -51,13 +50,19 @@ const QuestionItem = ({
     setPlayer,
     room,
     game,
+    hasOpponent,
   } = useTurnBased();
 
   useEffect(() => {
-    if (question)
+    if (question) {
       setOptions(
         handleShuffle([question.correctAnswer, ...question.wrongAnswer])
       );
+    }
+
+    return () => {
+      setOptions([]);
+    };
   }, [currentQuestion, question]);
 
   useEffect(() => {
@@ -72,7 +77,10 @@ const QuestionItem = ({
   }, [selectedOption]);
 
   const handleNext = () => {
+    if (turnNumber === 0 && !hasOpponent && !game.length) return;
+
     let randomValue = Math.round(Math.random() * length);
+
     if (absentItem) {
       setCurrentQuestion(randomValue);
       setMyTurn((myTurn) => !myTurn);

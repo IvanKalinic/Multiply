@@ -28,7 +28,6 @@ export const StatsItem = ({ userData }: { userData: any }) => {
   useEffect(() => {
     if (!!userData.name) {
       fetchSpecificUser(userData.name).then((res) => {
-        console.log(res);
         setUser(res.data[0]);
       });
     } else {

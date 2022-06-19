@@ -43,6 +43,9 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
   const axios = useAxios();
 
   const sendTurn = (index: number) => {
+    if (turnNumber === 0 && !hasOpponent && game.every((item) => item === ""))
+      return;
+
     if (!game[index] && !winner && myTurn) {
       const g = [...game];
       g[index] = xo;
@@ -50,7 +53,12 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
       setMyTurn((myTurn) => !myTurn);
       setTurnNumber((turnNumber) => turnNumber + 1);
       setPlayer(xo);
-      socket.emit("reqTurn", { index, value: xo, room, g });
+      socket.emit("reqTurn", {
+        index,
+        value: xo,
+        room,
+        g,
+      });
     }
   };
 
@@ -129,10 +137,11 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
       setRerenderGame!(3);
     });
 
-    socket?.on("opponent_joined", () => {
-      setHasOpponent(true);
+    socket?.on("opponent_joined", (payload: any) => {
+      if (!!opponents?.length && opponents.includes(payload.user))
+        setHasOpponent(true);
     });
-  }, [myTurn, socket]);
+  }, [myTurn, socket, opponents]);
 
   useEffect(() => {
     if (
@@ -148,7 +157,7 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
       // means you are player 2
       else {
         setXO("O");
-        socket.emit("join", room);
+        socket.emit("join", { room, user: user.data.username });
         setMyTurn(false);
       }
     }
@@ -188,13 +197,9 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
     }
   }, [winner]);
 
-  console.log(winner);
-  console.log(player === xo);
-
   const nextGameInQueue = () => {
     getActiveGame().then((data) => {
       let nextGame = data.data.find((game: any) => !game.winner)?.type;
-      console.log(nextGame);
       if (!!nextGame) {
         setGameType!(6);
         deleteActiveGames();
@@ -206,6 +211,9 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
       if (nextGame === 2) restart();
     });
   };
+
+  console.log(hasOpponent);
+  console.log(hasOpponent || (turnNumber !== 0 && xo === "O"));
   return (
     <TicTacToeContainer>
       {(winner || turnNumber === 9) && (
@@ -234,7 +242,9 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
         {!winner && turnNumber !== 9 && (
           <span style={{ color: "rgb(157, 190, 245)" }}>Turn: </span>
         )}
-        {winner && player === xo
+        {!hasOpponent && turnNumber === 0 && game.every((item) => item === "")
+          ? "Waiting..."
+          : winner && player === xo
           ? "You won"
           : winner && player !== xo
           ? "You lost"
@@ -246,7 +256,9 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
       </Button>
 
       <span style={{ marginTop: "0.5rem" }}>
-        {hasOpponent || xo === "O" ? "" : "Waiting for opponent..."}
+        {hasOpponent || (turnNumber !== 0 && xo === "O")
+          ? ""
+          : "Waiting for opponent..."}
       </span>
       <Flex justifyContent="center">
         <MenuWrapper style={{ width: "30rem", height: "25rem" }}>

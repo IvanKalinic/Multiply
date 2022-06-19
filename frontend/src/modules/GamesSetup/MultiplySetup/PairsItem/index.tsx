@@ -2,34 +2,49 @@ import { Button, Flex, Input } from "@chakra-ui/react";
 import React from "react";
 
 interface Props {
-  index: number;
   pairs: Array<any>;
-  randomGeneratedUsers: Array<any>;
 }
 
-const PairsItem = ({ index, pairs, randomGeneratedUsers }: Props) => {
+const PairsItem = ({ pairs }: Props) => {
   return (
-    <Flex
-      key={index}
-      justifyContent="space-evenly"
-      alignItems="center"
-      mb="0.5rem"
-    >
-      <Input
-        backgroundColor="white"
-        w="7rem"
-        mr="1rem"
-        placeholder="1st op."
-        value={pairs[0]}
-      />
+    <Flex alignItems="center" mb="0.5rem">
+      <Flex alignItems="center" justifyContent="start" mr="1rem">
+        <Input
+          backgroundColor="white"
+          placeholder="1st op."
+          value={pairs[0]?.username ?? ""}
+          w="6rem"
+          mr="0.1rem"
+          readOnly
+        />
+        <span
+          style={{
+            position: "relative",
+            left: "-2rem",
+            fontWeight: "bold",
+            marginRight: "-1.5rem",
+          }}
+        >{`#${pairs[0]?.rank}`}</span>
+      </Flex>
       <Button>vs</Button>
-      <Input
-        w="7rem"
-        ml="1rem"
-        placeholder="2nd op."
-        backgroundColor="white"
-        value={pairs[1]}
-      />
+      <Flex alignItems="center" justifyContent="start" ml="1rem">
+        <Input
+          placeholder="2nd op."
+          backgroundColor="white"
+          value={pairs[1]?.username ?? ""}
+          w="6rem"
+          mr="0.1rem"
+          readOnly
+        />
+        <span
+          style={{
+            position: "relative",
+            left: "-2rem",
+            fontWeight: "bold",
+            marginRight: "-1.5rem",
+          }}
+        >{`#${pairs[1]?.rank}`}</span>
+      </Flex>
     </Flex>
   );
 };

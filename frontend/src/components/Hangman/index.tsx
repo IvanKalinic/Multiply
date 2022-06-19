@@ -128,6 +128,7 @@ const Hangman = ({ battle, setRerenderGame, setGameType }: Props) => {
         setGameOver={setGameOver}
         singleGame={true}
         setTimeSpent={setTimeSpent}
+        setWinner={setWinner}
       />
       {showNotification && <Notification />}
     </BodyWrapper>

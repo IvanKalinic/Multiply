@@ -219,7 +219,6 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
   useEffect(() => {
     if (win === 8) {
       setTimeout(() => setWinner(true), 500);
-      console.log("Winner");
       if (battle) {
         updateBattleArrayInActiveGame(3, user.data.username);
       } else {

@@ -82,7 +82,7 @@ export const GameBoard = ({
   };
 
   useEffect(() => {
-    if (!!boardArray.lenght) return;
+    if (!!boardArray.length) return;
 
     fetchActiveGameBattleArray(user.data.username).then((res) => {
       if (!questions?.length && !!res.data?.questions?.length) {
@@ -97,18 +97,30 @@ export const GameBoard = ({
     if (!opponentArray?.length) setBoardArray(initialArray);
 
     if (!!initialArray[0].length) {
-      if (!battle && !boardArray.length) {
+      if (!battle) {
         saveWinnerOrMultiplyDetails({
           type: 1,
           gameBoard: initialArray,
           questions,
           user: user.data.username,
         });
+      } else {
+        updateBattleArrayInActiveGame(
+          1,
+          user.data.username,
+          initialArray,
+          questions,
+          false
+        );
       }
     }
 
     setDisplayWin(false);
     if (battle) setMaxClicks(0);
+
+    return () => {
+      setQuestions([]);
+    };
   }, [user, opponentArray, questions, battle]);
 
   const checkAbsent = useCallback(() => {
@@ -143,11 +155,13 @@ export const GameBoard = ({
   }, [displayWin]);
 
   useEffect(() => {
+    // if(!battle && !!opponentArray?.length) setBoardArray(opponentArray)
     fetchActiveGameBattleArray(user.data.username).then((res) => {
-      if (!!res.data?.gameBoard?.length && !boardArray.length)
+      if (!!res.data?.gameBoard?.length && !boardArray.length) {
         if (!opponentArray?.length) setBoardArray(res.data.gameBoard);
+      }
     });
-  }, []);
+  }, [user]);
 
   const renderList = (array: Array<any>) => {
     return array?.map((column: any, index: number) => (
@@ -169,17 +183,16 @@ export const GameBoard = ({
       });
       if (counter === 0) return;
     }
-
-    console.log("Here");
     if (!!opponentArray?.length) {
       setBoardArray(opponentArray);
     }
+
+    return () => {
+      setBoardArray([]);
+    };
   }, [opponentArray]);
 
   useEffect(() => {
-    // fetchActiveGameBattleArray(user.data.username).then((res) => {
-    //   if (res.data?.gameBoard) setBoardArray(res.data.gameBoard);
-    // });
     if (!!boardArray.length) {
       updateBattleArrayInActiveGame(
         1,
@@ -190,14 +203,6 @@ export const GameBoard = ({
       );
     }
   }, [boardArray]);
-
-  // setTimeout(() => {
-  //   saveWinnerOrMultiplyDetails({
-  //     type: 1,
-  //     winner: user.data.username,
-  //   });
-  //   setDisplayWin(true);
-  // }, 500);
 
   return (
     <>
