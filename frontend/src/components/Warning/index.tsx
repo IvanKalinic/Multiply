@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 
-const Warning = ({ text }: { text: string }) => {
+const Warning = ({ text }: { text: string | JSX.Element }) => {
   return (
     <Flex
       marginRight="1rem"

@@ -14,8 +14,8 @@ const AdminAppPage = () => {
           flexDirection="column"
           alignItems="center"
         >
-          <Text fontSize="5xl" color="black" mb="2" as="abbr">
-            Hello teacher {admin.data.username} !
+          <Text fontSize="3xl" color="black" mb="2rem" as="abbr">
+            Hello teacher {admin.data.username} ! <br /> Welcome to setup page
           </Text>
           <Flex mb="4" flexDirection="column">
             <Link to="/addNewUser">
