@@ -78,7 +78,7 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
   };
 
   useEffect(() => {
-    if (hasOpponent) fetchGameDetails(hasOpponent);
+      fetchGameDetails(hasOpponent);
   }, [hasOpponent]);
 
   useEffect(() => {
