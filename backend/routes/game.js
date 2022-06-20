@@ -25,7 +25,6 @@ router.post("/save", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const activeGame = await ActiveGame.find({});
-    console.log(activeGame);
     res.status(200).json(activeGame);
   } catch (err) {
     res.status(500).json(err);
@@ -41,7 +40,6 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
         (game) =>
           game.type === req.body.type && game?.opponents.includes(req.body.user)
       );
-      console.log(gameToBeUpdated);
       if (!!gameToBeUpdated) {
         await gameToBeUpdated.updateOne({ $set: req.body });
         return res
@@ -174,12 +172,10 @@ router.put("/battleArray/:winner", async (req, res) => {
           };
         }
       } else {
-        console.log("In else");
         return row;
       }
     });
     if (!!gameToBeUpdated && !!battleArrayUpdated) {
-      console.log("Gameboard:", req.body.gameBoard);
       await gameToBeUpdated.updateOne({
         $set: {
           battleArray: [...battleArrayUpdated],

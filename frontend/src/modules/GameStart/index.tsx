@@ -74,11 +74,15 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
         setOpponentArray(res?.data?.gameBoard);
         setQuestions(res?.data?.questions);
       }
+      if (battle) {
+        setOpponentArray(res?.data?.gameBoard);
+        setQuestions(res?.data?.questions);
+      }
     });
   };
 
   useEffect(() => {
-      fetchGameDetails(hasOpponent);
+    fetchGameDetails(hasOpponent);
   }, [hasOpponent]);
 
   useEffect(() => {
@@ -111,7 +115,6 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
 
       if (!!json.game.length) {
         setGame(json.game);
-        console.log(json.game);
         setOpponentArray(json.game);
       }
       if (json.value) setPlayer(json.value);
@@ -176,8 +179,9 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
     });
 
     socket?.on("opponent_joined", (payload: any) => {
-      if (!!opponents?.length && opponents.includes(payload.user))
+      if (!!opponents?.length && opponents.includes(payload.user)) {
         setHasOpponent(true);
+      }
     });
   }, [myTurn, opponents]);
 

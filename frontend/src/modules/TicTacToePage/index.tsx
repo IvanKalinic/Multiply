@@ -212,8 +212,6 @@ const TicTacToePage = ({ battle, setRerenderGame, setGameType }: Props) => {
     });
   };
 
-  console.log(hasOpponent);
-  console.log(hasOpponent || (turnNumber !== 0 && xo === "O"));
   return (
     <TicTacToeContainer>
       {(winner || turnNumber === 9) && (

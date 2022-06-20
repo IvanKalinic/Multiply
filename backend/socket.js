@@ -5,7 +5,6 @@ const socket = (io) => {
     const id = socket.handshake.query.id;
     socket.join(id);
 
-    console.log(id);
     socket.on("reqTurn", (data) => {
       // const room = data.room;
       // io.to(room).emit("playerTurn", data);

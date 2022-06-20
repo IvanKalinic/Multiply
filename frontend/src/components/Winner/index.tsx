@@ -144,7 +144,7 @@ const Winner = ({
             <Text fontSize="5xl" color="#9dbef5" mt="10" cursor="pointer">
               <strong>Game over!</strong>
             </Text>
-            <Button mt="20" as="u" onClick={handleNext}>
+            <Button mt="5%" as="u" onClick={handleNext}>
               Let's play next game in your queue
             </Button>
           </Flex>
@@ -168,7 +168,7 @@ const Winner = ({
                 ? `${battleWinner} won overall battle match and got 10 points award!`
                 : ""}
             </Text>
-            <Button mt="20" as="u" onClick={handleNext} cursor="pointer">
+            <Button mt="5%" as="u" onClick={handleNext} cursor="pointer">
               Let's play next game in your queue
             </Button>
           </Flex>
@@ -185,13 +185,13 @@ const Winner = ({
               <>
                 <h3>{finalMessageRevealWord}</h3>
                 <PopupButton>
-                  <Button mt="20" as="u" onClick={handleNext}>
+                  <Button mt="5%" as="u" onClick={handleNext}>
                     Let's play next game in your queue
                   </Button>
                 </PopupButton>
               </>
             ) : (
-              <Button mt="20" as="u" onClick={handleNext} cursor="pointer">
+              <Button mt="5%" as="u" onClick={handleNext} cursor="pointer">
                 Let's play next game in your queue
               </Button>
             )}

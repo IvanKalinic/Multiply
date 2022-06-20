@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
 router.get("/username/:username", async (req, res) => {
   try {
     const user = await User.find({ username: req.params.username });
-    console.log(user);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
@@ -31,7 +30,6 @@ router.get("/class/:class", async (req, res) => {
 
 router.put("/:username", async (req, res) => {
   try {
-    console.log(req.body);
     const user = await User.find({ username: req.params.username });
 
     await user[0].updateOne({
