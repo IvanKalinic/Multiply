@@ -166,7 +166,7 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
       color={
         !!boardArray[index][id]?.color &&
         boardArray[index][id]?.clicked &&
-        boardArray[index][id]?.color
+        boardArray[index][id].color
       }
       onClick={handleChange}
       style={{

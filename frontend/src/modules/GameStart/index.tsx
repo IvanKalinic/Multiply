@@ -78,12 +78,7 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
   };
 
   useEffect(() => {
-    fetchGameDetails(hasOpponent);
-
-    return () => {
-      setOpponentArray([]);
-      setQuestions([]);
-    };
+    if (hasOpponent) fetchGameDetails(hasOpponent);
   }, [hasOpponent]);
 
   useEffect(() => {
@@ -103,10 +98,6 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
         });
       }
     })();
-
-    return () => {
-      setQuestions([]);
-    };
   }, [category, difficulty]);
 
   useEffect(() => {
@@ -171,7 +162,6 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
                 : 0,
             });
           });
-          // setBattleWinner(json.winner);
           socket.emit("battleWinner", json.winner);
         }
       }
@@ -217,11 +207,6 @@ const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
         });
       }
     }
-
-    return () => {
-      setQuestions([]);
-      setOpponentArray([]);
-    };
   }, [room, opponents, user]);
 
   return (

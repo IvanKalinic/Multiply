@@ -89,13 +89,11 @@ const Winner = ({
     }
   };
 
-  // const checkNext = async () => {
-  if (!multiply && !battle) {
+  if (!(multiply && battle)) {
     getActiveGame().then((data) => {
       let arrayLength = data.data?.length;
       let nextGame = null;
       let nextGameIndex = data.data?.map((data: any, index: number) => {
-        console.log(data.opponents);
         if (
           (data.opponents.includes(user.data.username) ||
             data.user === user.data.username) &&

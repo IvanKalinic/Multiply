@@ -82,7 +82,12 @@ export const GameBoard = ({
   };
 
   useEffect(() => {
-    if (!!boardArray.length) return;
+    // console.log();
+    if (
+      !!boardArray.length &&
+      !boardArray.every((item: Array<any>) => !item.length)
+    )
+      return;
 
     fetchActiveGameBattleArray(user.data.username).then((res) => {
       if (!questions?.length && !!res.data?.questions?.length) {
@@ -117,10 +122,6 @@ export const GameBoard = ({
 
     setDisplayWin(false);
     if (battle) setMaxClicks(0);
-
-    return () => {
-      setQuestions([]);
-    };
   }, [user, opponentArray, questions, battle]);
 
   const checkAbsent = useCallback(() => {
@@ -186,10 +187,6 @@ export const GameBoard = ({
     if (!!opponentArray?.length) {
       setBoardArray(opponentArray);
     }
-
-    return () => {
-      setBoardArray([]);
-    };
   }, [opponentArray]);
 
   useEffect(() => {
