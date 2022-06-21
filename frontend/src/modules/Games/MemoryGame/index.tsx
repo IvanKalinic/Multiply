@@ -305,6 +305,7 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
         setGameOver={setGameOver}
         singleGame={true}
         setTimeSpent={setTimeSpent}
+        setWinner={setWinner}
       />
     </Flex>
   );
