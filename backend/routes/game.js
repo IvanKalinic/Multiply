@@ -51,7 +51,6 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
           );
       }
     } else {
-      // slučajevi kad nije mulitply -> imamo winnera
       gameToBeUpdated = activeGame.find(
         (game) =>
           !!game?.opponents.length &&
@@ -93,15 +92,12 @@ router.put("/winnerOrMultiplyDetails", async (req, res) => {
 
 router.delete("/deleteActiveGame", async (req, res) => {
   try {
-    const activeGame = await ActiveGame.find({
-      // winer: { $not: { $in: [null, undefined, ""] } },
-    });
+    const activeGame = await ActiveGame.find({});
     activeGame.map(async (game) => {
       if (!!game?.winner) {
         await game.deleteOne();
       }
     });
-    // await activeGame[0].deleteOne();
     res.status(200).json("Active game was deleted.");
   } catch (err) {
     res.status(500).json(err);

@@ -11,10 +11,10 @@ import Warning from "../../Warning";
 
 interface UserData {
   username: string;
-  gamesWon: Array<any>;
-  gamesPlayed: Array<any>;
-  battlesPlayed: Array<any>;
-  battlesWon: Array<any>;
+  gamesWon: number;
+  gamesPlayed: number;
+  battlesPlayed: number;
+  battlesWon: number;
   overallPoints: number;
   speed: number;
   levelNumber: number;
@@ -54,12 +54,11 @@ export const StatsItem = ({ userData }: { userData: any }) => {
           <Flex alignItems="center" justifyContent="flex-start">
             <Flex flexDirection="column" alignItems="flex-start">
               <h3>
-                Games (W/P): {user?.gamesWon?.length || 0}/
-                {user?.gamesPlayed?.length || 0}
+                Games (W/P): {user?.gamesWon || 0}/{user?.gamesPlayed || 0}
               </h3>
               <h3>
-                Battles (W/P): {user?.battlesWon?.length || 0}/
-                {user?.battlesPlayed?.length || 0}
+                Battles (W/P): {user?.battlesWon || 0}/
+                {user?.battlesPlayed || 0}
               </h3>
               <h3>Points: {user?.overallPoints}</h3>
               <h3>Speed: {user?.speed}</h3>
@@ -71,11 +70,11 @@ export const StatsItem = ({ userData }: { userData: any }) => {
               >
                 {!userData.wins
                   ? `${
-                      ((user?.gamesWon?.length || 0) /
-                        user?.gamesPlayed?.length) *
-                      100
+                      ((user?.gamesWon || 0) / (user?.gamesPlayed || 1)) * 100
                     }% won`
-                  : `${userData.wins} wins in this game`}
+                  : `${userData.wins} ${
+                      userData.wins !== 1 ? "wins" : "win"
+                    } in this game`}
               </h5>
             </Flex>
             <CircularProgress

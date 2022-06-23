@@ -160,7 +160,6 @@ const Statistics = () => {
       rank: index + 1,
     }));
   }
-  // }, [selectedOptions, users, gameUsers, fastestUsers, top10Users]);
 
   return (
     <Flex alignItems="center" justifyContent="center">
@@ -205,11 +204,7 @@ const Statistics = () => {
             </Flex>
           ))}
         </Flex>
-        <Flex justifyContent="center" alignItems="center" ml="2rem">
-          {/* {Object.keys(selectedOptions).map((option, index) => (
-            <Stats key={option} data={displayArray[index]} />
-          ))} */}
-        </Flex>
+        <Flex justifyContent="center" alignItems="center" ml="2rem"></Flex>
       </MenuWrapper>
     </Flex>
   );

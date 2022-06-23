@@ -135,7 +135,7 @@ const MemorySetup = ({ name }: { name: string }) => {
       {isNewWindowOpen &&
         (name === "memory" ? (
           <MenuWrapper
-            style={{ width: "20rem", position: "fixed", right: "5rem" }}
+            style={{ width: "20rem", position: "fixed", right: "7rem" }}
           >
             <CloseButton
               position="absolute"

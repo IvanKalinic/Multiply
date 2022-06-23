@@ -300,7 +300,7 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
       )}
       <CircularBar
         winner={winner}
-        workSeconds={1000}
+        workSeconds={200}
         breakSeconds={0}
         setGameOver={setGameOver}
         singleGame={true}

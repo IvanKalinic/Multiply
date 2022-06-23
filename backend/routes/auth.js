@@ -67,11 +67,6 @@ router.post("/loginAdmin", async (req, res) => {
 });
 
 router.post("/userlogin", async (req, res) => {
-  // res.header("Access-Control-Allow-Origin", "*");
-  // res.header(
-  //   "Access-Control-Allow-Headers",
-  //   "Origin, X-Requested-With, Content-Type, Accept"
-  // );
   try {
     const user = await User.findOne({ username: req.body.username });
     console.log(user);
