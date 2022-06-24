@@ -216,16 +216,16 @@ export const levelNameFromScore = (points: number) => {
   if (points >= 150 && points <= 300) return "Pro";
 };
 
-export const bestPlayerSort = (bestPlayers: Array<any>) => {
-  return bestPlayers
-    .sort((user1, user2) => user2.overallPoints - user1.overallPoints)
-    .slice(0, 10);
-};
-
 export const normalBestPlayerSort = (bestPlayers: Array<any>) => {
   return bestPlayers.sort(
     (user1, user2) => user2.overallPoints - user1.overallPoints
   );
+};
+
+export const bestPlayerSort = (bestPlayers: Array<any>) => {
+  return bestPlayers
+    .sort((user1, user2) => user2.overallPoints - user1.overallPoints)
+    .slice(0, 10);
 };
 
 export const arraySortSpeed = (fastestArray: Array<any>) => {
@@ -242,15 +242,15 @@ export const arraySortSpeed = (fastestArray: Array<any>) => {
 };
 
 export const bestInGame = (bestGameArray: Array<any>) => {
-  // property is
   const arrayWithUserNames = bestGameArray.map((row) => row.winner);
 
+  //number of appearances of every pupil
   let reducedArray = arrayWithUserNames.reduce((p, c) => {
     p[c] = (p[c] || 0) + 1;
     return p;
   }, []);
 
-  // ["user13","user14","user16"]
+  // i.e. ["user13","user14","user16"]
   let newArray = Object.keys(reducedArray).sort((a, b) => {
     return reducedArray[b] - reducedArray[a];
   });
@@ -275,7 +275,7 @@ export const checkBattleArrayWinner = (
         userPoints = userPoints + index + 1;
       }
     }
-    if (item.type == 3 || item.type === 4) {
+    if (item.type === 3 || item.type === 4) {
       let winNumber = item.winner.filter(
         (item: any) => item.win === true
       ).length;

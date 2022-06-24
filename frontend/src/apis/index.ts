@@ -55,14 +55,6 @@ export const deleteSpecificGame = async (username: string) => {
   );
 };
 
-// export const deleteActiveGameIfThereIsAWinner = async () => {
-//   getActiveGame().then((data) => {
-//     // if (!!data.data[0]?.winner) {
-//     deleteActiveGames(); // DELETION OF ALL GAMES THAT HAVE WINNER
-//     // }
-//   });
-// };
-
 export const saveActiveGame = async (payload: any) => {
   await axios.post(
     `${process.env.REACT_APP_SERVER_BASE_URL}/game/save`,
@@ -100,8 +92,10 @@ interface PayloadType {
   battleWinner?: string;
   battlePoints?: number;
 }
-export const saveUserScore = async (username:string,payload: PayloadType) => {
-  await axios.put(`${process.env.REACT_APP_SERVER_BASE_URL}/users/${username}`,payload)
-}
-//fastest - sort po speed-u
-//top 10 - sort po overallPoints
+export const saveUserScore = async (username: string, payload: PayloadType) => {
+  await axios.put(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/users/${username}`,
+    payload
+  );
+};
+

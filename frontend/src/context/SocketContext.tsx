@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 import io from "socket.io-client";
-import { useUser } from "./UserContext";
 
 type ContextType = {
   socket: any;

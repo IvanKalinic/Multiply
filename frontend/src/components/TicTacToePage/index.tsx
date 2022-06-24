@@ -1,6 +1,7 @@
 import { Button, Flex, Grid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { TicTacToeBox } from "..";
 import {
   deleteActiveGames,
   getActiveGame,
@@ -10,15 +11,14 @@ import {
   updateBattleArrayInActiveGame,
 } from "../../apis";
 import ArrowRight from "../../assets/icons/arrow-right.png";
-import { TicTacToeBox } from "../../components";
-import { ArrowWrapper } from "../../components/sharedcomponents/Questions/QuestionItem/styles";
 import { winningCombinations } from "../../consts/ticTacToe";
 import { useAxios } from "../../context/AxiosContext";
 import { useSocket } from "../../context/SocketContext";
 import { useUser } from "../../context/UserContext";
+import { TicTacToeContainer } from "../../modules/modules.style";
 import { MenuWrapper } from "../../styles";
 import { checkLevel, levelNameFromScore } from "../../utils";
-import { TicTacToeContainer } from "../modules.style";
+import { ArrowWrapper } from "../sharedcomponents/Questions/QuestionItem/styles";
 interface Props {
   battle?: boolean;
   setRerenderGame?: React.Dispatch<React.SetStateAction<number>>;

@@ -1,12 +1,12 @@
 import { CircularProgress, Flex } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getActiveGame } from "../../apis";
 import Hangman from "../../components/Hangman";
+import MemoryGame from "../../components/MemoryGame";
 import Warning from "../../components/Warning";
 import { useUser } from "../../context/UserContext";
-import MemoryGame from "../Games/MemoryGame";
-import GameStart from "../GameStart";
-import TicTacToePage from "../TicTacToePage";
+import GameStart from "../../components/GameStart";
+import TicTacToePage from "../../components/TicTacToePage";
 
 const UserAppPage = () => {
   const { user } = useUser();
@@ -15,17 +15,13 @@ const UserAppPage = () => {
   const [battleArrayGameType, setBattleArrayGameType] = useState<number>(0);
   const [rerenderGame, setRerenderGame] = useState(2); // 2,3,4,1
 
-  // const location = useLocation();
-  // it nows accidentaly work as global context
-  // it should be replaced with global context storing opponents for all game types
-
   useEffect(() => {
     getActiveGame().then((data) => {
       if (rerenderGame === 1) {
         setBattleArrayGameType(1);
         return;
       }
-      //logika za battle
+
       let foundGameType = data.data.find((row: any) => {
         if (
           (!!row?.opponents?.length &&

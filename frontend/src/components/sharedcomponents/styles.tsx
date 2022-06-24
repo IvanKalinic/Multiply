@@ -40,8 +40,6 @@ export const Overlay = styled.div`
 
 export const Details = styled.div`
   position: relative;
-  // top: 3.125rem;
-  // left: -9.375rem;
   left: -9vw;
   top: 5vh;
 `;

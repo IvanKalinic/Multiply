@@ -82,7 +82,6 @@ export const GameBoard = ({
   };
 
   useEffect(() => {
-    // console.log();
     if (
       !!boardArray.length &&
       !boardArray.every((item: Array<any>) => !item.length)

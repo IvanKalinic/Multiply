@@ -71,8 +71,6 @@ export const BoardItem = ({ value, id, boardArray, index, battle }: Props) => {
   }, [boardArray]);
 
   const handleChange = () => {
-    if (gameOver()) return;
-
     if (turnNumber === 0 && !hasOpponent && !game.length) return;
 
     if (

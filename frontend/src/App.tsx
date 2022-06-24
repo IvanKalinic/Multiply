@@ -5,7 +5,6 @@ import { ParentContainer } from "./App.style";
 import { SocketProvider } from "./context/SocketContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useUser } from "./context/UserContext";
-import { VideoCallProvider } from "./context/VideoCallContext";
 
 const App = () => {
   const { user } = useUser();
@@ -14,11 +13,9 @@ const App = () => {
   return (
     <ChakraProvider>
       <SocketProvider id={user?.data?.username ? id : ""}>
-        <VideoCallProvider>
-          <ParentContainer>
-            <AppRoutes setId={setId} />
-          </ParentContainer>
-        </VideoCallProvider>
+        <ParentContainer>
+          <AppRoutes setId={setId} />
+        </ParentContainer>
       </SocketProvider>
     </ChakraProvider>
   );

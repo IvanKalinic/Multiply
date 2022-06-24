@@ -16,7 +16,7 @@ import { useAdmin } from "../../../context/AdminContext";
 import { useAxios } from "../../../context/AxiosContext";
 import { MenuWrapper } from "../../../styles";
 import { gameSetup } from "../../../utils";
-import { getSign } from "../../Games/MemoryGame";
+import { getSign } from "../../../components/MemoryGame";
 import CustomizeItem from "./CustomizeItem";
 
 type SelectedOpponents = {

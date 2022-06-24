@@ -1,7 +1,6 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
-import { useSocket } from "../../context/SocketContext";
 import { useUser } from "../../context/UserContext";
 import { HomeWrapper } from "../modules.style";
 
@@ -30,9 +29,6 @@ const HomePage = () => {
           </Flex>
         </>
       )}
-      {/* <CircularBar /> */}
-      {/* <Hangman /> */}
-      {/* <MemoryGame /> */}
     </HomeWrapper>
   );
 };

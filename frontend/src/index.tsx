@@ -17,11 +17,9 @@ ReactDOM.render(
         <AdminProvider>
           <UserProvider>
             <GameProvider>
-              <TicTacToeProvider>
-                <TurnBasedProvider>
-                  <App />
-                </TurnBasedProvider>
-              </TicTacToeProvider>
+              <TurnBasedProvider>
+                <App />
+              </TurnBasedProvider>
             </GameProvider>
           </UserProvider>
         </AdminProvider>

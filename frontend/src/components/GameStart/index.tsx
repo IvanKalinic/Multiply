@@ -6,11 +6,10 @@ import {
   saveUserScore,
   updateBattleArrayInActiveGame,
 } from "../../apis";
-import { CircularBar } from "../../components/CircularProgressbar";
-import Pawns from "../../components/Pawns";
-import { GameBoard, QuestionSection } from "../../components/sharedcomponents";
+import { CircularBar } from "../CircularProgressbar";
+import Pawns from "../Pawns";
+import { GameBoard, QuestionSection } from "../sharedcomponents";
 import { awayColor, homeColor } from "../../consts";
-import { useAxios } from "../../context/AxiosContext";
 import { useGame } from "../../context/GameContext";
 import { useSocket } from "../../context/SocketContext";
 import { useTurnBased } from "../../context/TurnBasedContext";
@@ -31,7 +30,7 @@ interface Props {
 const GameStart = ({ battle, setRerenderGame, setGameType }: Props) => {
   const { questions, setQuestions, setDisplayWin } = useGame();
   const { user, setUser } = useUser();
-  const axios = useAxios();
+
   const { socket } = useSocket();
   const {
     room,

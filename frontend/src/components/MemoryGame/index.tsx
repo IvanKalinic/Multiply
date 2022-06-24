@@ -9,14 +9,14 @@ import {
   saveUserScore,
   saveWinnerOrMultiplyDetails,
   updateBattleArrayInActiveGame,
-} from "../../../apis";
-import { CircularBar } from "../../../components/CircularProgressbar";
-import Winner from "../../../components/Winner";
-import { categories, difficulties } from "../../../consts";
-import { useUser } from "../../../context/UserContext";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import { checkLevel, levelNameFromScore, randomValue } from "../../../utils";
-import { MemoryCardsContainer } from "../../modules.style";
+} from "../../apis";
+import { categories, difficulties } from "../../consts";
+import { useUser } from "../../context/UserContext";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import { MemoryCardsContainer } from "../../modules/modules.style";
+import { checkLevel, levelNameFromScore } from "../../utils";
+import { CircularBar } from "../CircularProgressbar";
+import Winner from "../Winner";
 import CardItem from "./CardItem";
 
 const difficultyNames = difficulties.map((diff) => diff.category);
@@ -166,7 +166,7 @@ const MemoryGame = ({ battle, setRerenderGame, setGameType }: Props) => {
           secondNumber = item.correctAnswer / firstNumber;
         } else {
           firstNumber = choices[Math.floor(Math.random() * choices.length)];
-          secondNumber = item.correctAnswer / firstNumber; // npr. 300 -> [1,300,30,10]
+          secondNumber = item.correctAnswer / firstNumber; // i.e. 300 -> [1,300,30,10]
         }
       }
       if (randomCategory === "Substraction") {

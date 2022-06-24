@@ -1,16 +1,16 @@
-import React, { lazy, Suspense, memo, useEffect, useState } from "react";
+import { Spinner } from "@chakra-ui/react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
-  Routes,
-  Route,
   Navigate,
+  Route,
+  Routes,
 } from "react-router-dom";
-import { Spinner } from "@chakra-ui/react";
-import Navbar from "../components/Navbar";
-import { useUser } from "../context/UserContext";
-import { useAdmin } from "../context/AdminContext";
-import { HomePage } from "../modules";
 import { fetchAllUsers } from "../apis";
+import Navbar from "../components/Navbar";
+import { useAdmin } from "../context/AdminContext";
+import { useUser } from "../context/UserContext";
+import { HomePage } from "../modules";
 import { bestPlayerSort } from "../utils";
 
 const ErrorComponent = lazy(() => import("../components/Error"));
@@ -20,8 +20,8 @@ const UserAppPage = lazy(() => import("../modules/UserAppPage"));
 const AddNewUser = lazy(() => import("../modules/AddNewUser"));
 const LoginAdmin = lazy(() => import("../modules/LoginAdmin"));
 const LoginUser = lazy(() => import("../modules/LoginUser"));
-const GameStart = lazy(() => import("../modules/GameStart"));
-const TicTacToePage = lazy(() => import("../modules/TicTacToePage"));
+const GameStart = lazy(() => import("../components/GameStart"));
+const TicTacToePage = lazy(() => import("../components/TicTacToePage"));
 const MultiplySetup = lazy(() => import("../modules/GamesSetup/MultiplySetup"));
 const SingleGameSetup = lazy(
   () => import("../modules/GamesSetup/SingleGameSetup")
@@ -59,7 +59,10 @@ const AppRoutes = ({
         <Suspense fallback={<Spinner />}>
           <Routes>
             <Route path="/" element={!user ? <HomePage /> : <UserAppPage />} />
-            <Route path="/statistics" element={<Statistics />} />
+            <Route
+              path="/statistics"
+              element={!!admin ? <Statistics /> : <ErrorComponent />}
+            />
             <Route path="/adminApp" element={<AdminAppPage />} />
             <Route path="/userApp" element={<UserAppPage />} />
             <Route path="/multiplySetup" element={<MultiplySetup />} />

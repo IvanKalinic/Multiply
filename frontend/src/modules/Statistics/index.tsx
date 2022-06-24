@@ -144,7 +144,6 @@ const Statistics = () => {
     }
   }, [selectedOptions]);
 
-  // useEffect(() => {
   if (!!selectedOptions.classes && !!users.length) {
     displayArray[0] = users;
   }
@@ -200,7 +199,7 @@ const Statistics = () => {
                   </Text>
                 </Button>
               )}
-              <Stats key={category.category} data={displayArray[index]} />
+              <Stats key={index} data={displayArray[index]} />
             </Flex>
           ))}
         </Flex>
