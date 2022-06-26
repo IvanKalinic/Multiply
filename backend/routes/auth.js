@@ -69,7 +69,6 @@ router.post("/loginAdmin", async (req, res) => {
 router.post("/userlogin", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
-    console.log(user);
     !user && res.status(404).send("User not found");
 
     const validPassword = await bcrypt.compare(
